@@ -6,7 +6,7 @@ spring:
     password: ${DB_PWD}
   jpa:
     database: mysql
-    properties.hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
+    database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
       ddl-auto: none
     show-sql: true
