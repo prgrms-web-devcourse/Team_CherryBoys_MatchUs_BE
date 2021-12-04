@@ -4,7 +4,9 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import lombok.Getter;
 
+@Getter
 @Embeddable
 public class Period {
 

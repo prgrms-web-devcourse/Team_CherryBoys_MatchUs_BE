@@ -1,18 +1,19 @@
 package com.matchus.domains.user.domain;
 
 import com.matchus.domains.common.AgeGroup;
+import com.matchus.domains.common.Sports;
 import com.matchus.global.domain.BaseEntity;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -33,8 +34,12 @@ public class User extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long Id;
 
-	@OneToMany(mappedBy = "user")
-	private List<UserSportsInterest> sportsInterests = new ArrayList<>();
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(
+		name = "sport_id",
+		referencedColumnName = "id"
+	)
+	private Sports sport;
 
 	@Column(nullable = false, length = 320, unique = true)
 	private String email;
@@ -64,12 +69,4 @@ public class User extends BaseEntity {
 
 	@Column(nullable = false, columnDefinition = "BOOLEAN default false")
 	private boolean isDisaffiliated;
-
-	public void addSportsInterests(UserSportsInterest sportsInterest) {
-		this.sportsInterests.add(sportsInterest);
-
-		if (sportsInterest.getUser() != this) {
-			sportsInterest.setUser(this);
-		}
-	}
 }

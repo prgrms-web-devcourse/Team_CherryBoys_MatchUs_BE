@@ -3,6 +3,7 @@ package com.matchus.domains.match.domain;
 import com.matchus.domains.common.Address;
 import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.common.Period;
+import com.matchus.domains.common.Sports;
 import com.matchus.domains.team.domain.Team;
 import com.matchus.global.domain.BaseEntity;
 import javax.persistence.Column;
@@ -10,11 +11,12 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -34,19 +36,26 @@ public class Match extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@OneToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(
 		name = "register_team_id",
 		referencedColumnName = "id"
 	)
 	private Team homeTeam;
 
-	@OneToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(
 		name = "apply_team_id",
 		referencedColumnName = "id"
 	)
 	private Team awayTeam;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(
+		name = "sport_id",
+		referencedColumnName = "id"
+	)
+	private Sports sport;
 
 	@Embedded
 	private Address address;

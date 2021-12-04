@@ -1,12 +1,10 @@
 package com.matchus.domains.common;
 
-import com.matchus.domains.team.domain.Team;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -24,7 +22,4 @@ public class Sports {
 
 	@Column(nullable = false)
 	private String name;
-
-	@OneToOne(mappedBy = "sport")
-	private Team team;
 }
