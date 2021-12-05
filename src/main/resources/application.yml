@@ -1,2 +1,20 @@
 server:
   port: 8080
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 2MB
+
+cloud:
+  aws:
+    s3:
+      bucket: matchus-image
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    credentials:
+      instanceProfile: true
+
