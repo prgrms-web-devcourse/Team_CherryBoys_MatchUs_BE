@@ -21,3 +21,12 @@ spring:
         format_sql: true
         use_sql_comments: true
     open-in-view: false
+    redis:
+      host: localhost
+      port: 6379
+
+
+jwt:
+  secret: VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHN
+
+
