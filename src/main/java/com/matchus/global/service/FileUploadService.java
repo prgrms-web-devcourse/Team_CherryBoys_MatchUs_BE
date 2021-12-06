@@ -1,9 +1,11 @@
 package com.matchus.global.service;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.matchus.global.error.ErrorCode;
+import com.matchus.global.error.exception.FileUploadException;
+import com.matchus.global.error.exception.InvalidFileTypeException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.MessageFormat;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,9 +28,7 @@ public class FileUploadService {
 		try (InputStream inputStream = file.getInputStream()) {
 			s3UploadService.uploadFile(fileName, inputStream, objectMetadata);
 		} catch (IOException e) {
-			throw new IllegalArgumentException(
-				MessageFormat.format("파일 변환 중 에러가 발생하였습니다. {0}", file.getOriginalFilename())
-			);
+			throw new FileUploadException(ErrorCode.FILE_UPLOAD_ERROR);
 		}
 
 		return s3UploadService.getFileUrl(fileName);
@@ -45,8 +45,7 @@ public class FileUploadService {
 		try {
 			return fileName.substring(fileName.lastIndexOf("."));
 		} catch (StringIndexOutOfBoundsException e) {
-			throw new IllegalArgumentException(
-				MessageFormat.format("잘못된 형식의 파일 {0} 입니다", fileName));
+			throw new InvalidFileTypeException(ErrorCode.INVALID_FILE_TYPE);
 		}
 	}
 }
