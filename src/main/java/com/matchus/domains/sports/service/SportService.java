@@ -20,6 +20,7 @@ public class SportService {
 		return sportRepository
 			.findByName(sportName)
 			.orElseThrow(() -> new SportsNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
+
 	}
 
 }

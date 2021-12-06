@@ -20,8 +20,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,7 +31,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE users SET is_disaffiliated = true WHERE id=?")
 @Where(clause = "is_disaffiliated = false")
 @Entity
@@ -69,7 +71,6 @@ public class User extends BaseEntity implements UserDetails {
 
 	@Column(nullable = false)
 	@ElementCollection(fetch = FetchType.EAGER)
-	@Builder.Default
 	private List<String> roles = new ArrayList<>();
 
 	@Enumerated(EnumType.STRING)
@@ -84,6 +85,7 @@ public class User extends BaseEntity implements UserDetails {
 
 	@Builder
 	private User(
+		Long id,
 		Sports sport,
 		String email,
 		String name,
@@ -94,6 +96,7 @@ public class User extends BaseEntity implements UserDetails {
 		List<String> roles,
 		AgeGroup ageGroup
 	) {
+		this.id = id;
 		this.sport = sport;
 		this.email = email;
 		this.name = name;
@@ -103,10 +106,6 @@ public class User extends BaseEntity implements UserDetails {
 		this.gender = gender;
 		this.roles = roles;
 		this.ageGroup = ageGroup;
-	}
-
-	protected User() {
-
 	}
 
 	public void checkPassword(PasswordEncoder passwordEncoder, String credentials) {
@@ -125,7 +124,7 @@ public class User extends BaseEntity implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		return email;
+		return this.email;
 	}
 
 	@Override

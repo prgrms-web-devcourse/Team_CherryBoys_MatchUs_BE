@@ -19,7 +19,6 @@ public class UserConverter {
 		this.passwordEncoder = passwordEncoder;
 	}
 
-
 	public User convertToUser(SignUpRequest dto, Sports sports) {
 		return User
 			.builder()

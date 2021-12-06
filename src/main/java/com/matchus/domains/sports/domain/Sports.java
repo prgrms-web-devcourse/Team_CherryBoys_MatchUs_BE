@@ -23,7 +23,9 @@ public class Sports {
 	@Column(nullable = false)
 	private String name;
 
-	public Sports(String name) {
+	public Sports(Long id, String name) {
+		this.id = id;
 		this.name = name;
 	}
+
 }

@@ -31,7 +31,8 @@ public class GlobalExceptionHandler {
 	}
 
 	@ExceptionHandler(
-		{SportsNotFoundException.class,
+		{
+			SportsNotFoundException.class,
 			UserNotFoundException.class
 		}
 	)

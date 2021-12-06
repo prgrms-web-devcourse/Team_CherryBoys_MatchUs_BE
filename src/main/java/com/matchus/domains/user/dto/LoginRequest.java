@@ -5,12 +5,12 @@ import lombok.Getter;
 @Getter
 public class LoginRequest {
 
-	private final String Email;
+	private final String email;
 
 	private final String password;
 
 	protected LoginRequest(String email, String password) {
-		Email = email;
+		this.email = email;
 		this.password = password;
 	}
 
