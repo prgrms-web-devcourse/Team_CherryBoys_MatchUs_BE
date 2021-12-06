@@ -3,7 +3,7 @@ package com.matchus.domains.match.domain;
 import com.matchus.domains.common.Address;
 import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.common.Period;
-import com.matchus.domains.common.Sports;
+import com.matchus.domains.sports.domain.Sports;
 import com.matchus.domains.team.domain.Team;
 import com.matchus.global.domain.BaseEntity;
 import javax.persistence.Column;

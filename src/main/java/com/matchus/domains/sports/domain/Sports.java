@@ -1,4 +1,4 @@
-package com.matchus.domains.common;
+package com.matchus.domains.sports.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,4 +22,8 @@ public class Sports {
 
 	@Column(nullable = false)
 	private String name;
+
+	public Sports(String name) {
+		this.name = name;
+	}
 }
