@@ -10,7 +10,7 @@ import com.matchus.domains.team.dto.request.TeamCreateRequest;
 import com.matchus.domains.team.repository.TeamRepository;
 import com.matchus.domains.team.repository.TeamUserRepository;
 import com.matchus.domains.user.domain.User;
-import com.matchus.domains.user.domain.repository.UserRepository;
+import com.matchus.domains.user.repository.UserRepository;
 import com.matchus.global.service.FileUploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
