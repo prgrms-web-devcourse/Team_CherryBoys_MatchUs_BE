@@ -1,7 +1,8 @@
 package com.matchus.global.error;
 
-import com.matchus.global.error.exception.SportsNotFoundException;
-import com.matchus.global.error.exception.UserNotFoundException;
+import com.matchus.domains.sports.exception.SportsNotFoundException;
+import com.matchus.domains.user.exception.UserNotFoundException;
+import com.matchus.global.error.exception.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +37,7 @@ public class GlobalExceptionHandler {
 			UserNotFoundException.class
 		}
 	)
-	public ResponseEntity<ErrorResponse> handleNotFound(SportsNotFoundException exception) {
+	public ResponseEntity<ErrorResponse> handleNotFound(EntityNotFoundException exception) {
 		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.ENTITY_NOT_FOUND);
 		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}

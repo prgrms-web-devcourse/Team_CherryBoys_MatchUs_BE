@@ -2,12 +2,14 @@ package com.matchus.domains.user.domain;
 
 import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.sports.domain.Sports;
+import com.matchus.domains.team.domain.TeamUser;
 import com.matchus.global.domain.BaseEntity;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -19,6 +21,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -31,11 +34,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE users SET is_disaffiliated = true WHERE id=?")
 @Where(clause = "is_disaffiliated = false")
 @Entity
-@Getter
 @Table(name = "users")
 public class User extends BaseEntity implements UserDetails {
 
@@ -82,6 +85,9 @@ public class User extends BaseEntity implements UserDetails {
 
 	@Column(nullable = false, columnDefinition = "BOOLEAN default false")
 	private boolean isDisaffiliated = false;
+
+	@OneToMany(mappedBy = "team", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	private List<TeamUser> teamUsers = new ArrayList<>();
 
 	@Builder
 	private User(

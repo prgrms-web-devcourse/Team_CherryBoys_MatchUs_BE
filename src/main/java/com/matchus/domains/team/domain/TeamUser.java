@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
@@ -48,5 +49,31 @@ public class TeamUser {
 	private Grade grade;
 
 	@Column(nullable = false, columnDefinition = "BOOLEAN default false")
-	private boolean isDisaffiliated;
+	private boolean isDisaffiliated = false;
+
+	@Builder
+	private TeamUser(Long id, Team team, User user, Grade grade) {
+		this.id = id;
+		setTeam(team);
+		setUser(user);
+		this.grade = grade;
+	}
+
+	public void setTeam(Team team) {
+		if (this.team != null) {
+			this.team.getTeamUsers().remove(this);
+		}
+
+		this.team = team;
+		team.getTeamUsers().add(this);
+	}
+
+	public void setUser(User user) {
+		if (this.user != null) {
+			this.user.getTeamUsers().remove(this);
+		}
+
+		this.user = user;
+		user.getTeamUsers().add(this);
+	}
 }

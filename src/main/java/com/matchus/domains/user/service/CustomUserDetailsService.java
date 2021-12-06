@@ -1,9 +1,9 @@
 package com.matchus.domains.user.service;
 
 import com.matchus.domains.user.domain.User;
+import com.matchus.domains.user.exception.UserNotFoundException;
 import com.matchus.domains.user.repository.UserRepository;
 import com.matchus.global.error.ErrorCode;
-import com.matchus.global.error.exception.UserNotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

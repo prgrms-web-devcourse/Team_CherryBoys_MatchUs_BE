@@ -27,5 +27,4 @@ public class Sports {
 		this.id = id;
 		this.name = name;
 	}
-
 }
