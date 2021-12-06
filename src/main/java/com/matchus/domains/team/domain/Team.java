@@ -1,7 +1,7 @@
 package com.matchus.domains.team.domain;
 
 import com.matchus.domains.common.AgeGroup;
-import com.matchus.domains.common.Sports;
+import com.matchus.domains.sports.domain.Sports;
 import com.matchus.global.domain.BaseEntity;
 import java.math.BigDecimal;
 import javax.persistence.Column;
