@@ -1,4 +1,4 @@
-package com.matchus.domains.team.exception;
+package com.matchus.domains.common.exception;
 
 import com.matchus.global.error.ErrorCode;
 import com.matchus.global.error.exception.BusinessException;

@@ -1,6 +1,6 @@
 package com.matchus.domains.common;
 
-import com.matchus.domains.team.exception.AgeGroupNotFoundException;
+import com.matchus.domains.common.exception.AgeGroupNotFoundException;
 import com.matchus.global.error.ErrorCode;
 import java.util.Arrays;
 import lombok.Getter;
