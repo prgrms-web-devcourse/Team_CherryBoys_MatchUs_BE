@@ -2,7 +2,7 @@ package com.matchus.domains.user.service;
 
 import com.matchus.domains.sports.domain.Sports;
 import com.matchus.domains.sports.service.SportService;
-import com.matchus.domains.team.domain.service.TeamUserService;
+import com.matchus.domains.team.service.TeamUserService;
 import com.matchus.domains.user.UserConverter;
 import com.matchus.domains.user.domain.User;
 import com.matchus.domains.user.dto.LoginRequest;
