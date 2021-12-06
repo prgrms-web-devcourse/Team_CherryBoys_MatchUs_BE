@@ -4,6 +4,9 @@ import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.common.Sports;
 import com.matchus.global.domain.BaseEntity;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -14,8 +17,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
@@ -53,11 +58,24 @@ public class Team extends BaseEntity {
 	private AgeGroup ageGroup;
 
 	@Column(nullable = false, columnDefinition = "INT default 1")
-	private int memberCount;
+	private int memberCount = 1;
 
 	@Column(nullable = false, columnDefinition = "DECIMAL(4,1) default '36.5'", precision = 4, scale = 1)
-	private BigDecimal mannerTemperature;
+	private BigDecimal mannerTemperature = new BigDecimal("36.5");
 
 	@Column(nullable = false, columnDefinition = "BOOLEAN default false")
-	private boolean isDeleted;
+	private boolean isDeleted = false;
+
+	@OneToMany(mappedBy = "team", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	private List<TeamUser> teamUsers = new ArrayList<>();
+
+	@Builder
+	private Team(Long id, Sports sport, String name, String bio, String logo, AgeGroup ageGroup) {
+		this.id = id;
+		this.sport = sport;
+		this.name = name;
+		this.bio = bio;
+		this.logo = logo;
+		this.ageGroup = ageGroup;
+	}
 }

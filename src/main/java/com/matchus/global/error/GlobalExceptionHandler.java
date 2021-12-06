@@ -1,6 +1,7 @@
 package com.matchus.global.error;
 
-import com.matchus.global.error.ErrorCode;
+import com.matchus.domains.common.exception.SportsNotFoundException;
+import javax.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,19 @@ public class GlobalExceptionHandler {
 	) {
 		ErrorResponse errorResponse = ErrorResponse.of(
 			ErrorCode.INVALID_INPUT_VALUE, e.getBindingResult());
+		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(
+		{
+			SportsNotFoundException.class
+		}
+	)
+	public ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(
+		EntityNotFoundException e
+	) {
+		log.error("handleEntityNotFoundException", e);
+		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.ENTITY_NOT_FOUND);
 		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 }

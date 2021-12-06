@@ -2,8 +2,12 @@ package com.matchus.domains.user.domain;
 
 import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.common.Sports;
+import com.matchus.domains.team.domain.TeamUser;
 import com.matchus.global.domain.BaseEntity;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -14,8 +18,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
@@ -32,7 +38,7 @@ public class User extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long Id;
+	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(
@@ -65,8 +71,34 @@ public class User extends BaseEntity {
 	private AgeGroup ageGroup;
 
 	@Column(nullable = false, columnDefinition = "DECIMAL(4,1) default '36.5'", precision = 4, scale = 1)
-	private BigDecimal mannerTemperature;
+	private BigDecimal mannerTemperature = new BigDecimal("36.5");
 
 	@Column(nullable = false, columnDefinition = "BOOLEAN default false")
-	private boolean isDisaffiliated;
+	private boolean isDisaffiliated = false;
+
+	@OneToMany(mappedBy = "team", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	private List<TeamUser> teamUsers = new ArrayList<>();
+
+	@Builder
+	private User(
+		Long id,
+		Sports sport,
+		String email,
+		String name,
+		String password,
+		String nickname,
+		String bio,
+		Gender gender,
+		AgeGroup ageGroup
+	) {
+		this.id = id;
+		this.sport = sport;
+		this.email = email;
+		this.name = name;
+		this.password = password;
+		this.nickname = nickname;
+		this.bio = bio;
+		this.gender = gender;
+		this.ageGroup = ageGroup;
+	}
 }
