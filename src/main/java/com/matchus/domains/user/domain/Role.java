@@ -1,31 +1,32 @@
-package com.matchus.domains.sports.domain;
+package com.matchus.domains.user.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Entity
+@Table(name = "roles")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity
-@Table(name = "sports")
-public class Sports {
+public class Role {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private String name;
+	private RoleName name;
 
-	@Builder
-	public Sports(Long id, String name) {
+	public Role(Long id, RoleName name) {
 		this.id = id;
 		this.name = name;
 	}
