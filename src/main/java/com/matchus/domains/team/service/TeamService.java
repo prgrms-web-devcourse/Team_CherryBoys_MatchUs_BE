@@ -10,7 +10,7 @@ import com.matchus.domains.team.dto.request.TeamCreateRequest;
 import com.matchus.domains.team.repository.TeamRepository;
 import com.matchus.domains.team.repository.TeamUserRepository;
 import com.matchus.domains.user.domain.User;
-import com.matchus.domains.user.domain.repository.UserRepository;
+import com.matchus.domains.user.repository.UserRepository;
 import com.matchus.global.service.FileUploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,7 +34,9 @@ public class TeamService {
 			.findByName(request.getSports());
 
 		// todo: User 관련, 스프링 시큐리티 적용 시 수정 필요
-		User user = userRepository.findById(1L).get();
+		User user = userRepository
+			.findById(1L)
+			.get();
 
 		Team createdTeam = teamRepository.save(
 			teamConverter.convertToTeam(request, logo, sports)
