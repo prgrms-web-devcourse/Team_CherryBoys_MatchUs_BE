@@ -1,6 +1,7 @@
 package com.matchus.global.error;
 
 import com.matchus.domains.sports.exception.SportsNotFoundException;
+import com.matchus.domains.user.exception.RoleNotFoundException;
 import com.matchus.domains.user.exception.UserNotFoundException;
 import com.matchus.global.error.exception.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +35,8 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(
 		{
 			SportsNotFoundException.class,
-			UserNotFoundException.class
+			UserNotFoundException.class,
+			RoleNotFoundException.class
 		}
 	)
 	public ResponseEntity<ErrorResponse> handleNotFound(EntityNotFoundException exception) {

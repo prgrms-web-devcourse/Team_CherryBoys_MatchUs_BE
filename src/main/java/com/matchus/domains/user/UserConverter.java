@@ -2,11 +2,9 @@ package com.matchus.domains.user;
 
 import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.sports.domain.Sports;
-import com.matchus.domains.user.domain.Authority;
 import com.matchus.domains.user.domain.Gender;
 import com.matchus.domains.user.domain.User;
 import com.matchus.domains.user.dto.SignUpRequest;
-import java.util.Collections;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -30,7 +28,6 @@ public class UserConverter {
 			.gender(Gender.valueOf(dto.getGender()))
 			.ageGroup(AgeGroup.valueOf(dto.getAgeGroup()))
 			.sport(sports)
-			.roles(Collections.singletonList(Authority.ROLE_USER.name()))
 			.build();
 	}
 

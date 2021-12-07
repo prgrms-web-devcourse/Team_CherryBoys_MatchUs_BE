@@ -19,6 +19,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {
@@ -30,6 +31,7 @@ public class UserService {
 	private final RedisTemplate redisTemplate;
 	private final SportService sportService;
 	private final UserConverter userConverter;
+	private final UserRoleService userRoleService;
 
 	public UserService(
 		UserRepository userRepository,
@@ -38,7 +40,8 @@ public class UserService {
 		JwtTokenProvider jwtTokenProvider,
 		RedisTemplate<String, String> redisTemplate,
 		SportService sportService,
-		UserConverter userConverter
+		UserConverter userConverter,
+		UserRoleService userRoleService
 	) {
 		this.userRepository = userRepository;
 		this.authenticationManagerBuilder = authenticationManagerBuilder;
@@ -47,15 +50,20 @@ public class UserService {
 		this.redisTemplate = redisTemplate;
 		this.sportService = sportService;
 		this.userConverter = userConverter;
+		this.userRoleService = userRoleService;
 	}
 
+	@Transactional
 	public void signUp(SignUpRequest signUpRequest) {
 		Sports sports = sportService.getSports(signUpRequest.getName());
 
-		userRepository.save(userConverter.convertToUser(signUpRequest, sports));
+		User user = userRepository.save(userConverter.convertToUser(signUpRequest, sports));
+
+		userRoleService.createUserRole(user);
 
 	}
 
+	@Transactional
 	public LoginResponse login(LoginRequest login) {
 		User user = userRepository
 			.findByEmail(login.getEmail())

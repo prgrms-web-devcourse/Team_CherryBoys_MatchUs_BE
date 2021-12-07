@@ -5,13 +5,12 @@ import com.matchus.domains.sports.domain.Sports;
 import com.matchus.domains.team.domain.TeamUser;
 import com.matchus.global.domain.BaseEntity;
 import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.stream.Collectors;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -72,9 +71,8 @@ public class User extends BaseEntity implements UserDetails {
 	@Column(nullable = false)
 	private Gender gender;
 
-	@Column(nullable = false)
-	@ElementCollection(fetch = FetchType.EAGER)
-	private List<String> roles = new ArrayList<>();
+	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	private List<UserRole> userRoles = new ArrayList<>();
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
@@ -99,7 +97,6 @@ public class User extends BaseEntity implements UserDetails {
 		String nickname,
 		String bio,
 		Gender gender,
-		List<String> roles,
 		AgeGroup ageGroup
 	) {
 		this.id = id;
@@ -110,7 +107,6 @@ public class User extends BaseEntity implements UserDetails {
 		this.nickname = nickname;
 		this.bio = bio;
 		this.gender = gender;
-		this.roles = roles;
 		this.ageGroup = ageGroup;
 	}
 
@@ -122,9 +118,12 @@ public class User extends BaseEntity implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return this.roles
+		return this.userRoles
 			.stream()
-			.map(SimpleGrantedAuthority::new)
+			.map((UserRole role) -> new SimpleGrantedAuthority(role
+																   .getRole()
+																   .getName()
+																   .name()))
 			.collect(Collectors.toList());
 	}
 
