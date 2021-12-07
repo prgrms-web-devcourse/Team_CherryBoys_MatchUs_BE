@@ -23,6 +23,3 @@ cloud:
       auto: false
     credentials:
       instanceProfile: true
-
-
-
