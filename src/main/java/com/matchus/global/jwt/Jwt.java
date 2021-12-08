@@ -77,7 +77,8 @@ public final class Jwt {
 		Date iat;
 		Date exp;
 
-		protected Claims() {/*no-op*/}
+		protected Claims() {
+		}
 
 		Claims(DecodedJWT decodedJWT) {
 			Claim username = decodedJWT.getClaim("username");
