@@ -1,7 +1,7 @@
 package com.matchus.domains.team.service;
 
-import com.matchus.domains.common.service.SportsService;
 import com.matchus.domains.sports.domain.Sports;
+import com.matchus.domains.sports.service.SportsService;
 import com.matchus.domains.team.converter.TeamConverter;
 import com.matchus.domains.team.domain.Grade;
 import com.matchus.domains.team.domain.Team;
@@ -31,7 +31,7 @@ public class TeamService {
 	public Team createTeam(TeamCreateRequest request) {
 		String logo = uploadService.uploadImage(request.getLogo());
 		Sports sports = sportsService
-			.findByName(request.getSports());
+			.getSports(request.getSports());
 
 		// todo: User 관련, 스프링 시큐리티 적용 시 수정 필요
 		User user = userRepository
