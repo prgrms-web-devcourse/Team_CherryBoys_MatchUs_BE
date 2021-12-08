@@ -10,9 +10,6 @@ spring:
     host: localhost
     port: 6379
 
-jwt:
-  secret: VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHN
-
 cloud:
   aws:
     s3:
@@ -24,5 +21,9 @@ cloud:
     credentials:
       instanceProfile: true
 
-
+jwt:
+  header: token
+  issuer: prgrms
+  client-secret: EENY5W0eegTf1naQB2eDeyCLl5kRS2b8xa5c4qLdS0hmVjtbvo8tOyhPMcAmtPuQ
+  expiry-seconds: 3000
 

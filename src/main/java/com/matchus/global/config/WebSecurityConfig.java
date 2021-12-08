@@ -1,40 +1,43 @@
 package com.matchus.global.config;
 
-import com.matchus.global.jwt.JwtAccessDeniedHandler;
-import com.matchus.global.jwt.JwtAuthenticationEntryPoint;
+import com.matchus.domains.user.service.UserService;
+import com.matchus.global.jwt.Jwt;
 import com.matchus.global.jwt.JwtAuthenticationFilter;
-import com.matchus.global.jwt.JwtTokenProvider;
+import com.matchus.global.jwt.JwtAuthenticationProvider;
+import java.io.UnsupportedEncodingException;
+import javax.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	private final JwtTokenProvider jwtTokenProvider;
-	private final RedisTemplate redisTemplate;
-	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-	private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+	private final Logger log = LoggerFactory.getLogger(getClass());
+
+	private final JwtConfig jwtConfig;
 
 	public WebSecurityConfig(
-		JwtTokenProvider jwtTokenProvider,
-		RedisTemplate redisTemplate,
-		JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
-		JwtAccessDeniedHandler jwtAccessDeniedHandler
+		JwtConfig jwtConfig
 	) {
-		this.jwtTokenProvider = jwtTokenProvider;
-		this.redisTemplate = redisTemplate;
-		this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
-		this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
+		this.jwtConfig = jwtConfig;
 	}
 
 	@Override
@@ -45,10 +48,67 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	@Bean
+	public AccessDeniedHandler accessDeniedHandler() {
+		return (request, response, e) -> {
+			Authentication authentication = SecurityContextHolder
+				.getContext()
+				.getAuthentication();
+			Object principal = authentication != null ? authentication.getPrincipal() : null;
+			log.warn("{} is denied", principal, e);
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			response.setContentType("text/plain;charset=UTF-8");
+			response
+				.getWriter()
+				.write("ACCESS DENIED");
+			response
+				.getWriter()
+				.flush();
+			response
+				.getWriter()
+				.close();
+		};
+	}
+
+	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 
+	@Bean
+	public Jwt jwt() throws UnsupportedEncodingException {
+		return new Jwt(
+			jwtConfig.getIssuer(),
+			jwtConfig.getClientSecret(),
+			jwtConfig.getExpirySeconds()
+		);
+	}
+
+	@Bean
+	public JwtAuthenticationProvider jwtAuthenticationProvider(
+		@Lazy UserService userService,
+		Jwt jwt
+	) {
+		return new JwtAuthenticationProvider(jwt, userService);
+	}
+
+	@Autowired
+	public void configureAuthentication(
+		AuthenticationManagerBuilder builder,
+		JwtAuthenticationProvider authenticationProvider
+	) {
+		builder.authenticationProvider(authenticationProvider);
+	}
+
+	@Bean
+	@Override
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+		return super.authenticationManagerBean();
+	}
+
+	public JwtAuthenticationFilter jwtAuthenticationFilter() {
+		Jwt jwt = getApplicationContext().getBean(Jwt.class);
+		return new JwtAuthenticationFilter(jwtConfig.getHeader(), jwt);
+	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -59,22 +119,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.anyRequest()
 			.permitAll()
 			.and()
+			.formLogin()
+			.disable()
 			.csrf()
 			.disable()
+			.headers()
+			.disable()
 			.httpBasic()
+			.disable()
+			.rememberMe()
+			.disable()
+			.logout()
 			.disable()
 			.sessionManagement()
 			.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
 			.exceptionHandling()
-			.authenticationEntryPoint(jwtAuthenticationEntryPoint)
-			.accessDeniedHandler(jwtAccessDeniedHandler)
+			.accessDeniedHandler(accessDeniedHandler())
 			.and()
-			.addFilterBefore(
-				new JwtAuthenticationFilter(jwtTokenProvider, redisTemplate),
-				UsernamePasswordAuthenticationFilter.class
-			);
-		/*.exceptionHandling();*/
-
+			.addFilterAfter(jwtAuthenticationFilter(), SecurityContextPersistenceFilter.class)
+		;
 	}
+
 }
