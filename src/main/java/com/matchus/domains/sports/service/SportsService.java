@@ -7,11 +7,11 @@ import com.matchus.global.error.ErrorCode;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SportService {
+public class SportsService {
 
 	private final SportRepository sportRepository;
 
-	public SportService(SportRepository sportRepository) {
+	public SportsService(SportRepository sportRepository) {
 		this.sportRepository = sportRepository;
 	}
 
