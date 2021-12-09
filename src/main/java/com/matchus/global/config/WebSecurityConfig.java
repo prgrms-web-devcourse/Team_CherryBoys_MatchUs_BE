@@ -1,6 +1,6 @@
 package com.matchus.global.config;
 
-import com.matchus.domains.user.service.UserService;
+import com.matchus.domains.user.service.AuthService;
 import com.matchus.global.jwt.Jwt;
 import com.matchus.global.jwt.JwtAuthenticationFilter;
 import com.matchus.global.jwt.JwtAuthenticationProvider;
@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,8 +20,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 
@@ -70,11 +67,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
-
-	@Bean
 	public Jwt jwt() throws UnsupportedEncodingException {
 		return new Jwt(
 			jwtConfig.getIssuer(),
@@ -85,10 +77,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public JwtAuthenticationProvider jwtAuthenticationProvider(
-		@Lazy UserService userService,
+		AuthService authService,
 		Jwt jwt
 	) {
-		return new JwtAuthenticationProvider(jwt, userService);
+		return new JwtAuthenticationProvider(jwt, authService);
 	}
 
 	@Autowired

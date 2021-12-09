@@ -3,7 +3,7 @@ package com.matchus.global.jwt;
 import static org.apache.commons.lang3.ClassUtils.*;
 
 import com.matchus.domains.user.domain.User;
-import com.matchus.domains.user.service.UserService;
+import com.matchus.domains.user.service.AuthService;
 import java.util.List;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -16,13 +16,16 @@ import org.springframework.security.core.GrantedAuthority;
 public class JwtAuthenticationProvider implements AuthenticationProvider {
 
 	private final Jwt jwt;
+	private final AuthService authService;
 
-	private final UserService userService;
-
-	public JwtAuthenticationProvider(Jwt jwt, UserService userService) {
+	public JwtAuthenticationProvider(
+		Jwt jwt,
+		AuthService authService
+	) {
 		this.jwt = jwt;
-		this.userService = userService;
+		this.authService = authService;
 	}
+
 
 	@Override
 	public boolean supports(Class<?> authentication) {
@@ -41,7 +44,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
 	private Authentication processUserAuthentication(String principal, String credentials) {
 		try {
-			User user = userService.loadUserByUserEmail(principal, credentials);
+			User user = authService.loadUserByUserEmail(principal, credentials);
 			List<GrantedAuthority> authorities = user
 				.getGroup()
 				.getAuthorities();
