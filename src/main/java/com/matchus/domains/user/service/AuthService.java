@@ -25,7 +25,7 @@ public class AuthService {
 	@Transactional(readOnly = true)
 	public User loadUserByUserEmail(String principal, String credentials) {
 		User user = this.userRepository
-			.findByEmail(principal)
+			.findByEmailAndIsDisaffiliatedFalse(principal)
 			.orElseThrow(() -> new UserNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
 		user.checkPassword(passwordEncoder, credentials);
 		return user;

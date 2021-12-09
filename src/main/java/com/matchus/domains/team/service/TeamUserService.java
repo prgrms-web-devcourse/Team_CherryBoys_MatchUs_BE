@@ -1,10 +1,11 @@
 package com.matchus.domains.team.service;
 
 import com.matchus.domains.team.repository.TeamUserReppository;
-import com.matchus.domains.user.dto.UserGrade;
+import com.matchus.domains.user.dto.LoginResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TeamUserService {
@@ -15,13 +16,14 @@ public class TeamUserService {
 		this.teamUserReppository = teamUserReppository;
 	}
 
-	public List<UserGrade> getUserGrades(Long userId) {
+	@Transactional(readOnly = true)
+	public List<LoginResponse.UserGradeResponse> getUserGrades(Long userId) {
 		return teamUserReppository
 			.findAllByUserId(userId)
 			.stream()
-			.map(teamUser -> new UserGrade(teamUser
-											   .getTeam()
-											   .getId(), teamUser.getGrade()))
+			.map(teamUser -> new LoginResponse.UserGradeResponse(teamUser
+																	 .getTeam()
+																	 .getId(), teamUser.getGrade()))
 			.collect(Collectors.toList());
 	}
 
