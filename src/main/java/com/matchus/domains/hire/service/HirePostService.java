@@ -1,13 +1,13 @@
 package com.matchus.domains.hire.service;
 
 import com.matchus.domains.common.AgeGroup;
-import com.matchus.domains.common.service.SportsService;
 import com.matchus.domains.hire.domain.HirePost;
 import com.matchus.domains.hire.dto.request.HirePostRetrieveFilterRequest;
 import com.matchus.domains.hire.dto.response.HirePostListFilterResponseDto;
 import com.matchus.domains.hire.dto.response.HirePostRetrieveByFilterResponse;
 import com.matchus.domains.hire.repository.HirePostRepository;
 import com.matchus.domains.sports.domain.Sports;
+import com.matchus.domains.sports.service.SportService;
 import com.matchus.global.utils.PageRequest;
 import java.time.LocalDate;
 import java.util.List;
@@ -21,19 +21,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class HirePostService {
 
 	private final HirePostRepository hirePostRepository;
-	private final SportsService sportsService;
+	private final SportService sportService;
 
 	@Transactional(readOnly = true)
 	public HirePostRetrieveByFilterResponse retrieveHirePostsNoOffsetByFilter(
 		HirePostRetrieveFilterRequest filterRequest,
 		PageRequest pageRequest
 	) {
-		Sports sports = sportsService.findByName(filterRequest.getSports());
+		Sports sports = sportService.getSportsOrNull(filterRequest.getSports());
 		AgeGroup ageGroup = AgeGroup.findGroupOrNull(filterRequest.getAgeGroup());
 
 		List<HirePostListFilterResponseDto> hirePosts = hirePostRepository.findAllNoOffsetByFilter(
 			filterRequest.getPosition(),
-			sports.getId(),
+			sports == null ? null : sports.getId(),
 			ageGroup,
 			filterRequest.getCity(),
 			filterRequest.getRegion(),

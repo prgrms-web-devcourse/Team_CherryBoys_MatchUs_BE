@@ -6,10 +6,10 @@ import static org.assertj.core.api.Assertions.*;
 import com.matchus.domains.common.Address;
 import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.common.Period;
-import com.matchus.domains.common.repository.SportsRepository;
 import com.matchus.domains.hire.domain.HirePost;
 import com.matchus.domains.hire.dto.response.HirePostListFilterResponseDto;
 import com.matchus.domains.sports.domain.Sports;
+import com.matchus.domains.sports.repository.SportRepository;
 import com.matchus.domains.team.domain.Team;
 import com.matchus.domains.team.repository.TeamRepository;
 import com.matchus.global.config.QuerydslConfig;
@@ -38,7 +38,7 @@ public class HirePostRepositoryTest {
 	private TeamRepository teamRepository;
 
 	@Autowired
-	private SportsRepository sportsRepository;
+	private SportRepository sportRepository;
 
 	@DisplayName("용병 구인 게시글 첫 번째 페이지 조회 테스트")
 	@Test
@@ -114,7 +114,7 @@ public class HirePostRepositoryTest {
 		assertThat(hirePosts.get(9).getId()).isEqualTo(11L);
 	}
 
-	@DisplayName("용병 게시글 리스트 필터 조회 테스트")
+	@DisplayName("용병 게시글 리스트 필터 조회 성공 테스트")
 	@Test
 	void hirePostsByFilterTest() {
 		// given
@@ -129,8 +129,8 @@ public class HirePostRepositoryTest {
 		int size = 30;
 		PageRequest pageRequest = new PageRequest(lastId, size);
 
-		Sports firstSports = sportsRepository.save(new Sports(1L, "축구"));
-		Sports secondSports = sportsRepository.save(new Sports(2L, "풋살"));
+		Sports firstSports = sportRepository.save(new Sports(1L, "축구"));
+		Sports secondSports = sportRepository.save(new Sports(2L, "풋살"));
 		Team teamOne = teamRepository.save(
 			Team
 				.builder()
