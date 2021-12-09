@@ -5,13 +5,10 @@ import com.matchus.domains.sports.domain.Sports;
 import com.matchus.domains.team.domain.TeamUser;
 import com.matchus.global.domain.BaseEntity;
 import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.stream.Collectors;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -29,9 +26,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
@@ -40,7 +34,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Where(clause = "is_disaffiliated = false")
 @Entity
 @Table(name = "users")
-public class User extends BaseEntity implements UserDetails {
+public class User extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -72,9 +66,9 @@ public class User extends BaseEntity implements UserDetails {
 	@Column(nullable = false)
 	private Gender gender;
 
-	@Column(nullable = false)
-	@ElementCollection(fetch = FetchType.EAGER)
-	private List<String> roles = new ArrayList<>();
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "group_id")
+	private Group group;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
@@ -96,60 +90,28 @@ public class User extends BaseEntity implements UserDetails {
 		String email,
 		String name,
 		String password,
+		Group group,
 		String nickname,
 		String bio,
 		Gender gender,
-		List<String> roles,
 		AgeGroup ageGroup
 	) {
 		this.id = id;
 		this.sport = sport;
 		this.email = email;
+		this.group = group;
 		this.name = name;
 		this.password = password;
 		this.nickname = nickname;
 		this.bio = bio;
 		this.gender = gender;
-		this.roles = roles;
 		this.ageGroup = ageGroup;
 	}
 
 	public void checkPassword(PasswordEncoder passwordEncoder, String credentials) {
-		if (!passwordEncoder.matches(credentials, this.password)) {
+		if (!passwordEncoder.matches(credentials, password)) {
 			throw new IllegalArgumentException("Bad credential");
 		}
 	}
 
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return this.roles
-			.stream()
-			.map(SimpleGrantedAuthority::new)
-			.collect(Collectors.toList());
-	}
-
-	@Override
-	public String getUsername() {
-		return this.email;
-	}
-
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		return true;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return true;
-	}
 }
