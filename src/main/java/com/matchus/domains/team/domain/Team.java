@@ -1,6 +1,7 @@
 package com.matchus.domains.team.domain;
 
 import com.matchus.domains.common.AgeGroup;
+import com.matchus.domains.hire.domain.HirePost;
 import com.matchus.domains.sports.domain.Sports;
 import com.matchus.global.domain.BaseEntity;
 import java.math.BigDecimal;
@@ -68,6 +69,9 @@ public class Team extends BaseEntity {
 
 	@OneToMany(mappedBy = "team", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private List<TeamUser> teamUsers = new ArrayList<>();
+
+	@OneToMany(mappedBy = "team", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	private List<HirePost> hirePosts = new ArrayList<>();
 
 	@Builder
 	private Team(Long id, Sports sport, String name, String bio, String logo, AgeGroup ageGroup) {

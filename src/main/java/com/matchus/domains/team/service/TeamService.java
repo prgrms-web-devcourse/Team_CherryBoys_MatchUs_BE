@@ -1,7 +1,6 @@
 package com.matchus.domains.team.service;
 
 import com.matchus.domains.common.AgeGroup;
-import com.matchus.domains.common.service.SportsService;
 import com.matchus.domains.sports.domain.Sports;
 import com.matchus.domains.sports.service.SportsService;
 import com.matchus.domains.team.converter.TeamConverter;

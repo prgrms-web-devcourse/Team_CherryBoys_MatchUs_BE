@@ -3,17 +3,22 @@ package com.matchus.domains.hire.domain;
 import com.matchus.domains.common.Address;
 import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.common.Period;
+import com.matchus.domains.team.domain.Team;
 import com.matchus.global.domain.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
@@ -50,8 +55,45 @@ public class HirePost extends BaseEntity {
 	private String detail;
 
 	@Column(nullable = false, columnDefinition = "INT default 1")
-	private int hirePlayerNumber;
+	private int hirePlayerNumber = 1;
 
 	@Column(nullable = false, columnDefinition = "BOOLEAN default false")
-	private boolean isDeleted;
+	private boolean isDeleted = false;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(
+		name = "team_id",
+		referencedColumnName = "id"
+	)
+	private Team team;
+
+	@Builder
+	private HirePost(
+		Long id,
+		String title,
+		String position,
+		Address address,
+		Period period,
+		AgeGroup ageGroup,
+		String detail,
+		int hirePlayerNumber
+	) {
+		this.id = id;
+		this.title = title;
+		this.position = position;
+		this.address = address;
+		this.period = period;
+		this.ageGroup = ageGroup;
+		this.detail = detail;
+		this.hirePlayerNumber = hirePlayerNumber;
+	}
+
+	public void setTeam(Team team) {
+		if (this.team != null) {
+			this.team.getHirePosts().remove(this);
+		}
+
+		this.team = team;
+		team.getHirePosts().add(this);
+	}
 }
