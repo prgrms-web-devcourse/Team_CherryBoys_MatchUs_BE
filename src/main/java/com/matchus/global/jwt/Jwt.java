@@ -8,7 +8,9 @@ import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
+import lombok.Getter;
 
+@Getter
 public final class Jwt {
 
 	private final String issuer;
@@ -48,26 +50,6 @@ public final class Jwt {
 
 	public Claims verify(String token) throws JWTVerificationException {
 		return new Claims(jwtVerifier.verify(token));
-	}
-
-	public String getIssuer() {
-		return issuer;
-	}
-
-	public String getClientSecret() {
-		return clientSecret;
-	}
-
-	public int getExpirySeconds() {
-		return expirySeconds;
-	}
-
-	public Algorithm getAlgorithm() {
-		return algorithm;
-	}
-
-	public JWTVerifier getJwtVerifier() {
-		return jwtVerifier;
 	}
 
 	static public class Claims {
