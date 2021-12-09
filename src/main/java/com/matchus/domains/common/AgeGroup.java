@@ -29,4 +29,12 @@ public enum AgeGroup {
 			.findFirst()
 			.orElseThrow(() -> new AgeGroupNotFoundException(ErrorCode.AGEGROUP_NOT_FOUND));
 	}
+
+	public static AgeGroup findGroupOrNull(String name) {
+		return Arrays
+			.stream(values())
+			.filter(ageGroup -> ageGroup.getAgeGroup().equals(name))
+			.findFirst()
+			.orElse(null);
+	}
 }
