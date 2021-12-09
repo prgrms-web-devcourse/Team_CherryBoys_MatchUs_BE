@@ -1,4 +1,4 @@
-package com.matchus.domains.user;
+package com.matchus.domains.user.converter;
 
 import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.sports.domain.Sports;

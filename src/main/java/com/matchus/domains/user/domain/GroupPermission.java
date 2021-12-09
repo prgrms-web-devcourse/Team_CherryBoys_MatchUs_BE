@@ -12,7 +12,7 @@ import lombok.Getter;
 
 @Getter
 @Entity
-@Table(name = "group_permission")
+@Table(name = "group_permissions")
 @AllArgsConstructor
 public class GroupPermission {
 
