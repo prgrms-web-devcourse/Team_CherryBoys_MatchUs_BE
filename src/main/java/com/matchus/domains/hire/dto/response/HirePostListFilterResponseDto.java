@@ -1,10 +1,12 @@
 package com.matchus.domains.hire.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.matchus.domains.common.AgeGroup;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class HirePostListFilterResponseDto {
 
 	private Long postId;
