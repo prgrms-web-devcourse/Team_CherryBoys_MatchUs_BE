@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 import com.matchus.domains.common.AgeGroup;
-import com.matchus.domains.common.service.SportsService;
 import com.matchus.domains.sports.domain.Sports;
+import com.matchus.domains.sports.service.SportsService;
 import com.matchus.domains.team.converter.TeamConverter;
 import com.matchus.domains.team.domain.Team;
 import com.matchus.domains.team.dto.request.TeamModifyRequest;

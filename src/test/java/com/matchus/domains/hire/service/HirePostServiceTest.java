@@ -8,7 +8,7 @@ import com.matchus.domains.hire.dto.request.HirePostRetrieveFilterRequest;
 import com.matchus.domains.hire.dto.response.HirePostListFilterResponseDto;
 import com.matchus.domains.hire.dto.response.HirePostRetrieveByFilterResponse;
 import com.matchus.domains.hire.repository.HirePostRepository;
-import com.matchus.domains.sports.service.SportService;
+import com.matchus.domains.sports.service.SportsService;
 import com.matchus.global.utils.PageRequest;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -31,13 +31,13 @@ class HirePostServiceTest {
 	private HirePostRepository hirePostRepository;
 
 	@Mock
-	private SportService sportService;
+	private SportsService sportsService;
 
 	@DisplayName("용병 구인 게시글 필터 조회 성공 테스트")
 	@Test
 	void retrieveHirePostsNoOffsetByFilter() {
 		// given
-		given(sportService.getSportsOrNull(any())).willReturn(null);
+		given(sportsService.getSportsOrNull(any())).willReturn(null);
 
 		List<HirePostListFilterResponseDto> hirePosts = List.of(
 			new HirePostListFilterResponseDto(
