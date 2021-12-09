@@ -82,4 +82,10 @@ public class Team extends BaseEntity {
 		this.logo = logo;
 		this.ageGroup = ageGroup;
 	}
+
+	public void changeInfo(String logo, String bio, AgeGroup ageGroup) {
+		this.logo = logo;
+		this.bio = bio;
+		this.ageGroup = ageGroup;
+	}
 }

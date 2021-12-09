@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class SportService {
+public class SportsService {
 
 	private final SportRepository sportRepository;
 
-	public SportService(SportRepository sportRepository) {
+	public SportsService(SportRepository sportRepository) {
 		this.sportRepository = sportRepository;
 	}
 
