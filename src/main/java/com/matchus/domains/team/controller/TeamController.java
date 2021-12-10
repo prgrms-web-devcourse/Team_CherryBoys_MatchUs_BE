@@ -2,12 +2,15 @@ package com.matchus.domains.team.controller;
 
 import com.matchus.domains.team.dto.request.TeamCreateRequest;
 import com.matchus.domains.team.dto.request.TeamModifyRequest;
+import com.matchus.domains.team.dto.response.TeamCreateResponse;
 import com.matchus.domains.team.dto.response.TeamModifyResponse;
 import com.matchus.domains.team.service.TeamService;
+import com.matchus.global.jwt.JwtAuthentication;
 import com.matchus.global.response.ApiResponse;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,9 +30,14 @@ public class TeamController {
 		notes = "새로운 팀을 생성합니다."
 	)
 	@PostMapping
-	public ResponseEntity<Void> createTeam(@ModelAttribute TeamCreateRequest request) {
-		teamService.createTeam(request);
-		return ResponseEntity.ok().build();
+	public ResponseEntity<ApiResponse<TeamCreateResponse>> createTeam(
+		@ModelAttribute TeamCreateRequest request,
+		@AuthenticationPrincipal JwtAuthentication authentication
+	) {
+		String userEmail = authentication.username;
+		return ResponseEntity.ok(
+			ApiResponse.of(teamService.createTeam(request, userEmail))
+		);
 	}
 
 	@ApiOperation(
