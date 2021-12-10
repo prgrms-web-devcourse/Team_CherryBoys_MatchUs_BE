@@ -13,23 +13,23 @@ import lombok.Getter;
 
 @Getter
 @Entity
-@Table(name = "group_permissions")
+@Table(name = "grouping_permissions")
 @AllArgsConstructor
-public class GroupPermission {
+public class GroupingPermission {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "group_id")
-	private Group group;
+	@JoinColumn(name = "grouping_id")
+	private Grouping grouping;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "permission_id")
 	private Permission permission;
 
-	public GroupPermission() {
+	public GroupingPermission() {
 
 	}
 }
