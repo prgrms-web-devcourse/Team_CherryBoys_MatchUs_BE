@@ -9,11 +9,13 @@ import com.matchus.domains.team.domain.Team;
 import com.matchus.domains.team.domain.TeamUser;
 import com.matchus.domains.team.dto.request.TeamCreateRequest;
 import com.matchus.domains.team.dto.request.TeamModifyRequest;
+import com.matchus.domains.team.dto.response.TeamCreateResponse;
 import com.matchus.domains.team.dto.response.TeamModifyResponse;
 import com.matchus.domains.team.exception.TeamNotFoundException;
 import com.matchus.domains.team.repository.TeamRepository;
 import com.matchus.domains.team.repository.TeamUserRepository;
 import com.matchus.domains.user.domain.User;
+import com.matchus.domains.user.exception.UserNotFoundException;
 import com.matchus.domains.user.repository.UserRepository;
 import com.matchus.global.error.ErrorCode;
 import com.matchus.global.service.FileUploadService;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class TeamService {
 
@@ -32,16 +35,14 @@ public class TeamService {
 	private final TeamUserRepository teamUserRepository;
 	private final UserRepository userRepository;
 
-	@Transactional
-	public Team createTeam(TeamCreateRequest request) {
+	public TeamCreateResponse createTeam(TeamCreateRequest request, String userEmail) {
 		String logo = uploadService.uploadImage(request.getLogo());
 		Sports sports = sportsService
 			.getSports(request.getSports());
 
-		// todo: User 관련, 스프링 시큐리티 적용 시 수정 필요
 		User user = userRepository
-			.findById(1L)
-			.get();
+			.findByEmailAndIsDisaffiliatedFalse(userEmail)
+			.orElseThrow(() -> new UserNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
 
 		Team createdTeam = teamRepository.save(
 			teamConverter.convertToTeam(request, logo, sports)
@@ -54,10 +55,9 @@ public class TeamService {
 			.build();
 		teamUserRepository.save(teamUser);
 
-		return createdTeam;
+		return new TeamCreateResponse(createdTeam.getId());
 	}
 
-	@Transactional
 	public TeamModifyResponse modifyTeam(Long teamId, TeamModifyRequest request) {
 		String logo = uploadService.uploadImage(request.getLogo());
 		Team team = findExistingTeam(teamId);
