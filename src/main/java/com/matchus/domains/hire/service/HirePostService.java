@@ -58,6 +58,7 @@ public class HirePostService {
 		return hirePostRepository.findAllNoOffset(lastId, size);
 	}
 
+	@Transactional(readOnly = true)
 	public HirePostInfoResponse getHirePost(Long postId) {
 		HirePost hirePost = hirePostRepository
 			.findById(postId)
