@@ -22,6 +22,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -110,9 +113,27 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return new JwtAuthenticationFilter(jwtConfig.getHeader(), jwt);
 	}
 
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
+
+		configuration.addAllowedOrigin("http://localhost:3000");
+		configuration.addAllowedHeader("*");
+		configuration.addAllowedMethod("*");
+		configuration.setAllowCredentials(true);
+
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+		return source;
+	}
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
+			.httpBasic()
+			.disable()
+			.cors()
+			.and()
 			.authorizeRequests()
 			.antMatchers("/users/me")
 			.hasAnyRole("USER", "ADMIN")
@@ -124,8 +145,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.csrf()
 			.disable()
 			.headers()
-			.disable()
-			.httpBasic()
 			.disable()
 			.rememberMe()
 			.disable()
