@@ -5,9 +5,9 @@ import lombok.Getter;
 @Getter
 public class SuccessResponse {
 
-	private final boolean success;
+	private final boolean isduplicated;
 
-	public SuccessResponse(boolean success) {
-		this.success = success;
+	public SuccessResponse(boolean isduplicated) {
+		this.isduplicated = isduplicated;
 	}
 }

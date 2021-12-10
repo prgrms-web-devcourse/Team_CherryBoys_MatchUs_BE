@@ -7,7 +7,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
 public class LoginResponse {
@@ -24,9 +23,6 @@ public class LoginResponse {
 		this.userResponse = userResponse;
 	}
 
-
-	@RequiredArgsConstructor
-	@Builder
 	@Getter
 	public static class UserResponse {
 
@@ -40,6 +36,31 @@ public class LoginResponse {
 		private final String roleGroup;
 		private final BigDecimal mannerTemperature;
 		private final List<UserGradeResponse> userGradeResponse;
+
+		@Builder
+		public UserResponse(
+			Long id,
+			String sport,
+			String email,
+			String name,
+			String bio,
+			Gender gender,
+			AgeGroup ageGroup,
+			String roleGroup,
+			BigDecimal mannerTemperature,
+			List<UserGradeResponse> userGradeResponse
+		) {
+			this.id = id;
+			this.sport = sport;
+			this.email = email;
+			this.name = name;
+			this.bio = bio;
+			this.gender = gender;
+			this.ageGroup = ageGroup;
+			this.roleGroup = roleGroup;
+			this.mannerTemperature = mannerTemperature;
+			this.userGradeResponse = userGradeResponse;
+		}
 
 	}
 
