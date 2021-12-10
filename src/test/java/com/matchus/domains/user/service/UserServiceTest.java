@@ -15,7 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,18 +26,24 @@ class UserServiceTest {
 
 	@Mock
 	private UserRepository userRepository;
+
 	@Mock
 	private UserConverter userConverter;
+
 	@Mock
 	private GroupService groupService;
+
 	@Mock
 	private TeamUserService teamUserService;
+
 	@InjectMocks
 	private UserService userService;
+
 	@Mock
 	private SportsService sportsService;
+
 	@Spy
-	private BCryptPasswordEncoder passwordEncoder;
+	private PasswordEncoder passwordEncoder;
 
 	@Test
 	@DisplayName("이메일 중복 여부 테스트")
@@ -51,7 +57,7 @@ class UserServiceTest {
 		SuccessResponse successResponse = userService.checkEmail(email);
 
 		//then
-		assertThat(successResponse.isSuccess()).isTrue();
+		assertThat(successResponse.isIsduplicated()).isTrue();
 	}
 
 	@Test
@@ -66,7 +72,7 @@ class UserServiceTest {
 		SuccessResponse successResponse = userService.checkNickname(nickname);
 
 		//then
-		assertThat(successResponse.isSuccess()).isFalse();
+		assertThat(successResponse.isIsduplicated()).isFalse();
 	}
 
 }
