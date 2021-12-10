@@ -18,9 +18,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 @Getter
 @Entity
-@Table(name = "groups")
+@Table(name = "groupings")
 @Setter
-public class Group {
+public class Grouping {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,14 +29,14 @@ public class Group {
 	@Column(nullable = false)
 	private String name;
 
-	@OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE, orphanRemoval = true)
-	private List<GroupPermission> permissions = new ArrayList<>();
+	@OneToMany(mappedBy = "grouping", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	private List<GroupingPermission> permissions = new ArrayList<>();
 
-	public Group() {
+	public Grouping() {
 
 	}
 
-	public Group(Long id, String name) {
+	public Grouping(Long id, String name) {
 		this.id = id;
 		this.name = name;
 	}

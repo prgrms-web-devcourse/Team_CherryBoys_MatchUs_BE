@@ -67,8 +67,8 @@ public class User extends BaseEntity {
 	private Gender gender;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "group_id")
-	private Group group;
+	@JoinColumn(name = "grouping_id")
+	private Grouping grouping;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
@@ -90,7 +90,7 @@ public class User extends BaseEntity {
 		String email,
 		String name,
 		String password,
-		Group group,
+		Grouping grouping,
 		String nickname,
 		String bio,
 		Gender gender,
@@ -99,7 +99,7 @@ public class User extends BaseEntity {
 		this.id = id;
 		this.sport = sport;
 		this.email = email;
-		this.group = group;
+		this.grouping = grouping;
 		this.name = name;
 		this.password = password;
 		this.nickname = nickname;

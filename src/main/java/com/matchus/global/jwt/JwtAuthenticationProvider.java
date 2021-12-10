@@ -46,7 +46,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 		try {
 			User user = authService.loadUserByUserEmail(principal, credentials);
 			List<GrantedAuthority> authorities = user
-				.getGroup()
+				.getGrouping()
 				.getAuthorities();
 			String token = getToken(user.getEmail(), authorities);
 			JwtAuthenticationToken authenticated =

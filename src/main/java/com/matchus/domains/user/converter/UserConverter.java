@@ -3,7 +3,7 @@ package com.matchus.domains.user.converter;
 import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.sports.domain.Sports;
 import com.matchus.domains.user.domain.Gender;
-import com.matchus.domains.user.domain.Group;
+import com.matchus.domains.user.domain.Grouping;
 import com.matchus.domains.user.domain.User;
 import com.matchus.domains.user.dto.LoginResponse;
 import com.matchus.domains.user.dto.SignUpRequest;
@@ -14,14 +14,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserConverter {
 
-	public User convertToUser(SignUpRequest dto, Sports sports, Group group, String password) {
+	public User convertToUser(
+		SignUpRequest dto,
+		Sports sports,
+		Grouping grouping,
+		String password
+	) {
 		return User
 			.builder()
 			.name(dto.getName())
 			.email(dto.getEmail())
 			.password(password)
 			.nickname(dto.getNickname())
-			.group(group)
+			.grouping(grouping)
 			.bio(dto.getBio())
 			.gender(Gender.valueOf(dto.getGender()))
 			.ageGroup(AgeGroup.valueOf(dto.getAgeGroup()))
@@ -42,7 +47,7 @@ public class UserConverter {
 					   .getName())
 			.id(user.getId())
 			.roleGroup(user
-						   .getGroup()
+						   .getGrouping()
 						   .getName())
 			.bio(user.getBio())
 			.ageGroup(user.getAgeGroup())
