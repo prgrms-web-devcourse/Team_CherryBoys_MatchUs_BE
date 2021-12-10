@@ -1,0 +1,30 @@
+package com.matchus.domains.common;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Embeddable
+public class Period {
+
+	@Column(nullable = false, columnDefinition = "DATE")
+	private LocalDate date;
+
+	@Column(nullable = false, columnDefinition = "TIME")
+	private LocalTime startTime;
+
+	@Column(nullable = false, columnDefinition = "TIME")
+	private LocalTime endTime;
+
+	public Period(LocalDate date, LocalTime startTime, LocalTime endTime) {
+		this.date = date;
+		this.startTime = startTime;
+		this.endTime = endTime;
+	}
+}
