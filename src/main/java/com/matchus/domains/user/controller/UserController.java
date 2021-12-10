@@ -1,66 +1,53 @@
 package com.matchus.domains.user.controller;
 
-import com.matchus.domains.team.service.TeamUserService;
-import com.matchus.domains.user.domain.User;
+import com.matchus.domains.common.dto.SuccessResponse;
 import com.matchus.domains.user.dto.LoginRequest;
 import com.matchus.domains.user.dto.LoginResponse;
 import com.matchus.domains.user.dto.SignUpRequest;
-import com.matchus.domains.user.dto.UserGrade;
 import com.matchus.domains.user.service.UserService;
-import com.matchus.global.jwt.JwtAuthentication;
-import com.matchus.global.jwt.JwtAuthenticationToken;
 import com.matchus.global.response.ApiResponse;
-import java.util.List;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping(value = "/users")
 public class UserController {
 
 	private final UserService userService;
-	private final AuthenticationManager authenticationManager;
-	private final TeamUserService teamUserService;
 
 	public UserController(
-		UserService userService,
-		AuthenticationManager authenticationManager,
-		TeamUserService teamUserService
+		UserService userService
 	) {
 		this.userService = userService;
-		this.authenticationManager = authenticationManager;
-		this.teamUserService = teamUserService;
 	}
 
-	@PostMapping(path = "/users/login")
+	@PostMapping(path = "/login")
 	public ResponseEntity<ApiResponse<LoginResponse>> login(@RequestBody LoginRequest request) {
-		JwtAuthenticationToken authToken = new JwtAuthenticationToken(
-			request.getEmail(), request.getPassword());
-		Authentication resultToken = authenticationManager.authenticate(authToken);
-		JwtAuthentication authentication = (JwtAuthentication) resultToken.getPrincipal();
-		User user = (User) resultToken.getDetails();
 
-		List<UserGrade> userGrades = teamUserService.getUserGrades(user.getId());
-
-		return ResponseEntity.ok(ApiResponse.of(LoginResponse
-													.builder()
-													.token(authentication.token)
-													.group(user
-															   .getGroup()
-															   .getName())
-													.userGrades(userGrades)
-													.build()));
+		return ResponseEntity.ok(ApiResponse.of(userService.login(request)));
 	}
 
-	@PostMapping(path = "/users")
+	@PostMapping
 	public ResponseEntity<Void> signUp(@RequestBody SignUpRequest request) {
 		userService.signUp(request);
 		return ResponseEntity
 			.ok()
 			.build();
+	}
+
+	@GetMapping("/email-check/{email}")
+	public ResponseEntity<ApiResponse<SuccessResponse>> checkEmail(@PathVariable String email) {
+		return ResponseEntity.ok(ApiResponse.of(userService.checkEmail(email)));
+	}
+
+	@GetMapping("/nickname-check/{nickname}")
+	public ResponseEntity<ApiResponse<SuccessResponse>> checkNickname(@PathVariable String nickname) {
+		return ResponseEntity.ok(ApiResponse.of(userService.checkNickname(nickname)));
 	}
 
 }

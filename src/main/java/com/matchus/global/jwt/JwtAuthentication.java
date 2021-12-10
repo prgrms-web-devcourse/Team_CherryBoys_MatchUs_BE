@@ -6,7 +6,10 @@ public class JwtAuthentication {
 
 	public final String username;
 
-	JwtAuthentication(String token, String username) {
+	public JwtAuthentication(
+		String token,
+		String username
+	) {
 		this.token = token;
 		this.username = username;
 	}
