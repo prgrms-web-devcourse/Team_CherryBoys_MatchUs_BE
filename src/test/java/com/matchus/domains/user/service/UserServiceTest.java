@@ -14,12 +14,15 @@ import com.matchus.domains.user.domain.Group;
 import com.matchus.domains.user.domain.User;
 import com.matchus.domains.user.dto.SignUpRequest;
 import com.matchus.domains.user.repository.UserRepository;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,6 +48,9 @@ class UserServiceTest {
 
 	@Mock
 	private SportsService sportsService;
+
+	@Spy
+	private PasswordEncoder passwordEncoder;
 
 	@Test
 	@DisplayName("이메일 중복 여부 테스트")
@@ -80,15 +86,34 @@ class UserServiceTest {
 	@DisplayName("유저 탈퇴 요청 테스트")
 	void deactivateUser() {
 		//given
+		final Sports sports = new Sports(1L, "축구");
+
+		final Group group = new Group(1L, "USER_GROUP");
+
+		final User user = User
+			.builder()
+			.id(1L)
+			.name("오재원")
+			.email("abc@abc.com")
+			.nickname("채리")
+			.password("password")
+			.gender(Gender.MAN)
+			.ageGroup(AgeGroup.TWENTIES)
+			.sport(sports)
+			.bio("안녕세요")
+			.group(group)
+			.build();
+
 		final String email = "abc@gmail.com";
+
 		given(userRepository.findByEmailAndIsDisaffiliatedFalse(any(String.class)))
-			.willReturn(any());
+			.willReturn(Optional.of(user));
 
 		//when
 		userService.deactivateUser(email);
 
 		//then
-		verify(userRepository, times(1)).save(any(User.class));
+		verify(userRepository, times(1)).findByEmailAndIsDisaffiliatedFalse(any(String.class));
 
 	}
 
