@@ -21,7 +21,7 @@ class UserControllerTest extends BaseIntegrationTest {
 
 	@Test
 	@DisplayName("이메일 중복 여부 테스트")
-	void checkEmail() throws Exception {
+	void checkEmailTest() throws Exception {
 
 		String email = "sun77@gmail.com";
 
@@ -41,7 +41,7 @@ class UserControllerTest extends BaseIntegrationTest {
 
 	@Test
 	@DisplayName("닉네임중복 여부 테스트")
-	void checkNickname() throws Exception {
+	void checkNicknameTest() throws Exception {
 
 		String nickName = "삐약삐약";
 

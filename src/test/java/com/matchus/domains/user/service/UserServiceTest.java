@@ -54,7 +54,7 @@ class UserServiceTest {
 
 	@Test
 	@DisplayName("이메일 중복 여부 테스트")
-	void checkEmail() {
+	void checkEmailTest() {
 		//given
 		final String email = "abc@gmail.com";
 		given(userRepository.existsByEmail(any(String.class)))
@@ -69,7 +69,7 @@ class UserServiceTest {
 
 	@Test
 	@DisplayName("닉네임중복 여부 테스트")
-	void checkNickname() {
+	void checkNicknameTest() {
 		//given
 		final String nickname = "머쓱머쓱";
 		given(userRepository.existsByNickname(nickname))
@@ -84,7 +84,7 @@ class UserServiceTest {
 
 	@Test
 	@DisplayName("유저 탈퇴 요청 테스트")
-	void deactivateUser() {
+	void deactivateUserTest() {
 		//given
 		final Sports sports = new Sports(1L, "축구");
 
@@ -119,7 +119,7 @@ class UserServiceTest {
 
 	@Test
 	@DisplayName("회원가입 성공 테스트")
-	void SignUpTest() {
+	void signUpTest() {
 		//given
 		final SignUpRequest signUpRequest = SignUpRequest
 			.builder()
