@@ -5,7 +5,9 @@ import com.matchus.domains.common.AgeGroup;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import lombok.Getter;
 
+@Getter
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class HirePostInfoResponse {
 
