@@ -114,4 +114,8 @@ public class User extends BaseEntity {
 		}
 	}
 
+	public void deactivateUser() {
+		this.isDisaffiliated = true;
+	}
+
 }

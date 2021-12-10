@@ -5,8 +5,11 @@ import com.matchus.domains.user.dto.LoginRequest;
 import com.matchus.domains.user.dto.LoginResponse;
 import com.matchus.domains.user.dto.SignUpRequest;
 import com.matchus.domains.user.service.UserService;
+import com.matchus.global.jwt.JwtAuthentication;
 import com.matchus.global.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,6 +51,17 @@ public class UserController {
 	@GetMapping("/nickname-check/{nickname}")
 	public ResponseEntity<ApiResponse<SuccessResponse>> checkNickname(@PathVariable String nickname) {
 		return ResponseEntity.ok(ApiResponse.of(userService.checkNickname(nickname)));
+	}
+
+	@DeleteMapping("/me")
+	public ResponseEntity<Void> deactivateUser(
+		@AuthenticationPrincipal JwtAuthentication authentication
+	) {
+		userService.deactivateUser(authentication.username);
+
+		return ResponseEntity
+			.ok()
+			.build();
 	}
 
 }

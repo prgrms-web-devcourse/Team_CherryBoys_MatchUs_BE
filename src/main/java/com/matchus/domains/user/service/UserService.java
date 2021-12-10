@@ -10,7 +10,9 @@ import com.matchus.domains.user.domain.User;
 import com.matchus.domains.user.dto.LoginRequest;
 import com.matchus.domains.user.dto.LoginResponse;
 import com.matchus.domains.user.dto.SignUpRequest;
+import com.matchus.domains.user.exception.UserNotFoundException;
 import com.matchus.domains.user.repository.UserRepository;
+import com.matchus.global.error.ErrorCode;
 import com.matchus.global.jwt.JwtAuthentication;
 import com.matchus.global.jwt.JwtAuthenticationToken;
 import java.util.List;
@@ -84,6 +86,19 @@ public class UserService {
 			user.getId());
 
 		return userConverter.convertToLoginResponse(user, authentication, userGrades);
+	}
+
+	@Transactional
+	public void deactivateUser(String email) {
+		User user = findActiveUser(email);
+
+		user.deactivateUser();
+	}
+
+	public User findActiveUser(String email) {
+		return userRepository
+			.findByEmailAndIsDisaffiliatedFalse(email)
+			.orElseThrow(() -> new UserNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
 	}
 
 }
