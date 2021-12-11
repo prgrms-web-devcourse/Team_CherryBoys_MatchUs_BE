@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -36,4 +37,12 @@ public class MemberWaiting {
 		referencedColumnName = "id"
 	)
 	private TeamWaiting teamWaiting;
+
+	@Builder
+	public MemberWaiting(Long id, User user, TeamWaiting teamWaiting) {
+		this.id = id;
+		this.user = user;
+		this.teamWaiting = teamWaiting;
+	}
+
 }
