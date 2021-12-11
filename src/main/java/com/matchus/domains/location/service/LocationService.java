@@ -13,23 +13,18 @@ import com.matchus.domains.location.repository.RegionRepository;
 import com.matchus.global.error.ErrorCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.matchus.domains.location.converter.LocationConverter;
+import com.matchus.domains.location.dto.response.LocationResult;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @Service
 public class LocationService {
 
 	private final CityRepository cityRepository;
 	private final RegionRepository regionRepository;
 	private final GroundRepository groundRepository;
-
-	public LocationService(
-		CityRepository cityRepository,
-		RegionRepository regionRepository,
-		GroundRepository groundRepository
-	) {
-		this.cityRepository = cityRepository;
-		this.regionRepository = regionRepository;
-		this.groundRepository = groundRepository;
-	}
+	private final LocationConverter locationConverter;
 
 	@Transactional(readOnly = true)
 	public Location getLocation(Long cityId, Long regionId, Long groundId) {
@@ -47,6 +42,16 @@ public class LocationService {
 			.orElseThrow(() -> new GroundNotfoundException(ErrorCode.ENTITY_NOT_FOUND));
 
 		return new Location(city, region, ground);
+    
+  }
 
+  @Transactional(readOnly = true)
+	public LocationResult getLocations() {
+		return locationConverter.convertToLocationResult(
+			cityRepository.findAll(),
+			regionRepository.findAll(),
+			groundRepository.findAll()
+		);
 	}
+  
 }
