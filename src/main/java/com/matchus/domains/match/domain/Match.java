@@ -19,6 +19,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
@@ -76,5 +77,33 @@ public class Match extends BaseEntity {
 	private MatchStatus status;
 
 	@Column(nullable = false, columnDefinition = "BOOLEAN default false")
-	private boolean isCancelled;
+	private boolean isCancelled = false;
+
+	@Builder
+	public Match(
+		Long id,
+		Team homeTeam,
+		Team awayTeam,
+		Sports sport,
+		Address address,
+		Period period,
+		AgeGroup ageGroup,
+		int cost,
+		String detail,
+		MatchStatus status,
+		boolean isCancelled
+	) {
+		this.id = id;
+		this.homeTeam = homeTeam;
+		this.awayTeam = awayTeam;
+		this.sport = sport;
+		this.address = address;
+		this.period = period;
+		this.ageGroup = ageGroup;
+		this.cost = cost;
+		this.detail = detail;
+		this.status = status;
+		this.isCancelled = isCancelled;
+	}
+
 }
