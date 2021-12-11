@@ -15,7 +15,6 @@ import com.matchus.domains.team.dto.request.TeamModifyRequest;
 import com.matchus.domains.team.dto.response.TeamCreateResponse;
 import com.matchus.domains.team.dto.response.TeamModifyResponse;
 import com.matchus.domains.team.repository.TeamRepository;
-import com.matchus.domains.team.repository.TeamUserRepository;
 import com.matchus.domains.user.domain.Gender;
 import com.matchus.domains.user.domain.User;
 import com.matchus.domains.user.repository.UserRepository;
