@@ -4,7 +4,6 @@ import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.common.Period;
 import com.matchus.domains.location.domain.Location;
 import com.matchus.domains.match.domain.Match;
-import com.matchus.domains.match.domain.MatchStatus;
 import com.matchus.domains.match.dto.MatchCreateRequest;
 import com.matchus.domains.sports.domain.Sports;
 import com.matchus.domains.team.domain.Team;
@@ -30,7 +29,6 @@ public class MatchConverter {
 			.ageGroup(AgeGroup.findGroup(request.getAgeGroup()))
 			.cost(request.getCost())
 			.detail(request.getDetail())
-			.status(MatchStatus.WAITING)
 			.build();
 	}
 

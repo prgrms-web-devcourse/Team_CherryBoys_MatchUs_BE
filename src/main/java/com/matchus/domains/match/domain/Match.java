@@ -94,7 +94,7 @@ public class Match extends BaseEntity {
 	private String detail;
 
 	@Enumerated(EnumType.STRING)
-	private MatchStatus status;
+	private MatchStatus status = MatchStatus.WAITING;
 
 	@Column(nullable = false, columnDefinition = "BOOLEAN default false")
 	private boolean isCancelled = false;
@@ -111,9 +111,7 @@ public class Match extends BaseEntity {
 		Period period,
 		AgeGroup ageGroup,
 		int cost,
-		String detail,
-		MatchStatus status,
-		boolean isCancelled
+		String detail
 	) {
 		this.id = id;
 		this.homeTeam = homeTeam;
@@ -126,8 +124,6 @@ public class Match extends BaseEntity {
 		this.ageGroup = ageGroup;
 		this.cost = cost;
 		this.detail = detail;
-		this.status = status;
-		this.isCancelled = isCancelled;
 	}
 
 }

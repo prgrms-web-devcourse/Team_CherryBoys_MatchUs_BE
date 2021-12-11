@@ -1,12 +1,9 @@
 package com.matchus.domains.match.service;
 
-import com.matchus.domains.match.domain.Match;
 import com.matchus.domains.match.domain.MemberWaiting;
 import com.matchus.domains.match.domain.TeamWaiting;
-import com.matchus.domains.match.domain.WaitingType;
 import com.matchus.domains.match.repository.MemberWaitingReponsitory;
 import com.matchus.domains.match.repository.TeamWaitingReponsitory;
-import com.matchus.domains.team.domain.Team;
 import com.matchus.domains.user.domain.User;
 import com.matchus.domains.user.exception.UserNotFoundException;
 import com.matchus.domains.user.repository.UserRepository;
@@ -22,7 +19,6 @@ public class MemberWaitingService {
 	private final TeamWaitingReponsitory teamWaitingReponsitory;
 	private final UserRepository userRepository;
 
-
 	public MemberWaitingService(
 		MemberWaitingReponsitory memberWaitingReponsitory,
 		TeamWaitingReponsitory teamWaitingReponsitory,
@@ -34,13 +30,7 @@ public class MemberWaitingService {
 	}
 
 	@Transactional
-	public void saveMemberWaitings(Team team, List<Long> userIds, Match match, WaitingType type) {
-		TeamWaiting teamWaiting = teamWaitingReponsitory.save(TeamWaiting
-																  .builder()
-																  .team(team)
-																  .match(match)
-																  .type(type)
-																  .build());
+	public void saveMemberWaitings(List<Long> userIds, TeamWaiting teamWaiting) {
 
 		for (Long id : userIds) {
 			User user = userRepository

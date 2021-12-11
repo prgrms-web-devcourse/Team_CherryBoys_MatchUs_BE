@@ -31,7 +31,7 @@ public class LocationService {
 		this.groundRepository = groundRepository;
 	}
 
-	@Transactional
+	@Transactional(readOnly = true)
 	public Location getLocation(Long cityId, Long regionId, Long groundId) {
 
 		City city = cityRepository

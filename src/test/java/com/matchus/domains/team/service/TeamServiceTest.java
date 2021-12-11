@@ -15,6 +15,7 @@ import com.matchus.domains.team.dto.request.TeamModifyRequest;
 import com.matchus.domains.team.dto.response.TeamCreateResponse;
 import com.matchus.domains.team.dto.response.TeamModifyResponse;
 import com.matchus.domains.team.repository.TeamRepository;
+import com.matchus.domains.team.repository.TeamUserRepository;
 import com.matchus.domains.user.domain.Gender;
 import com.matchus.domains.user.domain.User;
 import com.matchus.domains.user.repository.UserRepository;
@@ -32,7 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
-class TeamServiceTest<TeamUserRepository> {
+class TeamServiceTest {
 
 	@InjectMocks
 	private TeamService teamService;
@@ -50,7 +51,7 @@ class TeamServiceTest<TeamUserRepository> {
 	private FileUploadService uploadService;
 
 	@Mock
-	private com.matchus.domains.team.repository.TeamUserRepository teamUserRepository;
+	private TeamUserRepository teamUserRepository;
 
 	@Mock
 	private UserRepository userRepository;
