@@ -84,7 +84,7 @@ public class UserService {
 		List<LoginResponse.UserGradeResponse> userGrades = teamUserService.getUserGrades(
 			user.getId());
 
-		return userConverter.convertToLoginResponse(user, authentication, userGrades);
+		return userConverter.convertToLoginResponse(user, authentication.token, userGrades);
 	}
 
 	@Transactional
@@ -98,6 +98,17 @@ public class UserService {
 		return userRepository
 			.findByEmailAndIsDisaffiliatedFalse(email)
 			.orElseThrow(() -> new UserNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
+	}
+
+	public LoginResponse reissue(String email, String token) {
+
+		User user = findActiveUserByEmail(email);
+
+		List<LoginResponse.UserGradeResponse> userGrades = teamUserService.getUserGrades(
+			user.getId());
+
+		return userConverter.convertToLoginResponse(user, token, userGrades);
+
 	}
 
 }
