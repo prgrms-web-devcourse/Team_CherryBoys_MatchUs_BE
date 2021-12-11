@@ -5,7 +5,7 @@ import com.matchus.domains.sports.domain.Sports;
 import com.matchus.domains.sports.service.SportsService;
 import com.matchus.domains.team.service.TeamUserService;
 import com.matchus.domains.user.converter.UserConverter;
-import com.matchus.domains.user.domain.Group;
+import com.matchus.domains.user.domain.Grouping;
 import com.matchus.domains.user.domain.User;
 import com.matchus.domains.user.dto.LoginRequest;
 import com.matchus.domains.user.dto.LoginResponse;
@@ -29,7 +29,7 @@ public class UserService {
 	private final SportsService sportsService;
 	private final UserRepository userRepository;
 	private final UserConverter userConverter;
-	private final GroupService groupService;
+	private final GroupingService groupingService;
 	private final AuthenticationManager authenticationManager;
 	private final TeamUserService teamUserService;
 	private final PasswordEncoder passwordEncoder;
@@ -39,7 +39,7 @@ public class UserService {
 		SportsService sportsService,
 		UserRepository userRepository,
 		UserConverter userConverter,
-		GroupService groupService,
+		GroupingService groupingService,
 		AuthenticationManager authenticationManager,
 		TeamUserService teamUserService,
 		PasswordEncoder passwordEncoder
@@ -47,7 +47,7 @@ public class UserService {
 		this.sportsService = sportsService;
 		this.userRepository = userRepository;
 		this.userConverter = userConverter;
-		this.groupService = groupService;
+		this.groupingService = groupingService;
 		this.authenticationManager = authenticationManager;
 		this.teamUserService = teamUserService;
 		this.passwordEncoder = passwordEncoder;
@@ -56,11 +56,11 @@ public class UserService {
 	@Transactional
 	public void signUp(SignUpRequest signUpRequest) {
 		Sports sports = sportsService.getSports(signUpRequest.getSports());
-		Group group = groupService.findByName("USER_GROUP");
+		Grouping grouping = groupingService.findByName("USER_GROUP");
 		String password = passwordEncoder.encode(signUpRequest.getPassword());
 
 		User user = userRepository.save(
-			userConverter.convertToUser(signUpRequest, sports, group, password));
+			userConverter.convertToUser(signUpRequest, sports, grouping, password));
 	}
 
 	public SuccessResponse checkEmail(String email) {

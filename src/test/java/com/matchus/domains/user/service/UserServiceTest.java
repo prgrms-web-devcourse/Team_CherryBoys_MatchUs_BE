@@ -10,7 +10,7 @@ import com.matchus.domains.sports.service.SportsService;
 import com.matchus.domains.team.service.TeamUserService;
 import com.matchus.domains.user.converter.UserConverter;
 import com.matchus.domains.user.domain.Gender;
-import com.matchus.domains.user.domain.Group;
+import com.matchus.domains.user.domain.Grouping;
 import com.matchus.domains.user.domain.User;
 import com.matchus.domains.user.dto.SignUpRequest;
 import com.matchus.domains.user.repository.UserRepository;
@@ -38,7 +38,7 @@ class UserServiceTest {
 	private UserConverter userConverter;
 
 	@Mock
-	private GroupService groupService;
+	private GroupingService groupingService;
 
 	@Mock
 	private TeamUserService teamUserService;
@@ -88,7 +88,7 @@ class UserServiceTest {
 		//given
 		final Sports sports = new Sports(1L, "축구");
 
-		final Group group = new Group(1L, "USER_GROUP");
+		final Grouping grouping = new Grouping(1L, "USER_GROUP");
 
 		final User user = User
 			.builder()
@@ -101,7 +101,7 @@ class UserServiceTest {
 			.ageGroup(AgeGroup.TWENTIES)
 			.sport(sports)
 			.bio("안녕세요")
-			.group(group)
+			.grouping(grouping)
 			.build();
 
 		final String email = "abc@gmail.com";
@@ -135,7 +135,7 @@ class UserServiceTest {
 
 		final Sports sports = new Sports(1L, "축구");
 
-		final Group group = new Group(1L, "USER_GROUP");
+		final Grouping grouping = new Grouping(1L, "USER_GROUP");
 
 		final User user = User
 			.builder()
@@ -148,13 +148,13 @@ class UserServiceTest {
 			.ageGroup(AgeGroup.TWENTIES)
 			.sport(sports)
 			.bio("안녕세요")
-			.group(group)
+			.grouping(grouping)
 			.build();
 
 		given(sportsService.getSports(any(String.class)))
 			.willReturn(sports);
-		given(groupService.findByName(any(String.class)))
-			.willReturn(group);
+		given(groupingService.findByName(any(String.class)))
+			.willReturn(grouping);
 
 		given(userConverter.convertToUser(any(), any(),
 										  any(), any()
