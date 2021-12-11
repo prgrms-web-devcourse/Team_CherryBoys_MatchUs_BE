@@ -64,4 +64,11 @@ public class UserController {
 			.build();
 	}
 
+	@GetMapping("/reissue")
+	public ResponseEntity<ApiResponse<LoginResponse>> reissue(@AuthenticationPrincipal JwtAuthentication authentication) {
+
+		return ResponseEntity.ok(
+			ApiResponse.of(userService.reissue(authentication.username, authentication.token)));
+	}
+
 }
