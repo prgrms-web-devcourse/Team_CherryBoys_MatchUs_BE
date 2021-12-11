@@ -7,7 +7,6 @@ import com.matchus.domains.user.domain.Grouping;
 import com.matchus.domains.user.domain.User;
 import com.matchus.domains.user.dto.LoginResponse;
 import com.matchus.domains.user.dto.SignUpRequest;
-import com.matchus.global.jwt.JwtAuthentication;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
@@ -36,7 +35,7 @@ public class UserConverter {
 
 	public LoginResponse convertToLoginResponse(
 		User user,
-		JwtAuthentication authentication,
+		String token,
 		List<LoginResponse.UserGradeResponse> userGrades
 	) {
 
@@ -60,7 +59,7 @@ public class UserConverter {
 
 		return LoginResponse
 			.builder()
-			.token(authentication.token)
+			.token(token)
 			.userResponse(userResponse)
 			.build();
 	}
