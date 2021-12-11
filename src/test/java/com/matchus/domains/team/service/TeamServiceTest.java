@@ -32,7 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
-class TeamServiceTest {
+class TeamServiceTest<TeamUserRepository> {
 
 	@InjectMocks
 	private TeamService teamService;
@@ -50,7 +50,7 @@ class TeamServiceTest {
 	private FileUploadService uploadService;
 
 	@Mock
-	private TeamUserRepository teamUserRepository;
+	private com.matchus.domains.team.repository.TeamUserRepository teamUserRepository;
 
 	@Mock
 	private UserRepository userRepository;
@@ -97,7 +97,8 @@ class TeamServiceTest {
 			.build();
 		given(sportsService.getSports(any())).willReturn(sport);
 		given(uploadService.uploadImage(any())).willReturn(logo);
-		given(userRepository.findByEmailAndIsDisaffiliatedFalse(any())).willReturn(Optional.of(user));
+		given(userRepository.findByEmailAndIsDisaffiliatedFalse(any())).willReturn(
+			Optional.of(user));
 		given(teamConverter.convertToTeam(any(), any(), any())).willReturn(team);
 		given(teamRepository.save(any())).willReturn(team);
 		given(teamUserRepository.save(any())).willReturn(teamUser);
