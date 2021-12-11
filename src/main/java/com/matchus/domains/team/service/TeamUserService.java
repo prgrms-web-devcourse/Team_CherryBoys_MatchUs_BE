@@ -1,6 +1,6 @@
 package com.matchus.domains.team.service;
 
-import com.matchus.domains.team.repository.TeamUserReppository;
+import com.matchus.domains.team.repository.TeamUserRepository;
 import com.matchus.domains.user.dto.LoginResponse;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,15 +10,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class TeamUserService {
 
-	private final TeamUserReppository teamUserReppository;
+	private final TeamUserRepository teamUserRepository;
 
-	public TeamUserService(TeamUserReppository teamUserReppository) {
-		this.teamUserReppository = teamUserReppository;
+	public TeamUserService(TeamUserRepository teamUserRepository) {
+		this.teamUserRepository = teamUserRepository;
 	}
 
 	@Transactional(readOnly = true)
 	public List<LoginResponse.UserGradeResponse> getUserGrades(Long userId) {
-		return teamUserReppository
+		return teamUserRepository
 			.findAllByUserId(userId)
 			.stream()
 			.map(teamUser -> new LoginResponse.UserGradeResponse(teamUser
