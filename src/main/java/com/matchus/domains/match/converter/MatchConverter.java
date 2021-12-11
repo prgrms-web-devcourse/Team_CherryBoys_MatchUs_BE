@@ -1,6 +1,8 @@
 package com.matchus.domains.match.converter;
 
 import com.matchus.domains.common.AgeGroup;
+import com.matchus.domains.common.Period;
+import com.matchus.domains.location.domain.Location;
 import com.matchus.domains.match.domain.Match;
 import com.matchus.domains.match.domain.MatchStatus;
 import com.matchus.domains.match.dto.MatchCreateRequest;
@@ -11,12 +13,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class MatchConverter {
 
-	public Match convertToMatch(MatchCreateRequest request, Team team, Sports sport) {
+	public Match convertToMatch(
+		MatchCreateRequest request,
+		Team team,
+		Sports sport,
+		Location location
+	) {
 		return Match
 			.builder()
 			.homeTeam(team)
 			.sport(sport)
-			.address(new Address(request.getCity(), request.getRegion(), request.getGroundName()))
+			.city(location.getCity())
+			.region(location.getRegion())
+			.ground(location.getGround())
 			.period(new Period(request.getDate(), request.getStartTime(), request.getEndTime()))
 			.ageGroup(AgeGroup.findGroup(request.getAgeGroup()))
 			.cost(request.getCost())
@@ -24,4 +33,5 @@ public class MatchConverter {
 			.status(MatchStatus.WAITING)
 			.build();
 	}
+
 }

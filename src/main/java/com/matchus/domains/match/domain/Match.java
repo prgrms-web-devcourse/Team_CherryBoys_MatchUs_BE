@@ -1,8 +1,10 @@
 package com.matchus.domains.match.domain;
 
-import com.matchus.domains.common.Address;
 import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.common.Period;
+import com.matchus.domains.location.domain.City;
+import com.matchus.domains.location.domain.Ground;
+import com.matchus.domains.location.domain.Region;
 import com.matchus.domains.sports.domain.Sports;
 import com.matchus.domains.team.domain.Team;
 import com.matchus.global.domain.BaseEntity;
@@ -58,8 +60,26 @@ public class Match extends BaseEntity {
 	)
 	private Sports sport;
 
-	@Embedded
-	private Address address;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(
+		name = "city_id",
+		referencedColumnName = "id"
+	)
+	private City city;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(
+		name = "region_id",
+		referencedColumnName = "id"
+	)
+	private Region region;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(
+		name = "ground_id",
+		referencedColumnName = "id"
+	)
+	private Ground ground;
 
 	@Embedded
 	private Period period;
@@ -85,7 +105,9 @@ public class Match extends BaseEntity {
 		Team homeTeam,
 		Team awayTeam,
 		Sports sport,
-		Address address,
+		City city,
+		Region region,
+		Ground ground,
 		Period period,
 		AgeGroup ageGroup,
 		int cost,
@@ -97,7 +119,9 @@ public class Match extends BaseEntity {
 		this.homeTeam = homeTeam;
 		this.awayTeam = awayTeam;
 		this.sport = sport;
-		this.address = address;
+		this.city = city;
+		this.region = region;
+		this.ground = ground;
 		this.period = period;
 		this.ageGroup = ageGroup;
 		this.cost = cost;

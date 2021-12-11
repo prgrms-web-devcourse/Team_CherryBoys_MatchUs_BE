@@ -13,13 +13,13 @@ public class MatchCreateRequest {
 
 	private final Long registerTeamId;
 
-	private final String sportsName;
+	private final String sports;
 
-	private final String city;
+	private final Long city;
 
-	private final String region;
+	private final Long region;
 
-	private final String groundName;
+	private final Long ground;
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private final LocalDate date;
@@ -36,6 +36,6 @@ public class MatchCreateRequest {
 
 	private final String detail;
 
-	private final List<Long> userIds;
+	private final List<Long> players;
 
 }
