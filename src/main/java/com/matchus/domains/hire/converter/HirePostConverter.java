@@ -20,9 +20,9 @@ public class HirePostConverter {
 
 		Long postId = hirePost.getId();
 		String title = hirePost.getTitle();
-		String city = hirePost.getAddress().getCity();
-		String region = hirePost.getAddress().getRegion();
-		String groundName = hirePost.getAddress().getGroundName();
+		String city = hirePost.getCity().getName();
+		String region = hirePost.getRegion().getName();
+		String groundName = hirePost.getGround().getName();
 		String position = hirePost.getPosition();
 		AgeGroup ageGroup = hirePost.getAgeGroup();
 		int hirePlayerNumber = hirePost.getHirePlayerNumber();

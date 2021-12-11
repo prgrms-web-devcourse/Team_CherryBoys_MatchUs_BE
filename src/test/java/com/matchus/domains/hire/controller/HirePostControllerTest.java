@@ -6,13 +6,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.matchus.domains.common.Address;
 import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.common.Period;
 import com.matchus.domains.hire.dto.response.HirePostInfoResponse;
 import com.matchus.domains.hire.dto.response.HirePostListFilterResponseDto;
 import com.matchus.domains.hire.dto.response.HirePostRetrieveByFilterResponse;
 import com.matchus.domains.hire.service.HirePostService;
+import com.matchus.domains.location.domain.City;
+import com.matchus.domains.location.domain.Ground;
+import com.matchus.domains.location.domain.Region;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -142,7 +144,9 @@ class HirePostControllerTest {
 		Long postId = 1L;
 		String title = "제목";
 		String position = "윙백";
-		Address address = new Address("서울", "광진구", "아차산풋살장");
+		City city = new City(1L, "서울특별시");
+		Region region = new Region(1L, city, "강남구");
+		Ground ground = new Ground(1L, region, "대륭축구장");
 		Period period = new Period(
 			LocalDate.parse("2021-12-10"),
 			LocalTime.of(12, 30),
@@ -160,9 +164,9 @@ class HirePostControllerTest {
 		HirePostInfoResponse response = new HirePostInfoResponse(
 			postId,
 			title,
-			address.getCity(),
-			address.getRegion(),
-			address.getGroundName(),
+			city.getName(),
+			region.getName(),
+			ground.getName(),
 			position,
 			ageGroup,
 			hirePlayerNumber,

@@ -15,9 +15,9 @@ public interface HirePostRepositoryCustom {
 		String position,
 		Long sportsId,
 		AgeGroup ageGroup,
-		String city,
-		String region,
-		String groundName,
+		Long cityId,
+		Long regionId,
+		Long groundId,
 		LocalDate date,
 		PageRequest pageRequest
 	);
