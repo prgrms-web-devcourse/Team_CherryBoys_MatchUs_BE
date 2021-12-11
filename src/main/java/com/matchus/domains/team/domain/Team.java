@@ -2,11 +2,16 @@ package com.matchus.domains.team.domain;
 
 import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.hire.domain.HirePost;
+import com.matchus.domains.match.domain.Match;
 import com.matchus.domains.sports.domain.Sports;
+import com.matchus.domains.tag.domain.TeamTag;
 import com.matchus.global.domain.BaseEntity;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -58,9 +63,6 @@ public class Team extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private AgeGroup ageGroup;
 
-	@Column(nullable = false, columnDefinition = "INT default 1")
-	private int memberCount = 1;
-
 	@Column(nullable = false, columnDefinition = "DECIMAL(4,1) default '36.5'", precision = 4, scale = 1)
 	private BigDecimal mannerTemperature = new BigDecimal("36.5");
 
@@ -72,6 +74,15 @@ public class Team extends BaseEntity {
 
 	@OneToMany(mappedBy = "team", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private List<HirePost> hirePosts = new ArrayList<>();
+
+	@OneToMany(mappedBy = "homeTeam", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	private List<Match> homeMatches = new ArrayList<>();
+
+	@OneToMany(mappedBy = "awayTeam", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	private List<Match> awayMatches = new ArrayList<>();
+
+	@OneToMany(mappedBy = "team", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	private List<TeamTag> teamTags = new ArrayList<>();
 
 	@Builder
 	private Team(Long id, Sports sport, String name, String bio, String logo, AgeGroup ageGroup) {
@@ -87,5 +98,16 @@ public class Team extends BaseEntity {
 		this.logo = logo;
 		this.bio = bio;
 		this.ageGroup = ageGroup;
+	}
+
+	public int getMatchCount() {
+		return this.getHomeMatches().size() + this.getAwayMatches().size();
+	}
+
+	public List<Match> getAllMatches() {
+		return Stream
+			.concat(this.getHomeMatches().stream(), this.getAwayMatches().stream())
+			.sorted(Comparator.comparing(Match::getId).reversed())
+			.collect(Collectors.toList());
 	}
 }
