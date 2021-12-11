@@ -5,16 +5,16 @@ import java.util.List;
 import lombok.Getter;
 
 @Getter
-public class Location {
+public class LocationResult {
 
-	private final List<Location.City> cities;
-	private final List<Location.Region> regions;
-	private final List<Location.Ground> grounds;
+	private final List<LocationResult.City> cities;
+	private final List<LocationResult.Region> regions;
+	private final List<LocationResult.Ground> grounds;
 
-	public Location(
-		List<Location.City> cities,
-		List<Location.Region> regions,
-		List<Location.Ground> grounds
+	public LocationResult(
+		List<LocationResult.City> cities,
+		List<LocationResult.Region> regions,
+		List<LocationResult.Ground> grounds
 	) {
 		this.cities = cities;
 		this.regions = regions;

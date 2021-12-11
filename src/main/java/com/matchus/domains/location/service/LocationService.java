@@ -1,7 +1,7 @@
 package com.matchus.domains.location.service;
 
 import com.matchus.domains.location.converter.LocationConverter;
-import com.matchus.domains.location.dto.response.LocationResponse;
+import com.matchus.domains.location.dto.response.LocationResult;
 import com.matchus.domains.location.repository.CityRepository;
 import com.matchus.domains.location.repository.GroundRepository;
 import com.matchus.domains.location.repository.RegionRepository;
@@ -17,8 +17,8 @@ public class LocationService {
 	private final GroundRepository groundRepository;
 	private final LocationConverter locationConverter;
 
-	public LocationResponse getLocations() {
-		return locationConverter.convertToLocationResponse(
+	public LocationResult getLocations() {
+		return locationConverter.convertToLocationResult(
 			cityRepository.findAll(),
 			regionRepository.findAll(),
 			groundRepository.findAll()

@@ -1,6 +1,6 @@
 package com.matchus.domains.location.controller;
 
-import com.matchus.domains.location.dto.response.LocationResponse;
+import com.matchus.domains.location.dto.response.LocationResult;
 import com.matchus.domains.location.service.LocationService;
 import com.matchus.global.response.ApiResponse;
 import io.swagger.annotations.ApiOperation;
@@ -20,7 +20,7 @@ public class LocationController {
 		notes = "시/도, 시/군/구, 구장 리스트를 조회합니다."
 	)
 	@GetMapping("/locations")
-	public ResponseEntity<ApiResponse<LocationResponse>> getLocation() {
+	public ResponseEntity<ApiResponse<LocationResult>> getLocation() {
 		return ResponseEntity.ok(
 			ApiResponse.of(locationService.getLocations())
 		);
