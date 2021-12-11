@@ -28,8 +28,8 @@ public class UserConverter {
 			.nickname(dto.getNickname())
 			.grouping(grouping)
 			.bio(dto.getBio())
-			.gender(Gender.valueOf(dto.getGender()))
-			.ageGroup(AgeGroup.valueOf(dto.getAgeGroup()))
+			.gender(Gender.findGender(dto.getGender()))
+			.ageGroup(AgeGroup.findGroup(dto.getName()))
 			.sport(sports)
 			.build();
 	}

@@ -34,7 +34,6 @@ public class UserService {
 	private final TeamUserService teamUserService;
 	private final PasswordEncoder passwordEncoder;
 
-
 	public UserService(
 		SportsService sportsService,
 		UserRepository userRepository,
@@ -90,12 +89,12 @@ public class UserService {
 
 	@Transactional
 	public void deactivateUser(String email) {
-		User user = findActiveUser(email);
+		User user = findActiveUserByEmail(email);
 
 		user.deactivateUser();
 	}
 
-	public User findActiveUser(String email) {
+	public User findActiveUserByEmail(String email) {
 		return userRepository
 			.findByEmailAndIsDisaffiliatedFalse(email)
 			.orElseThrow(() -> new UserNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
