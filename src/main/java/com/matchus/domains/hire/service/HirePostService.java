@@ -40,9 +40,9 @@ public class HirePostService {
 			filterRequest.getPosition(),
 			sports == null ? null : sports.getId(),
 			ageGroup,
-			filterRequest.getCity(),
-			filterRequest.getRegion(),
-			filterRequest.getGroundName(),
+			filterRequest.getCityId(),
+			filterRequest.getRegionId(),
+			filterRequest.getGroundId(),
 			filterRequest.getDate() == null ? null : LocalDate.parse(filterRequest.getDate()),
 			pageRequest
 		);

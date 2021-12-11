@@ -10,9 +10,9 @@ public class HirePostRetrieveFilterRequest {
 	private String position;
 	private String sports;
 	private String ageGroup;
-	private String city;
-	private String region;
-	private String groundName;
+	private Long cityId;
+	private Long regionId;
+	private Long groundId;
 	private String date;
 
 	public HirePostRetrieveFilterRequest() {
@@ -23,17 +23,17 @@ public class HirePostRetrieveFilterRequest {
 		String position,
 		String sports,
 		String ageGroup,
-		String city,
-		String region,
-		String groundName,
+		Long cityId,
+		Long regionId,
+		Long groundId,
 		String date
 	) {
 		this.position = position;
 		this.sports = sports;
 		this.ageGroup = ageGroup;
-		this.city = city;
-		this.region = region;
-		this.groundName = groundName;
+		this.cityId = cityId;
+		this.regionId = regionId;
+		this.groundId = groundId;
 		this.date = date;
 	}
 }
