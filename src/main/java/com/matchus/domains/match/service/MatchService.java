@@ -8,17 +8,27 @@ import com.matchus.domains.match.domain.TeamWaiting;
 import com.matchus.domains.match.domain.WaitingType;
 import com.matchus.domains.match.dto.MatchCreateRequest;
 import com.matchus.domains.match.dto.MatchCreateResponse;
+import com.matchus.domains.match.dto.MatchInfoResponse;
+import com.matchus.domains.match.dto.MatchMember;
+import com.matchus.domains.match.exception.MatchNotFoundException;
 import com.matchus.domains.match.repository.MatchRepository;
 import com.matchus.domains.sports.domain.Sports;
 import com.matchus.domains.sports.service.SportsService;
+import com.matchus.domains.team.domain.Grade;
 import com.matchus.domains.team.domain.Team;
+import com.matchus.domains.team.exception.TeamUserNotFoundException;
 import com.matchus.domains.team.service.TeamService;
+import com.matchus.domains.user.domain.User;
+import com.matchus.global.error.ErrorCode;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MatchService {
 
 	private final MatchRepository matchRepository;
@@ -54,6 +64,69 @@ public class MatchService {
 		memberWaitingService.saveMemberWaitings(matchCreateRequest.getPlayers(), teamWaiting);
 
 		return new MatchCreateResponse(match.getId());
+	}
+
+	public MatchInfoResponse getMatchInfo(Long matchId) {
+		Match match = findExistingMatch(matchId);
+
+		MatchInfoResponse.TeamInfoResponsse regiserTeamInfo = buildTeamInfoResponse(
+			match, WaitingType.REGISTER);
+
+		switch (match.getStatus()) {
+			case WAITING:
+				return matchConverter.convertToMatchInfoResponse(
+					match, regiserTeamInfo, new MatchInfoResponse.TeamInfoResponsse());
+			default:
+				return matchConverter.convertToMatchInfoResponse(
+					match, regiserTeamInfo, buildTeamInfoResponse(match, WaitingType.SELECTED));
+		}
+	}
+
+	private MatchInfoResponse.TeamInfoResponsse buildTeamInfoResponse(
+		Match match,
+		WaitingType waitingType
+	) {
+
+		TeamWaiting teamWaiting = teamWaitingService.findByMatchIdAndTypeTeamWaiting(
+			match.getId(), waitingType);
+
+		Team team = teamWaiting.getTeam();
+
+		List<MatchMember> matchMembers = memberWaitingService
+			.getMemberWaitings(
+				teamWaiting)
+			.stream()
+			.map(memberWaiting -> new MatchMember(
+				memberWaiting
+					.getUser()
+					.getId(), memberWaiting
+					.getUser()
+					.getName()))
+			.collect(Collectors.toList());
+
+		User captain = team
+			.getTeamUsers()
+			.stream()
+			.filter(member -> member
+				.getGrade()
+				.equals(Grade.CAPTAIN))
+			.findFirst()
+			.orElseThrow(() -> new TeamUserNotFoundException(ErrorCode.ENTITY_NOT_FOUND))
+			.getUser();
+
+		return new MatchInfoResponse.TeamInfoResponsse(
+			team.getId(), team.getLogo(), team.getName(), captain.getId(),
+			captain.getName(), team.getMannerTemperature(), matchMembers
+		);
+
+	}
+
+	public Match findExistingMatch(Long matchId) {
+		return matchRepository
+			.findById(matchId)
+			.orElseThrow(
+				() -> new MatchNotFoundException(ErrorCode.ENTITY_NOT_FOUND)
+			);
 	}
 
 }

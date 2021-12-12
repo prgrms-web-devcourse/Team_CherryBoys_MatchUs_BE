@@ -5,6 +5,7 @@ import com.matchus.domains.common.Period;
 import com.matchus.domains.location.domain.Location;
 import com.matchus.domains.match.domain.Match;
 import com.matchus.domains.match.dto.MatchCreateRequest;
+import com.matchus.domains.match.dto.MatchInfoResponse;
 import com.matchus.domains.sports.domain.Sports;
 import com.matchus.domains.team.domain.Team;
 import org.springframework.stereotype.Component;
@@ -30,6 +31,44 @@ public class MatchConverter {
 			.cost(request.getCost())
 			.detail(request.getDetail())
 			.build();
+	}
+
+	public MatchInfoResponse convertToMatchInfoResponse(
+		Match match,
+		MatchInfoResponse.TeamInfoResponsse registerTeamResponsse,
+		MatchInfoResponse.TeamInfoResponsse applyTeamResponse
+	) {
+
+		return MatchInfoResponse
+			.builder()
+			.matchId(match.getId())
+			.city(match
+					  .getCity()
+					  .getName())
+			.region(match
+						.getRegion()
+						.getName())
+			.ground(match
+						.getGround()
+						.getName())
+			.date(match
+					  .getPeriod()
+					  .getDate())
+			.startTime(match
+						   .getPeriod()
+						   .getStartTime())
+			.endTime(match
+						 .getPeriod()
+						 .getEndTime())
+			.ageGroup(match
+						  .getAgeGroup()
+						  .getAgeGroup())
+			.cost(match.getCost())
+			.detail(match.getDetail())
+			.registerTeamResponsse(registerTeamResponsse)
+			.applyTeamResponse(applyTeamResponse)
+			.build();
+
 	}
 
 }
