@@ -130,7 +130,6 @@ class UserServiceTest {
 			.gender("MAN")
 			.ageGroup("20대")
 			.sports("축구")
-			.bio("안녕세요")
 			.build();
 
 		final Sports sports = new Sports(1L, "축구");
