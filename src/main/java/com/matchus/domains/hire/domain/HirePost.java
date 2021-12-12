@@ -116,7 +116,7 @@ public class HirePost extends BaseEntity {
 		team.getHirePosts().add(this);
 	}
 
-	public void updateHirePost(
+	public void changeInfo(
 		String position,
 		City city,
 		Region region,

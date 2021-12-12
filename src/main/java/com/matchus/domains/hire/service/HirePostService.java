@@ -99,7 +99,7 @@ public class HirePostService {
 		AgeGroup ageGroup = AgeGroup.findGroup(request.getAgeGroup());
 
 		HirePost hirePost = findHirePost(postId);
-		hirePost.updateHirePost(
+		hirePost.changeInfo(
 			request.getPosition(),
 			location.getCity(),
 			location.getRegion(),
