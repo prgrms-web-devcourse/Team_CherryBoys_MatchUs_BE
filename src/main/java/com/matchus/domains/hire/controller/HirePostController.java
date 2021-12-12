@@ -13,7 +13,9 @@ import com.matchus.global.utils.PageRequest;
 import io.swagger.annotations.ApiOperation;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -86,5 +88,15 @@ public class HirePostController {
 		return ResponseEntity.ok(
 			ApiResponse.of(hirePostService.modifyHirePost(postId, request))
 		);
+	}
+
+	@ApiOperation(
+		value = "용병 구인 게시글 삭제",
+		notes = "용병 구인 게시글을 삭제합니다."
+	)
+	@DeleteMapping("/{postId}")
+	public ResponseEntity<Void> removeHirePost(@PathVariable Long postId) {
+		hirePostService.removeHirePost(postId);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }
