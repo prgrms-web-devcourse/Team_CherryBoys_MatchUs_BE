@@ -98,7 +98,8 @@ class TeamServiceTest {
 			.build();
 		given(sportsService.getSports(any())).willReturn(sport);
 		given(uploadService.uploadImage(any())).willReturn(logo);
-		given(userRepository.findByEmailAndIsDisaffiliatedFalse(any())).willReturn(Optional.of(user));
+		given(userRepository.findByEmailAndIsDisaffiliatedFalse(any())).willReturn(
+			Optional.of(user));
 		given(teamConverter.convertToTeam(any(), any(), any())).willReturn(team);
 		given(teamRepository.save(any())).willReturn(team);
 		given(teamUserRepository.save(any())).willReturn(teamUser);
