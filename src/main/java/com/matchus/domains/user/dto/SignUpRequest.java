@@ -13,7 +13,6 @@ public class SignUpRequest {
 	private final String ageGroup;
 	private final String sports;
 	private final String gender;
-	private final String bio;
 
 	@Builder
 	public SignUpRequest(
@@ -23,8 +22,7 @@ public class SignUpRequest {
 		String password,
 		String ageGroup,
 		String sports,
-		String gender,
-		String bio
+		String gender
 	) {
 		this.name = name;
 		this.email = email;
@@ -33,7 +31,6 @@ public class SignUpRequest {
 		this.ageGroup = ageGroup;
 		this.sports = sports;
 		this.gender = gender;
-		this.bio = bio;
 	}
 
 }

@@ -26,9 +26,8 @@ public class UserConverter {
 			.password(password)
 			.nickname(dto.getNickname())
 			.grouping(grouping)
-			.bio(dto.getBio())
 			.gender(Gender.findGender(dto.getGender()))
-			.ageGroup(AgeGroup.findGroup(dto.getName()))
+			.ageGroup(AgeGroup.findGroup(dto.getAgeGroup()))
 			.sport(sports)
 			.build();
 	}
@@ -41,20 +40,19 @@ public class UserConverter {
 
 		LoginResponse.UserResponse userResponse = LoginResponse.UserResponse
 			.builder()
-			.sport(user
-					   .getSport()
-					   .getName())
 			.id(user.getId())
+			.name(user.getName())
 			.roleGroup(user
 						   .getGrouping()
 						   .getName())
 			.bio(user.getBio())
+			.nickname(user.getNickname())
 			.ageGroup(user.getAgeGroup())
-			.email(user.getEmail())
 			.gender(user.getGender())
-			.mannerTemperature(user.getMannerTemperature())
+			.sports(user
+						.getSport()
+						.getName())
 			.userGradeResponse(userGrades)
-			.name(user.getName())
 			.build();
 
 		return LoginResponse

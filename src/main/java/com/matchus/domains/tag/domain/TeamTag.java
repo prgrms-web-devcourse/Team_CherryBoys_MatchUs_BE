@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -40,4 +41,12 @@ public class TeamTag {
 
 	@Column(nullable = false, columnDefinition = "INT default 0")
 	private int tagCount;
+
+	@Builder
+	public TeamTag(Long id, Tag tag, Team team, int tagCount) {
+		this.id = id;
+		this.tag = tag;
+		this.team = team;
+		this.tagCount = tagCount;
+	}
 }

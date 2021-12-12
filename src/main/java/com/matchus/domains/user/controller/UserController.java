@@ -31,10 +31,9 @@ public class UserController {
 	}
 
 	@ApiOperation(
-		value = "회원가입 요청",
-		notes = "사용자가 회원가입을 요청합니다."
+		value = "로그인 요청",
+		notes = "회원가입한 사용자가 로그인을 요청합니다."
 	)
-
 	@PostMapping(path = "/login")
 	public ResponseEntity<ApiResponse<LoginResponse>> login(@RequestBody LoginRequest request) {
 
@@ -42,8 +41,8 @@ public class UserController {
 	}
 
 	@ApiOperation(
-		value = "로그인 요청",
-		notes = "회원가입한 사용자가 로그인을 요청합니다."
+		value = "회원가입 요청",
+		notes = "사용자가 회원가입을 요청합니다."
 	)
 	@PostMapping
 	public ResponseEntity<Void> signUp(@RequestBody SignUpRequest request) {
