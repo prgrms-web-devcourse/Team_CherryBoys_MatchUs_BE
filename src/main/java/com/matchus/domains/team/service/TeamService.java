@@ -14,8 +14,8 @@ import com.matchus.domains.team.domain.TeamUser;
 import com.matchus.domains.team.dto.request.TeamCreateRequest;
 import com.matchus.domains.team.dto.request.TeamModifyRequest;
 import com.matchus.domains.team.dto.response.TeamCreateResponse;
-import com.matchus.domains.team.dto.response.TeamMembersResponse;
 import com.matchus.domains.team.dto.response.TeamInfoResponse;
+import com.matchus.domains.team.dto.response.TeamMembersResponse;
 import com.matchus.domains.team.dto.response.TeamModifyResponse;
 import com.matchus.domains.team.exception.TeamNotFoundException;
 import com.matchus.domains.team.repository.TeamRepository;
@@ -26,8 +26,8 @@ import com.matchus.domains.user.repository.UserRepository;
 import com.matchus.global.error.ErrorCode;
 import com.matchus.global.service.FileUploadService;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -86,7 +86,7 @@ public class TeamService {
 			);
 	}
 
-  @Transactional(readOnly = true)
+	@Transactional(readOnly = true)
 	public TeamInfoResponse getTeamInfo(Long teamId) {
 		Team team = findExistingTeam(teamId);
 		List<String> tagNames = teamTagService
@@ -107,7 +107,7 @@ public class TeamService {
 
 		return teamConverter.convertToTeamInfoResponse(team, tagNames, captain);
 	}
-  
+
 	@Transactional(readOnly = true)
 	public TeamMembersResponse getTeamMembers(Long teamId) {
 		List<TeamUser> teamUsers = teamUserRepository.findAllByTeamIdAndGradeNot(
