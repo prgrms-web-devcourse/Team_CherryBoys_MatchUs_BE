@@ -21,7 +21,7 @@ import org.hibernate.annotations.Where;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE users SET is_disaffiliated = true WHERE id=?")
+@SQLDelete(sql = "UPDATE team_users SET is_disaffiliated = true WHERE id=?")
 @Where(clause = "is_disaffiliated = false")
 @Entity
 @Table(name = "team_users")

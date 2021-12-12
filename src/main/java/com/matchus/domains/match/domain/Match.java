@@ -29,7 +29,7 @@ import org.hibernate.annotations.Where;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE users SET is_cancelled = true WHERE id=?")
+@SQLDelete(sql = "UPDATE matches SET is_cancelled = true WHERE id=?")
 @Where(clause = "is_cancelled = false")
 @Entity
 @Table(name = "matches")
