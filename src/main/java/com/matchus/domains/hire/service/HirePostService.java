@@ -1,12 +1,15 @@
 package com.matchus.domains.hire.service;
 
 import com.matchus.domains.common.AgeGroup;
+import com.matchus.domains.common.Period;
 import com.matchus.domains.hire.converter.HirePostConverter;
 import com.matchus.domains.hire.domain.HirePost;
+import com.matchus.domains.hire.dto.request.HirePostModifyRequest;
 import com.matchus.domains.hire.dto.request.HirePostRetrieveFilterRequest;
 import com.matchus.domains.hire.dto.request.HirePostWriteRequest;
 import com.matchus.domains.hire.dto.response.HirePostInfoResponse;
 import com.matchus.domains.hire.dto.response.HirePostListFilterResponseDto;
+import com.matchus.domains.hire.dto.response.HirePostModifyResponse;
 import com.matchus.domains.hire.dto.response.HirePostRetrieveByFilterResponse;
 import com.matchus.domains.hire.dto.response.HirePostWriteResponse;
 import com.matchus.domains.hire.exception.HirePostNotFoundException;
@@ -68,11 +71,7 @@ public class HirePostService {
 
 	@Transactional(readOnly = true)
 	public HirePostInfoResponse getHirePost(Long postId) {
-		HirePost hirePost = hirePostRepository
-			.findById(postId)
-			.orElseThrow(() -> new HirePostNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
-
-		return hirePostConverter.convertToHirePostInfoResponse(hirePost);
+		return hirePostConverter.convertToHirePostInfoResponse(findHirePost(postId));
 	}
 
 	public HirePostWriteResponse writeHirePost(HirePostWriteRequest request) {
@@ -89,5 +88,35 @@ public class HirePostService {
 
 		HirePost savedHirePost = hirePostRepository.save(hirePost);
 		return new HirePostWriteResponse(savedHirePost.getId());
+	}
+
+	public HirePostModifyResponse modifyHirePost(Long postId, HirePostModifyRequest request) {
+		Location location = locationService.getLocation(
+			request.getCityId(),
+			request.getRegionId(),
+			request.getGroundId()
+		);
+		AgeGroup ageGroup = AgeGroup.findGroup(request.getAgeGroup());
+
+		HirePost hirePost = findHirePost(postId);
+		hirePost.updateHirePost(
+			request.getPosition(),
+			location.getCity(),
+			location.getRegion(),
+			location.getGround(),
+			new Period(request.getDate(), request.getStartTime(), request.getEndTime()),
+			ageGroup,
+			request.getDetail(),
+			request.getHirePlayerNumber()
+		);
+
+		return new HirePostModifyResponse(hirePost.getId());
+	}
+
+	@Transactional(readOnly = true)
+	public HirePost findHirePost(Long postId) {
+		return hirePostRepository
+			.findById(postId)
+			.orElseThrow(() -> new HirePostNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
 	}
 }
