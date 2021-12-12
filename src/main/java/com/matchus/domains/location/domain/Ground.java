@@ -1,6 +1,6 @@
-package com.matchus.domains.match.domain;
+package com.matchus.domains.location.domain;
 
-import com.matchus.domains.user.domain.User;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -10,15 +10,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "member_waitings")
-public class MemberWaiting {
+@Table(name = "grounds")
+public class Ground {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,23 +25,17 @@ public class MemberWaiting {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(
-		name = "user_id",
+		name = "region_id",
 		referencedColumnName = "id"
 	)
-	private User user;
+	private Region region;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(
-		name = "team_waiting_id",
-		referencedColumnName = "id"
-	)
-	private TeamWaiting teamWaiting;
+	@Column(nullable = false)
+	private String name;
 
-	@Builder
-	public MemberWaiting(Long id, User user, TeamWaiting teamWaiting) {
+	public Ground(Long id, Region region, String name) {
 		this.id = id;
-		this.user = user;
-		this.teamWaiting = teamWaiting;
+		this.region = region;
+		this.name = name;
 	}
-
 }

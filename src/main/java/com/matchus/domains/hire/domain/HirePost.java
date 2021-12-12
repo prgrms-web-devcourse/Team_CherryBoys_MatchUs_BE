@@ -1,8 +1,10 @@
 package com.matchus.domains.hire.domain;
 
-import com.matchus.domains.common.Address;
 import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.common.Period;
+import com.matchus.domains.location.domain.City;
+import com.matchus.domains.location.domain.Ground;
+import com.matchus.domains.location.domain.Region;
 import com.matchus.domains.team.domain.Team;
 import com.matchus.global.domain.BaseEntity;
 import javax.persistence.Column;
@@ -42,8 +44,26 @@ public class HirePost extends BaseEntity {
 	@Column(length = 50)
 	private String position;
 
-	@Embedded
-	private Address address;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(
+		name = "city_id",
+		referencedColumnName = "id"
+	)
+	private City city;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(
+		name = "region_id",
+		referencedColumnName = "id"
+	)
+	private Region region;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(
+		name = "ground_id",
+		referencedColumnName = "id"
+	)
+	private Ground ground;
 
 	@Embedded
 	private Period period;
@@ -72,7 +92,9 @@ public class HirePost extends BaseEntity {
 		Long id,
 		String title,
 		String position,
-		Address address,
+		City city,
+		Region region,
+		Ground ground,
 		Period period,
 		AgeGroup ageGroup,
 		String detail,
@@ -81,7 +103,9 @@ public class HirePost extends BaseEntity {
 		this.id = id;
 		this.title = title;
 		this.position = position;
-		this.address = address;
+		this.city = city;
+		this.region = region;
+		this.ground = ground;
 		this.period = period;
 		this.ageGroup = ageGroup;
 		this.detail = detail;
