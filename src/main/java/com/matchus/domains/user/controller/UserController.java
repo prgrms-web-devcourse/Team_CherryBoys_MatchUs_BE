@@ -1,9 +1,9 @@
 package com.matchus.domains.user.controller;
 
 import com.matchus.domains.common.dto.SuccessResponse;
-import com.matchus.domains.user.dto.LoginRequest;
-import com.matchus.domains.user.dto.LoginResponse;
-import com.matchus.domains.user.dto.SignUpRequest;
+import com.matchus.domains.user.dto.request.LoginRequest;
+import com.matchus.domains.user.dto.request.SignUpRequest;
+import com.matchus.domains.user.dto.response.LoginResponse;
 import com.matchus.domains.user.service.UserService;
 import com.matchus.global.jwt.JwtAuthentication;
 import com.matchus.global.response.ApiResponse;

@@ -1,4 +1,4 @@
-package com.matchus.domains.user.dto;
+package com.matchus.domains.user.dto.response;
 
 import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.team.domain.Grade;

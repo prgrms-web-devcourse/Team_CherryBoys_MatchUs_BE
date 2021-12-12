@@ -12,7 +12,7 @@ import com.matchus.domains.user.converter.UserConverter;
 import com.matchus.domains.user.domain.Gender;
 import com.matchus.domains.user.domain.Grouping;
 import com.matchus.domains.user.domain.User;
-import com.matchus.domains.user.dto.SignUpRequest;
+import com.matchus.domains.user.dto.request.SignUpRequest;
 import com.matchus.domains.user.repository.UserRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;

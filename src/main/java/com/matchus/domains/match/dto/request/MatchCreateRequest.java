@@ -1,4 +1,4 @@
-package com.matchus.domains.match.dto;
+package com.matchus.domains.match.dto.request;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

@@ -1,4 +1,4 @@
-package com.matchus.domains.user.dto;
+package com.matchus.domains.user.dto.request;
 
 import lombok.Getter;
 

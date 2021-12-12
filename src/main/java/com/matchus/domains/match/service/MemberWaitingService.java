@@ -3,7 +3,6 @@ package com.matchus.domains.match.service;
 import com.matchus.domains.match.domain.MemberWaiting;
 import com.matchus.domains.match.domain.TeamWaiting;
 import com.matchus.domains.match.repository.MemberWaitingReponsitory;
-import com.matchus.domains.match.repository.TeamWaitingReponsitory;
 import com.matchus.domains.user.domain.User;
 import com.matchus.domains.user.exception.UserNotFoundException;
 import com.matchus.domains.user.repository.UserRepository;
@@ -13,19 +12,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class MemberWaitingService {
 
 	private final MemberWaitingReponsitory memberWaitingReponsitory;
-	private final TeamWaitingReponsitory teamWaitingReponsitory;
 	private final UserRepository userRepository;
 
 	public MemberWaitingService(
 		MemberWaitingReponsitory memberWaitingReponsitory,
-		TeamWaitingReponsitory teamWaitingReponsitory,
 		UserRepository userRepository
 	) {
 		this.memberWaitingReponsitory = memberWaitingReponsitory;
-		this.teamWaitingReponsitory = teamWaitingReponsitory;
 		this.userRepository = userRepository;
 	}
 
@@ -44,6 +41,10 @@ public class MemberWaitingService {
 											  .build());
 		}
 
+	}
+
+	public List<MemberWaiting> getMemberWaitings(TeamWaiting teamWaiting) {
+		return memberWaitingReponsitory.findAllByTeamWaitingId(teamWaiting.getId());
 	}
 
 }
