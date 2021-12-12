@@ -19,7 +19,6 @@ public class HirePostConverter {
 	public HirePostInfoResponse convertToHirePostInfoResponse(HirePost hirePost) {
 
 		Long postId = hirePost.getId();
-		String title = hirePost.getTitle();
 		String city = hirePost.getCity().getName();
 		String region = hirePost.getRegion().getName();
 		String groundName = hirePost.getGround().getName();

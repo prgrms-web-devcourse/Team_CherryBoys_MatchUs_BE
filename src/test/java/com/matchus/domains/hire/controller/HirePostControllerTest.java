@@ -142,7 +142,6 @@ class HirePostControllerTest {
 	void getHirePostTest() throws Exception {
 		// given
 		Long postId = 1L;
-		String title = "제목";
 		String position = "윙백";
 		City city = new City(1L, "서울특별시");
 		Region region = new Region(1L, city, "강남구");
@@ -163,7 +162,6 @@ class HirePostControllerTest {
 		String teamCaptainName = "쭝";
 		HirePostInfoResponse response = new HirePostInfoResponse(
 			postId,
-			title,
 			city.getName(),
 			region.getName(),
 			ground.getName(),
