@@ -4,7 +4,6 @@ import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.hire.domain.HirePost;
 import com.matchus.domains.match.domain.Match;
 import com.matchus.domains.sports.domain.Sports;
-import com.matchus.domains.tag.domain.TeamTag;
 import com.matchus.global.domain.BaseEntity;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -81,9 +80,6 @@ public class Team extends BaseEntity {
 	@OneToMany(mappedBy = "awayTeam", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private List<Match> awayMatches = new ArrayList<>();
 
-	@OneToMany(mappedBy = "team", cascade = CascadeType.REMOVE, orphanRemoval = true)
-	private List<TeamTag> teamTags = new ArrayList<>();
-
 	@Builder
 	private Team(Long id, Sports sport, String name, String bio, String logo, AgeGroup ageGroup) {
 		this.id = id;
@@ -107,7 +103,10 @@ public class Team extends BaseEntity {
 	public List<Match> getAllMatches() {
 		return Stream
 			.concat(this.getHomeMatches().stream(), this.getAwayMatches().stream())
-			.sorted(Comparator.comparing(Match::getId).reversed())
+			.sorted(Comparator.comparing(
+				(Match match) -> match.getPeriod().getDate(),
+				Comparator.reverseOrder()
+			))
 			.collect(Collectors.toList());
 	}
 }

@@ -46,16 +46,7 @@ public class TeamTag {
 	public TeamTag(Long id, Tag tag, Team team, int tagCount) {
 		this.id = id;
 		this.tag = tag;
-		setTeam(team);
-		this.tagCount = tagCount;
-	}
-
-	public void setTeam(Team team) {
-		if (this.team != null) {
-			this.team.getTeamTags().remove(this);
-		}
-
 		this.team = team;
-		team.getTeamTags().add(this);
+		this.tagCount = tagCount;
 	}
 }
