@@ -1,6 +1,7 @@
 package com.matchus.domains.team.service;
 
 import com.matchus.domains.common.AgeGroup;
+import com.matchus.domains.match.domain.Match;
 import com.matchus.domains.sports.domain.Sports;
 import com.matchus.domains.sports.service.SportsService;
 import com.matchus.domains.tag.domain.Tag;
@@ -15,6 +16,8 @@ import com.matchus.domains.team.dto.request.TeamCreateRequest;
 import com.matchus.domains.team.dto.request.TeamModifyRequest;
 import com.matchus.domains.team.dto.response.TeamCreateResponse;
 import com.matchus.domains.team.dto.response.TeamInfoResponse;
+import com.matchus.domains.team.dto.response.TeamMatchInfo;
+import com.matchus.domains.team.dto.response.TeamMatchesResponse;
 import com.matchus.domains.team.dto.response.TeamMembersResponse;
 import com.matchus.domains.team.dto.response.TeamModifyResponse;
 import com.matchus.domains.team.exception.TeamNotFoundException;
@@ -126,6 +129,30 @@ public class TeamService {
 		);
 
 		return new TeamMembersResponse(getTeamMembers(teamUsers));
+	}
+
+	@Transactional(readOnly = true)
+	public TeamMatchesResponse getTeamMatches(Long teamId) {
+		Team team = findExistingTeam(teamId);
+
+		List<TeamMatchInfo> teamMatchInfos = new ArrayList<>();
+		for (Match match : team.getAllMatches()) {
+			teamMatchInfos.add(
+				new TeamMatchInfo(
+					match.getId(),
+					match.getHomeTeam().getId(),
+					match.getHomeTeam().getName(),
+					match.getHomeTeam().getLogo(),
+					match.getAwayTeam() != null ? match.getAwayTeam().getId() : null,
+					match.getAwayTeam() != null ? match.getAwayTeam().getName() : null,
+					match.getAwayTeam() != null ? match.getAwayTeam().getLogo() : null,
+					match.getPeriod().getDate(),
+					match.getStatus()
+				)
+			);
+		}
+
+		return new TeamMatchesResponse(teamMatchInfos);
 	}
 
 	private List<TeamMember> getTeamMembers(List<TeamUser> teamUsers) {

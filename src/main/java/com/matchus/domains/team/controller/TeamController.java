@@ -4,6 +4,7 @@ import com.matchus.domains.team.dto.request.TeamCreateRequest;
 import com.matchus.domains.team.dto.request.TeamModifyRequest;
 import com.matchus.domains.team.dto.response.TeamCreateResponse;
 import com.matchus.domains.team.dto.response.TeamInfoResponse;
+import com.matchus.domains.team.dto.response.TeamMatchesResponse;
 import com.matchus.domains.team.dto.response.TeamMembersResponse;
 import com.matchus.domains.team.dto.response.TeamModifyResponse;
 import com.matchus.domains.team.service.TeamService;
@@ -93,6 +94,19 @@ public class TeamController {
 	) {
 		return ResponseEntity.ok(
 			ApiResponse.of(teamService.getTeamHiredMembers(teamId))
+		);
+	}
+
+	@ApiOperation(
+		value = "팀 매칭 리스트 조회",
+		notes = "팀이 참여한 매치 리스트를 조회합니다."
+	)
+	@GetMapping("/{teamId}/matches")
+	public ResponseEntity<ApiResponse<TeamMatchesResponse>> getTeamMatches(
+		@PathVariable Long teamId
+	) {
+		return ResponseEntity.ok(
+			ApiResponse.of(teamService.getTeamMatches(teamId))
 		);
 	}
 }
