@@ -5,8 +5,8 @@ import com.matchus.domains.sports.domain.Sports;
 import com.matchus.domains.user.domain.Gender;
 import com.matchus.domains.user.domain.Grouping;
 import com.matchus.domains.user.domain.User;
-import com.matchus.domains.user.dto.LoginResponse;
-import com.matchus.domains.user.dto.SignUpRequest;
+import com.matchus.domains.user.dto.request.SignUpRequest;
+import com.matchus.domains.user.dto.response.LoginResponse;
 import java.util.List;
 import org.springframework.stereotype.Component;
 

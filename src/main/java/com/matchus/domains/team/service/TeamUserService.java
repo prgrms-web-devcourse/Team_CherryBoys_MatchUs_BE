@@ -1,7 +1,7 @@
 package com.matchus.domains.team.service;
 
 import com.matchus.domains.team.repository.TeamUserRepository;
-import com.matchus.domains.user.dto.LoginResponse;
+import com.matchus.domains.user.dto.response.LoginResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;

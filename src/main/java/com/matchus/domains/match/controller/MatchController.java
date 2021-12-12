@@ -1,8 +1,8 @@
 package com.matchus.domains.match.controller;
 
-import com.matchus.domains.match.dto.MatchCreateRequest;
-import com.matchus.domains.match.dto.MatchCreateResponse;
-import com.matchus.domains.match.dto.MatchInfoResponse;
+import com.matchus.domains.match.dto.request.MatchCreateRequest;
+import com.matchus.domains.match.dto.response.MatchCreateResponse;
+import com.matchus.domains.match.dto.response.MatchInfoResponse;
 import com.matchus.domains.match.service.MatchService;
 import com.matchus.global.response.ApiResponse;
 import io.swagger.annotations.ApiOperation;
