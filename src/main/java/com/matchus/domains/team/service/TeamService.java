@@ -6,10 +6,12 @@ import com.matchus.domains.sports.service.SportsService;
 import com.matchus.domains.team.converter.TeamConverter;
 import com.matchus.domains.team.domain.Grade;
 import com.matchus.domains.team.domain.Team;
+import com.matchus.domains.team.domain.TeamMember;
 import com.matchus.domains.team.domain.TeamUser;
 import com.matchus.domains.team.dto.request.TeamCreateRequest;
 import com.matchus.domains.team.dto.request.TeamModifyRequest;
 import com.matchus.domains.team.dto.response.TeamCreateResponse;
+import com.matchus.domains.team.dto.response.TeamMembersResponse;
 import com.matchus.domains.team.dto.response.TeamModifyResponse;
 import com.matchus.domains.team.exception.TeamNotFoundException;
 import com.matchus.domains.team.repository.TeamRepository;
@@ -19,6 +21,8 @@ import com.matchus.domains.user.exception.UserNotFoundException;
 import com.matchus.domains.user.repository.UserRepository;
 import com.matchus.global.error.ErrorCode;
 import com.matchus.global.service.FileUploadService;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,5 +77,34 @@ public class TeamService {
 			.orElseThrow(
 				() -> new TeamNotFoundException(ErrorCode.ENTITY_NOT_FOUND)
 			);
+	}
+
+	@Transactional(readOnly = true)
+	public TeamMembersResponse getTeamMembers(Long teamId) {
+		List<TeamUser> teamUsers = teamUserRepository.findAllByTeamIdAndGradeNot(
+			teamId,
+			Grade.HIRED
+		);
+
+		return new TeamMembersResponse(getTeamMembers(teamUsers));
+	}
+
+	@Transactional(readOnly = true)
+	public TeamMembersResponse getTeamHiredMembers(Long teamId) {
+		List<TeamUser> teamUsers = teamUserRepository.findAllByTeamIdAndGrade(
+			teamId,
+			Grade.HIRED
+		);
+
+		return new TeamMembersResponse(getTeamMembers(teamUsers));
+	}
+
+	private List<TeamMember> getTeamMembers(List<TeamUser> teamUsers) {
+		List<TeamMember> teamMembers = new ArrayList<>();
+		for (TeamUser teamUser : teamUsers) {
+			User user = teamUser.getUser();
+			teamMembers.add(new TeamMember(user.getId(), user.getName(), teamUser.getGrade()));
+		}
+		return teamMembers;
 	}
 }
