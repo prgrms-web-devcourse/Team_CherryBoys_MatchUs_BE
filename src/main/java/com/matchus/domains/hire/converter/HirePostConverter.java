@@ -1,8 +1,11 @@
 package com.matchus.domains.hire.converter;
 
 import com.matchus.domains.common.AgeGroup;
+import com.matchus.domains.common.Period;
 import com.matchus.domains.hire.domain.HirePost;
+import com.matchus.domains.hire.dto.request.HirePostWriteRequest;
 import com.matchus.domains.hire.dto.response.HirePostInfoResponse;
+import com.matchus.domains.location.domain.Location;
 import com.matchus.domains.team.domain.Grade;
 import com.matchus.domains.team.domain.Team;
 import com.matchus.domains.team.domain.TeamUser;
@@ -47,7 +50,6 @@ public class HirePostConverter {
 
 		return new HirePostInfoResponse(
 			postId,
-			title,
 			city,
 			region,
 			groundName,
@@ -65,5 +67,23 @@ public class HirePostConverter {
 			teamCaptainId,
 			teamManagerName
 		);
+	}
+
+	public HirePost convertToHirePost(
+		HirePostWriteRequest request,
+		Location location,
+		AgeGroup ageGroup
+	) {
+		return HirePost
+			.builder()
+			.position(request.getPosition())
+			.city(location.getCity())
+			.region(location.getRegion())
+			.ground(location.getGround())
+			.period(new Period(request.getDate(), request.getStartTime(), request.getEndTime()))
+			.ageGroup(ageGroup)
+			.detail(request.getDetail())
+			.hirePlayerNumber(request.getHirePlayerNumber())
+			.build();
 	}
 }
