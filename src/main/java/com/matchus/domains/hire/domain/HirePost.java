@@ -115,4 +115,24 @@ public class HirePost extends BaseEntity {
 		this.team = team;
 		team.getHirePosts().add(this);
 	}
+
+	public void changeInfo(
+		String position,
+		City city,
+		Region region,
+		Ground ground,
+		Period period,
+		AgeGroup ageGroup,
+		String detail,
+		int hirePlayerNumber
+	) {
+		this.position = position;
+		this.city = city;
+		this.region = region;
+		this.ground = ground;
+		this.period = period;
+		this.ageGroup = ageGroup;
+		this.detail = detail;
+		this.hirePlayerNumber = hirePlayerNumber;
+	}
 }
