@@ -37,9 +37,9 @@ public class MatchInfoResponse {
 
 	private final String detail;
 
-	private final TeamInfoResponsse registerTeamResponsse;
+	private final TeamInfo registerTeamInfo;
 
-	private TeamInfoResponsse applyTeamResponse;
+	private final TeamInfo applyTeamInfo;
 
 	@Builder
 	public MatchInfoResponse(
@@ -47,13 +47,14 @@ public class MatchInfoResponse {
 		String city,
 		String region,
 		String ground,
-		LocalDate date, LocalTime startTime,
+		LocalDate date,
+		LocalTime startTime,
 		LocalTime endTime,
 		String ageGroup,
 		MatchStatus status, int cost,
 		String detail,
-		TeamInfoResponsse registerTeamResponsse,
-		TeamInfoResponsse applyTeamResponse
+		TeamInfo registerTeamInfo,
+		TeamInfo applyTeamInfo
 	) {
 		this.matchId = matchId;
 		this.city = city;
@@ -66,22 +67,22 @@ public class MatchInfoResponse {
 		this.status = status;
 		this.cost = cost;
 		this.detail = detail;
-		this.registerTeamResponsse = registerTeamResponsse;
-		this.applyTeamResponse = applyTeamResponse;
+		this.registerTeamInfo = registerTeamInfo;
+		this.applyTeamInfo = applyTeamInfo;
 	}
 
 	@Getter
-	public static class TeamInfoResponsse {
+	public static class TeamInfo {
 
-		private long teamId;
-		private String teamLogo;
-		private String teamName;
-		private Long captainId;
-		private String captainName;
-		private BigDecimal mannerTemperature;
-		private List<MatchMember> matchMembers;
+		private final long teamId;
+		private final String teamLogo;
+		private final String teamName;
+		private final Long captainId;
+		private final String captainName;
+		private final BigDecimal mannerTemperature;
+		private final List<MatchMember> matchMembers;
 
-		public TeamInfoResponsse(
+		public TeamInfo(
 			long teamId,
 			String teamLogo,
 			String teamName,
@@ -97,9 +98,6 @@ public class MatchInfoResponse {
 			this.captainName = captainName;
 			this.mannerTemperature = mannerTemperature;
 			this.matchMembers = matchMembers;
-		}
-
-		public TeamInfoResponsse() {
 		}
 
 	}

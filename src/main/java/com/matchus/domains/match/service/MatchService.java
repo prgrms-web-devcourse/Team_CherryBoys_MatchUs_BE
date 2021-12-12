@@ -69,25 +69,33 @@ public class MatchService {
 	public MatchInfoResponse getMatchInfo(Long matchId) {
 		Match match = findExistingMatch(matchId);
 
-		MatchInfoResponse.TeamInfoResponsse regiserTeamInfo = buildTeamInfoResponse(
+		MatchInfoResponse.TeamInfo regiserTeamInfo = buildTeamInfoResponse(
 			match, WaitingType.REGISTER);
 
 		switch (match.getStatus()) {
 			case WAITING:
 				return matchConverter.convertToMatchInfoResponse(
-					match, regiserTeamInfo, new MatchInfoResponse.TeamInfoResponsse());
+					match, regiserTeamInfo, null);
 			default:
 				return matchConverter.convertToMatchInfoResponse(
 					match, regiserTeamInfo, buildTeamInfoResponse(match, WaitingType.SELECTED));
 		}
 	}
 
-	private MatchInfoResponse.TeamInfoResponsse buildTeamInfoResponse(
+	public Match findExistingMatch(Long matchId) {
+		return matchRepository
+			.findById(matchId)
+			.orElseThrow(
+				() -> new MatchNotFoundException(ErrorCode.ENTITY_NOT_FOUND)
+			);
+	}
+
+	private MatchInfoResponse.TeamInfo buildTeamInfoResponse(
 		Match match,
 		WaitingType waitingType
 	) {
 
-		TeamWaiting teamWaiting = teamWaitingService.findByMatchIdAndTypeTeamWaiting(
+		TeamWaiting teamWaiting = teamWaitingService.findByMatchIdAndType(
 			match.getId(), waitingType);
 
 		Team team = teamWaiting.getTeam();
@@ -114,19 +122,11 @@ public class MatchService {
 			.orElseThrow(() -> new TeamUserNotFoundException(ErrorCode.ENTITY_NOT_FOUND))
 			.getUser();
 
-		return new MatchInfoResponse.TeamInfoResponsse(
+		return new MatchInfoResponse.TeamInfo(
 			team.getId(), team.getLogo(), team.getName(), captain.getId(),
 			captain.getName(), team.getMannerTemperature(), matchMembers
 		);
 
-	}
-
-	public Match findExistingMatch(Long matchId) {
-		return matchRepository
-			.findById(matchId)
-			.orElseThrow(
-				() -> new MatchNotFoundException(ErrorCode.ENTITY_NOT_FOUND)
-			);
 	}
 
 }

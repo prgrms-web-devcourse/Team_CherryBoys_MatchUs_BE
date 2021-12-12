@@ -35,8 +35,8 @@ public class MatchConverter {
 
 	public MatchInfoResponse convertToMatchInfoResponse(
 		Match match,
-		MatchInfoResponse.TeamInfoResponsse registerTeamResponsse,
-		MatchInfoResponse.TeamInfoResponsse applyTeamResponse
+		MatchInfoResponse.TeamInfo registerTeamResponsse,
+		MatchInfoResponse.TeamInfo applyTeamResponse
 	) {
 
 		return MatchInfoResponse
@@ -66,8 +66,8 @@ public class MatchConverter {
 			.cost(match.getCost())
 			.status(match.getStatus())
 			.detail(match.getDetail())
-			.registerTeamResponsse(registerTeamResponsse)
-			.applyTeamResponse(applyTeamResponse)
+			.registerTeamInfo(registerTeamResponsse)
+			.applyTeamInfo(applyTeamResponse)
 			.build();
 
 	}
