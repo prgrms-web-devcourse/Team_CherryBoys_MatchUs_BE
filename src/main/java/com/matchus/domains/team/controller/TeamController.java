@@ -3,6 +3,7 @@ package com.matchus.domains.team.controller;
 import com.matchus.domains.team.dto.request.TeamCreateRequest;
 import com.matchus.domains.team.dto.request.TeamModifyRequest;
 import com.matchus.domains.team.dto.response.TeamCreateResponse;
+import com.matchus.domains.team.dto.response.TeamMembersResponse;
 import com.matchus.domains.team.dto.response.TeamModifyResponse;
 import com.matchus.domains.team.service.TeamService;
 import com.matchus.global.jwt.JwtAuthentication;
@@ -11,6 +12,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,6 +53,19 @@ public class TeamController {
 	) {
 		return ResponseEntity.ok(
 			ApiResponse.of(teamService.modifyTeam(teamId, request))
+		);
+	}
+
+	@ApiOperation(
+		value = "팀원 조회",
+		notes = "팀에 소속되어 있는 팀원 리스트를 조회힙니다."
+	)
+	@GetMapping("/{teamId}/members")
+	public ResponseEntity<ApiResponse<TeamMembersResponse>> getTeamMembers(
+		@PathVariable Long teamId
+	) {
+		return ResponseEntity.ok(
+			ApiResponse.of(teamService.getTeamMembers(teamId))
 		);
 	}
 }
