@@ -38,9 +38,6 @@ public class HirePost extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false, length = 100)
-	private String title;
-
 	@Column(length = 50)
 	private String position;
 
@@ -90,7 +87,6 @@ public class HirePost extends BaseEntity {
 	@Builder
 	private HirePost(
 		Long id,
-		String title,
 		String position,
 		City city,
 		Region region,
@@ -101,7 +97,6 @@ public class HirePost extends BaseEntity {
 		int hirePlayerNumber
 	) {
 		this.id = id;
-		this.title = title;
 		this.position = position;
 		this.city = city;
 		this.region = region;

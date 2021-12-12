@@ -4,13 +4,19 @@ import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.hire.converter.HirePostConverter;
 import com.matchus.domains.hire.domain.HirePost;
 import com.matchus.domains.hire.dto.request.HirePostRetrieveFilterRequest;
+import com.matchus.domains.hire.dto.request.HirePostWriteRequest;
 import com.matchus.domains.hire.dto.response.HirePostInfoResponse;
 import com.matchus.domains.hire.dto.response.HirePostListFilterResponseDto;
 import com.matchus.domains.hire.dto.response.HirePostRetrieveByFilterResponse;
+import com.matchus.domains.hire.dto.response.HirePostWriteResponse;
 import com.matchus.domains.hire.exception.HirePostNotFoundException;
 import com.matchus.domains.hire.repository.HirePostRepository;
+import com.matchus.domains.location.domain.Location;
+import com.matchus.domains.location.service.LocationService;
 import com.matchus.domains.sports.domain.Sports;
 import com.matchus.domains.sports.service.SportsService;
+import com.matchus.domains.team.domain.Team;
+import com.matchus.domains.team.service.TeamService;
 import com.matchus.global.error.ErrorCode;
 import com.matchus.global.utils.PageRequest;
 import java.time.LocalDate;
@@ -27,6 +33,8 @@ public class HirePostService {
 	private final HirePostRepository hirePostRepository;
 	private final SportsService sportsService;
 	private final HirePostConverter hirePostConverter;
+	private final TeamService teamService;
+	private final LocationService locationService;
 
 	@Transactional(readOnly = true)
 	public HirePostRetrieveByFilterResponse retrieveHirePostsNoOffsetByFilter(
@@ -65,5 +73,21 @@ public class HirePostService {
 			.orElseThrow(() -> new HirePostNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
 
 		return hirePostConverter.convertToHirePostInfoResponse(hirePost);
+	}
+
+	public HirePostWriteResponse writeHirePost(HirePostWriteRequest request) {
+		Team team = teamService.findExistingTeam(request.getTeamId());
+		Location location = locationService.getLocation(
+			request.getCityId(),
+			request.getRegionId(),
+			request.getGroundId()
+		);
+		AgeGroup ageGroup = AgeGroup.findGroup(request.getAgeGroup());
+
+		HirePost hirePost = hirePostConverter.convertToHirePost(request, location, ageGroup);
+		hirePost.setTeam(team);
+
+		HirePost savedHirePost = hirePostRepository.save(hirePost);
+		return new HirePostWriteResponse(savedHirePost.getId());
 	}
 }

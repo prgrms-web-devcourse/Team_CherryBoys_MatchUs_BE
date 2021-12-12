@@ -99,7 +99,6 @@ public class HirePostRepositoryTest {
 			HirePost hirePost = hirePostRepository.save(
 				HirePost
 					.builder()
-					.title("구인글제목1")
 					.position("윙백")
 					.city(city)
 					.region(region)
@@ -122,7 +121,6 @@ public class HirePostRepositoryTest {
 			HirePost hirePost = hirePostRepository.save(
 				HirePost
 					.builder()
-					.title("구인글제목2")
 					.position("수비수")
 					.city(city)
 					.region(region)
@@ -145,7 +143,6 @@ public class HirePostRepositoryTest {
 			HirePost hirePost = hirePostRepository.save(
 				HirePost
 					.builder()
-					.title("구인글제목3")
 					.position("수비수")
 					.city(city)
 					.region(region)

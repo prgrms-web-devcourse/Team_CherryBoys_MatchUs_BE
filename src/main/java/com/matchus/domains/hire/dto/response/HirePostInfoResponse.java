@@ -31,7 +31,6 @@ public class HirePostInfoResponse {
 
 	public HirePostInfoResponse(
 		Long postId,
-		String title,
 		String city,
 		String region,
 		String groundName,

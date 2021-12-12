@@ -145,7 +145,6 @@ class HirePostServiceTest {
 	void getHirePostTest() {
 		// given
 		long postId = 1L;
-		String title = "제목";
 		String position = "윙백";
 		City city = new City(1L, "서울특별시");
 		Region region = new Region(1L, city, "강남구");
@@ -161,7 +160,6 @@ class HirePostServiceTest {
 		HirePost hirePost = HirePost
 			.builder()
 			.id(postId)
-			.title(title)
 			.position(position)
 			.city(city)
 			.region(region)
@@ -184,7 +182,6 @@ class HirePostServiceTest {
 		given(hirePostRepository.findById(anyLong())).willReturn(Optional.of(hirePost));
 		HirePostInfoResponse response = new HirePostInfoResponse(
 			postId,
-			title,
 			city.getName(),
 			region.getName(),
 			ground.getName(),
