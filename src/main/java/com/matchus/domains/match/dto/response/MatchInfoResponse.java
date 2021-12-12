@@ -1,5 +1,6 @@
 package com.matchus.domains.match.dto.response;
 
+import com.matchus.domains.match.domain.MatchStatus;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -30,6 +31,8 @@ public class MatchInfoResponse {
 
 	private final String ageGroup;
 
+	private final MatchStatus status;
+
 	private final int cost;
 
 	private final String detail;
@@ -47,7 +50,7 @@ public class MatchInfoResponse {
 		LocalDate date, LocalTime startTime,
 		LocalTime endTime,
 		String ageGroup,
-		int cost,
+		MatchStatus status, int cost,
 		String detail,
 		TeamInfoResponsse registerTeamResponsse,
 		TeamInfoResponsse applyTeamResponse
@@ -60,6 +63,7 @@ public class MatchInfoResponse {
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.ageGroup = ageGroup;
+		this.status = status;
 		this.cost = cost;
 		this.detail = detail;
 		this.registerTeamResponsse = registerTeamResponsse;

@@ -64,6 +64,7 @@ public class MatchConverter {
 						  .getAgeGroup()
 						  .getAgeGroup())
 			.cost(match.getCost())
+			.status(match.getStatus())
 			.detail(match.getDetail())
 			.registerTeamResponsse(registerTeamResponsse)
 			.applyTeamResponse(applyTeamResponse)
