@@ -1,6 +1,7 @@
 package com.matchus.global.error;
 
 import com.matchus.domains.common.exception.AgeGroupNotFoundException;
+import com.matchus.domains.hire.exception.HireApplicationNotFoundException;
 import com.matchus.domains.sports.exception.SportsNotFoundException;
 import com.matchus.domains.team.exception.GradeNotFoundException;
 import com.matchus.domains.user.exception.RoleNotFoundException;
@@ -40,10 +41,12 @@ public class GlobalExceptionHandler {
 			SportsNotFoundException.class,
 			UserNotFoundException.class,
 			RoleNotFoundException.class,
+			HireApplicationNotFoundException.class,
 		}
 	)
 	public ResponseEntity<ErrorResponse> handleNotFound(EntityNotFoundException e) {
-		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.ENTITY_NOT_FOUND);
+		log.error("handleEntityNotFoundException", e);
+		ErrorResponse errorResponse = ErrorResponse.of(e.getErrorCode());
 		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 
