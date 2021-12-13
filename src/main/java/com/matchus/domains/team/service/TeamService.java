@@ -12,9 +12,11 @@ import com.matchus.domains.team.domain.Grade;
 import com.matchus.domains.team.domain.Team;
 import com.matchus.domains.team.domain.TeamMember;
 import com.matchus.domains.team.domain.TeamUser;
+import com.matchus.domains.team.dto.request.ChangeGradesRequest;
 import com.matchus.domains.team.dto.request.TeamCreateRequest;
 import com.matchus.domains.team.dto.request.TeamModifyRequest;
 import com.matchus.domains.team.dto.response.TeamCreateResponse;
+import com.matchus.domains.team.dto.response.TeamIdResponse;
 import com.matchus.domains.team.dto.response.TeamInfoResponse;
 import com.matchus.domains.team.dto.response.TeamMatchInfo;
 import com.matchus.domains.team.dto.response.TeamMatchesResponse;
@@ -155,11 +157,31 @@ public class TeamService {
 		return new TeamMatchesResponse(teamMatchInfos);
 	}
 
+	public TeamIdResponse changeMembersGrade(Long teamId, ChangeGradesRequest request) {
+		for (TeamMember teamMember : request.getMembers()) {
+			teamUserRepository
+				.findByTeamIdAndUserId(
+					teamId,
+					teamMember.getUserId()
+				)
+				.ifPresent(
+					teamUser -> teamUser.changeGrade(Grade.findGrade(teamMember.getGrade()))
+				);
+		}
+
+		return new TeamIdResponse(teamId);
+	}
+
 	private List<TeamMember> getTeamMembers(List<TeamUser> teamUsers) {
 		List<TeamMember> teamMembers = new ArrayList<>();
 		for (TeamUser teamUser : teamUsers) {
 			User user = teamUser.getUser();
-			teamMembers.add(new TeamMember(user.getId(), user.getName(), teamUser.getGrade()));
+			teamMembers.add(
+				new TeamMember(
+					user.getId(),
+					user.getName(),
+					teamUser.getGrade().getType()
+				));
 		}
 		return teamMembers;
 	}
