@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -36,4 +37,11 @@ public class HireApplication {
 		referencedColumnName = "id"
 	)
 	private User user;
+
+	@Builder
+	public HireApplication(Long id, HirePost hirePost, User user) {
+		this.id = id;
+		this.hirePost = hirePost;
+		this.user = user;
+	}
 }
