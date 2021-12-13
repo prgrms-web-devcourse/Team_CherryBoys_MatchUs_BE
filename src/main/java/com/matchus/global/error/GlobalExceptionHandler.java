@@ -1,6 +1,5 @@
 package com.matchus.global.error;
 
-import com.matchus.domains.match.exception.InvalidTeamWaitingException;
 import com.matchus.domains.sports.exception.SportsNotFoundException;
 import com.matchus.domains.user.exception.RoleNotFoundException;
 import com.matchus.domains.user.exception.UserNotFoundException;
@@ -42,13 +41,6 @@ public class GlobalExceptionHandler {
 	)
 	public ResponseEntity<ErrorResponse> handleNotFound(EntityNotFoundException e) {
 		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.ENTITY_NOT_FOUND);
-		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-	}
-
-	@ExceptionHandler(InvalidTeamWaitingException.class)
-	public ResponseEntity<ErrorResponse> invalidTeamWaiting(InvalidTeamWaitingException e) {
-		log.error("InvalidTeamWaitingException", e);
-		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.INVALID_WAITIMG_TYPE);
 		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 

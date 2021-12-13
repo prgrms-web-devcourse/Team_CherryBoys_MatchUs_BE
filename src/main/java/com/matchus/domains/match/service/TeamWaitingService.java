@@ -37,9 +37,9 @@ public class TeamWaitingService {
 			.orElseThrow(() -> new TeamWaitingNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
 	}
 
-	public TeamWaiting findById(Long teamWaitingId) {
+	public TeamWaiting findByIdAndTypeNot(Long teamWaitingId, WaitingType type) {
 		return teamWaitingReponsitory
-			.findById(teamWaitingId)
+			.findByIdAndTypeNot(teamWaitingId, type)
 			.orElseThrow(() -> new TeamWaitingNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
 	}
 

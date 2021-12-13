@@ -14,7 +14,6 @@ import com.matchus.domains.match.dto.response.MatchInfoResponse;
 import com.matchus.domains.match.dto.response.MatchListByFilterResponse;
 import com.matchus.domains.match.dto.response.MatchMember;
 import com.matchus.domains.match.dto.response.MatchRetrieveByFilterResponse;
-import com.matchus.domains.match.exception.InvalidTeamWaitingException;
 import com.matchus.domains.match.exception.MatchNotFoundException;
 import com.matchus.domains.match.repository.MatchRepository;
 import com.matchus.domains.sports.domain.Sports;
@@ -111,13 +110,10 @@ public class MatchService {
 	@Transactional
 	public MatchIdResponse acceptMatch(Long teamWaitingId) {
 
-		TeamWaiting teamWaiting = teamWaitingService.findById(teamWaitingId);
+		TeamWaiting teamWaiting = teamWaitingService.findByIdAndTypeNot(
+			teamWaitingId, WaitingType.REGISTER);
 
-		if (teamWaiting.getType() != WaitingType.REGISTER) {
-			teamWaiting.changeWaitingType(WaitingType.SELECTED);
-		} else {
-			throw new InvalidTeamWaitingException(ErrorCode.INVALID_WAITIMG_TYPE);
-		}
+		teamWaiting.changeWaitingType(WaitingType.SELECTED);
 
 		Match match = teamWaiting.getMatch();
 
