@@ -3,7 +3,9 @@ package com.matchus.domains.user.controller;
 import com.matchus.domains.common.dto.SuccessResponse;
 import com.matchus.domains.user.dto.request.LoginRequest;
 import com.matchus.domains.user.dto.request.SignUpRequest;
+import com.matchus.domains.user.dto.request.UserChangeInfoRequest;
 import com.matchus.domains.user.dto.response.LoginResponse;
+import com.matchus.domains.user.dto.response.UserChangeInfoResponse;
 import com.matchus.domains.user.service.UserService;
 import com.matchus.global.jwt.JwtAuthentication;
 import com.matchus.global.response.ApiResponse;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -94,6 +97,21 @@ public class UserController {
 
 		return ResponseEntity.ok(
 			ApiResponse.of(userService.reissue(authentication.username, authentication.token)));
+	}
+
+	@ApiOperation(
+		value = "사용자 정보 수정",
+		notes = "사용자 정보를 수정합니다."
+	)
+	@PutMapping("/me")
+	public ResponseEntity<ApiResponse<UserChangeInfoResponse>> changeInfoUser(
+		@RequestBody UserChangeInfoRequest userChangeInfoRequest,
+		@AuthenticationPrincipal JwtAuthentication authentication
+	) {
+
+		return ResponseEntity.ok(
+			ApiResponse.of(
+				userService.changeInfoUser(userChangeInfoRequest, authentication.username)));
 	}
 
 }

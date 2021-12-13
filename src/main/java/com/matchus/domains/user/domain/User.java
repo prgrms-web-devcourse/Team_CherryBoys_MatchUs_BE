@@ -118,4 +118,18 @@ public class User extends BaseEntity {
 		this.isDisaffiliated = true;
 	}
 
+	public void changeInfo(
+		String nickname,
+		String password,
+		String bio,
+		AgeGroup ageGroup,
+		Sports sport
+	) {
+		this.nickname = nickname;
+		this.password = password;
+		this.bio = bio;
+		this.ageGroup = ageGroup;
+		this.sport = sport;
+	}
+
 }
