@@ -1,5 +1,6 @@
 package com.matchus.domains.hire.service;
 
+import com.matchus.domains.common.dto.SuccessResponse;
 import com.matchus.domains.hire.domain.HireApplication;
 import com.matchus.domains.hire.domain.HirePost;
 import com.matchus.domains.hire.dto.request.HireApplyRequest;
@@ -33,5 +34,11 @@ public class HireApplicationService {
 		);
 
 		return new HireApplyResponse(hireApplication.getId());
+	}
+
+	public SuccessResponse cancelApplication(Long applicationsId) {
+		hireApplicationRepository.deleteById(applicationsId);
+
+		return new SuccessResponse(true);
 	}
 }

@@ -1,5 +1,6 @@
 package com.matchus.domains.hire.controller;
 
+import com.matchus.domains.common.dto.SuccessResponse;
 import com.matchus.domains.hire.dto.request.HireApplyRequest;
 import com.matchus.domains.hire.dto.response.HireApplyResponse;
 import com.matchus.domains.hire.service.HireApplicationService;
@@ -9,6 +10,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +36,19 @@ public class HireApplicationController {
 		String userEmail = authentication.username;
 		return ResponseEntity.ok(
 			ApiResponse.of(hireApplicationService.applyHire(request, userEmail))
+		);
+	}
+
+	@ApiOperation(
+		value = "용병 신청 취소",
+		notes = "용병 신청을 취소합니다."
+	)
+	@DeleteMapping("/{applicationsId}")
+	public ResponseEntity<ApiResponse<SuccessResponse>> cancelApplication(
+		@PathVariable Long applicationsId
+	) {
+		return ResponseEntity.ok(
+			ApiResponse.of(hireApplicationService.cancelApplication(applicationsId))
 		);
 	}
 }
