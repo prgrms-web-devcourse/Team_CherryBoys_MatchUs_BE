@@ -9,7 +9,7 @@ import com.matchus.domains.match.domain.TeamWaiting;
 import com.matchus.domains.match.domain.WaitingType;
 import com.matchus.domains.match.dto.request.MatchCreateRequest;
 import com.matchus.domains.match.dto.request.MatchRetrieveFilterRequest;
-import com.matchus.domains.match.dto.response.MatchCreateResponse;
+import com.matchus.domains.match.dto.response.MatchIdResponse;
 import com.matchus.domains.match.dto.response.MatchInfoResponse;
 import com.matchus.domains.match.dto.response.MatchListByFilterResponse;
 import com.matchus.domains.match.dto.response.MatchMember;
@@ -45,7 +45,7 @@ public class MatchService {
 	private final TeamWaitingService teamWaitingService;
 
 	@Transactional
-	public MatchCreateResponse createMatchPost(MatchCreateRequest matchCreateRequest) {
+	public MatchIdResponse createMatchPost(MatchCreateRequest matchCreateRequest) {
 		Team registerTeam = teamService.findExistingTeam(matchCreateRequest.getRegisterTeamId());
 		Sports sports = sportsService.getSports(matchCreateRequest.getSports());
 
@@ -68,7 +68,7 @@ public class MatchService {
 
 		memberWaitingService.saveMemberWaitings(matchCreateRequest.getPlayers(), teamWaiting);
 
-		return new MatchCreateResponse(match.getId());
+		return new MatchIdResponse(match.getId());
 	}
 
 	public MatchInfoResponse getMatchInfo(Long matchId) {
@@ -107,6 +107,20 @@ public class MatchService {
 		return new MatchRetrieveByFilterResponse(matchs);
 	}
 
+	@Transactional
+	public MatchIdResponse acceptMatch(Long teamWaitingId) {
+
+		TeamWaiting teamWaiting = teamWaitingService.findByIdAndTypeNot(
+			teamWaitingId, WaitingType.REGISTER);
+
+		teamWaiting.changeWaitingType(WaitingType.SELECTED);
+
+		Match match = teamWaiting.getMatch();
+
+		match.achieveAwayTeam(teamWaiting.getTeam());
+
+		return new MatchIdResponse(match.getId());
+	}
 
 	public Match findExistingMatch(Long matchId) {
 		return matchRepository

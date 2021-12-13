@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
 			RoleNotFoundException.class,
 		}
 	)
-	public ResponseEntity<ErrorResponse> handleNotFound(EntityNotFoundException exception) {
+	public ResponseEntity<ErrorResponse> handleNotFound(EntityNotFoundException e) {
 		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.ENTITY_NOT_FOUND);
 		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}

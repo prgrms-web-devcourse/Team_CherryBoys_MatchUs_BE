@@ -126,8 +126,9 @@ public class Match extends BaseEntity {
 		this.detail = detail;
 	}
 
-	public void changeStatus(MatchStatus matchStatus) {
-		this.status = matchStatus;
+	public void achieveAwayTeam(Team awayTeam) {
+		this.status = MatchStatus.COMPLETION;
+		this.awayTeam = awayTeam;
 	}
 
 }
