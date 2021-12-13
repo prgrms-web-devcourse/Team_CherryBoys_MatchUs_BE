@@ -1,5 +1,6 @@
 package com.matchus.domains.user.service;
 
+import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.common.dto.SuccessResponse;
 import com.matchus.domains.sports.domain.Sports;
 import com.matchus.domains.sports.service.SportsService;
@@ -9,7 +10,9 @@ import com.matchus.domains.user.domain.Grouping;
 import com.matchus.domains.user.domain.User;
 import com.matchus.domains.user.dto.request.LoginRequest;
 import com.matchus.domains.user.dto.request.SignUpRequest;
+import com.matchus.domains.user.dto.request.UserChangeInfoRequest;
 import com.matchus.domains.user.dto.response.LoginResponse;
+import com.matchus.domains.user.dto.response.UserChangeInfoResponse;
 import com.matchus.domains.user.exception.UserNotFoundException;
 import com.matchus.domains.user.repository.UserRepository;
 import com.matchus.global.error.ErrorCode;
@@ -33,7 +36,6 @@ public class UserService {
 	private final AuthenticationManager authenticationManager;
 	private final TeamUserService teamUserService;
 	private final PasswordEncoder passwordEncoder;
-
 
 	public UserService(
 		SportsService sportsService,
@@ -93,6 +95,19 @@ public class UserService {
 		User user = findActiveUser(email);
 
 		user.deactivateUser();
+	}
+
+	@Transactional
+	public UserChangeInfoResponse changeInfoUser(UserChangeInfoRequest request, String email) {
+		User user = findActiveUser(email);
+		Sports sports = sportsService.getSports(request.getSportName());
+
+		user.changeInfo(request.getNickname(), passwordEncoder.encode(request.getPassword()),
+						request.getBio(),
+						AgeGroup.findGroup(request.getAgeGroup()), sports
+		);
+
+		return new UserChangeInfoResponse(user.getId());
 	}
 
 	public User findActiveUser(String email) {
