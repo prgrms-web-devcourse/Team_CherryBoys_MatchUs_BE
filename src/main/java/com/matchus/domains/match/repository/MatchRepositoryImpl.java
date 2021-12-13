@@ -8,6 +8,7 @@ import static com.matchus.domains.sports.domain.QSports.*;
 import static com.matchus.domains.team.domain.QTeam.*;
 
 import com.matchus.domains.common.AgeGroup;
+import com.matchus.domains.match.domain.MatchStatus;
 import com.matchus.domains.match.dto.response.MatchListByFilterResponse;
 import com.matchus.global.utils.PageRequest;
 import com.querydsl.core.types.Projections;
@@ -66,7 +67,8 @@ public class MatchRepositoryImpl implements MatchRepositoryCustom {
 				eqCity(cityId),
 				eqRegion(regionId),
 				eqGround(groundId),
-				eqDate(date)
+				eqDate(date),
+				match.status.eq(MatchStatus.WAITING)
 			)
 			.orderBy(match.id.desc())
 			.limit(pageRequest.getSize())
