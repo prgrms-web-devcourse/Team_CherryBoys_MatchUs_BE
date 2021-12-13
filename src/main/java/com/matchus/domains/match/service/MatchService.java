@@ -1,5 +1,6 @@
 package com.matchus.domains.match.service;
 
+import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.location.domain.Location;
 import com.matchus.domains.location.service.LocationService;
 import com.matchus.domains.match.converter.MatchConverter;
@@ -7,9 +8,12 @@ import com.matchus.domains.match.domain.Match;
 import com.matchus.domains.match.domain.TeamWaiting;
 import com.matchus.domains.match.domain.WaitingType;
 import com.matchus.domains.match.dto.request.MatchCreateRequest;
+import com.matchus.domains.match.dto.request.MatchRetrieveFilterRequest;
 import com.matchus.domains.match.dto.response.MatchCreateResponse;
 import com.matchus.domains.match.dto.response.MatchInfoResponse;
+import com.matchus.domains.match.dto.response.MatchListByFilterResponse;
 import com.matchus.domains.match.dto.response.MatchMember;
+import com.matchus.domains.match.dto.response.MatchRetrieveByFilterResponse;
 import com.matchus.domains.match.exception.MatchNotFoundException;
 import com.matchus.domains.match.repository.MatchRepository;
 import com.matchus.domains.sports.domain.Sports;
@@ -20,6 +24,7 @@ import com.matchus.domains.team.exception.TeamUserNotFoundException;
 import com.matchus.domains.team.service.TeamService;
 import com.matchus.domains.user.domain.User;
 import com.matchus.global.error.ErrorCode;
+import com.matchus.global.utils.PageRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -81,6 +86,27 @@ public class MatchService {
 					match, regiserTeamInfo, buildTeamInfoResponse(match, WaitingType.SELECTED));
 		}
 	}
+
+	public MatchRetrieveByFilterResponse retrieveMatchNoOffsetByFilter(
+		MatchRetrieveFilterRequest filterRequest,
+		PageRequest pageRequest
+	) {
+		Sports sports = sportsService.getSportsOrNull(filterRequest.getSports());
+		AgeGroup ageGroup = AgeGroup.findGroupOrNull(filterRequest.getAgeGroup());
+
+		List<MatchListByFilterResponse> matchs = matchRepository.findAllNoOffsetByFilter(
+			sports == null ? null : sports.getId(),
+			ageGroup,
+			filterRequest.getCityId(),
+			filterRequest.getRegionId(),
+			filterRequest.getGroundId(),
+			filterRequest.getDate() == null ? null : filterRequest.getDate(),
+			pageRequest
+		);
+
+		return new MatchRetrieveByFilterResponse(matchs);
+	}
+
 
 	public Match findExistingMatch(Long matchId) {
 		return matchRepository

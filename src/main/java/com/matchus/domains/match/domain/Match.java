@@ -126,7 +126,7 @@ public class Match extends BaseEntity {
 		this.detail = detail;
 	}
 
-	public void modifyStatus(MatchStatus matchStatus) {
+	public void changeStatus(MatchStatus matchStatus) {
 		this.status = matchStatus;
 	}
 

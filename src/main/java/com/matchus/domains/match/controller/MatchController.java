@@ -1,13 +1,17 @@
 package com.matchus.domains.match.controller;
 
 import com.matchus.domains.match.dto.request.MatchCreateRequest;
+import com.matchus.domains.match.dto.request.MatchRetrieveFilterRequest;
 import com.matchus.domains.match.dto.response.MatchCreateResponse;
 import com.matchus.domains.match.dto.response.MatchInfoResponse;
+import com.matchus.domains.match.dto.response.MatchRetrieveByFilterResponse;
 import com.matchus.domains.match.service.MatchService;
 import com.matchus.global.response.ApiResponse;
+import com.matchus.global.utils.PageRequest;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,6 +44,22 @@ public class MatchController {
 	@GetMapping("/{matchId}")
 	public ResponseEntity<ApiResponse<MatchInfoResponse>> getMatchInfo(@PathVariable Long matchId) {
 		return ResponseEntity.ok(ApiResponse.of(matchService.getMatchInfo(matchId)));
+	}
+
+	@ApiOperation(
+		value = "매치 게시글 리스트 필터 조회",
+		notes = "매치 게시글 리스트를 조회합니다. 필터를 설정하여 조회할 수 있습니다."
+	)
+	@GetMapping
+	public ResponseEntity<ApiResponse<MatchRetrieveByFilterResponse>> retrieveMatches(
+		@ModelAttribute MatchRetrieveFilterRequest filterRequest,
+		PageRequest pageRequest
+	) {
+		return ResponseEntity.ok(
+			ApiResponse.of(
+				matchService.retrieveMatchNoOffsetByFilter(filterRequest, pageRequest)
+			)
+		);
 	}
 
 }
