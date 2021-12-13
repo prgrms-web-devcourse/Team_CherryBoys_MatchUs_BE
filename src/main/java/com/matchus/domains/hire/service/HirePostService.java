@@ -113,6 +113,10 @@ public class HirePostService {
 		return new HirePostModifyResponse(hirePost.getId());
 	}
 
+	public void removeHirePost(Long postId) {
+		hirePostRepository.deleteById(postId);
+	}
+
 	@Transactional(readOnly = true)
 	public HirePost findHirePost(Long postId) {
 		return hirePostRepository
