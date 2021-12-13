@@ -13,6 +13,7 @@ import com.matchus.domains.team.domain.Team;
 import com.matchus.domains.team.domain.TeamMember;
 import com.matchus.domains.team.domain.TeamUser;
 import com.matchus.domains.team.dto.request.ChangeGradesRequest;
+import com.matchus.domains.team.dto.request.RemoveMembersRequest;
 import com.matchus.domains.team.dto.request.TeamCreateRequest;
 import com.matchus.domains.team.dto.request.TeamModifyRequest;
 import com.matchus.domains.team.dto.response.TeamCreateResponse;
@@ -167,6 +168,14 @@ public class TeamService {
 				.ifPresent(
 					teamUser -> teamUser.changeGrade(Grade.findGrade(teamMember.getGrade()))
 				);
+		}
+
+		return new TeamIdResponse(teamId);
+	}
+
+	public TeamIdResponse removeMembers(Long teamId, RemoveMembersRequest request) {
+		for (TeamMember teamMember : request.getMembers()) {
+			teamUserRepository.deleteByTeamIdAndUserId(teamId, teamMember.getUserId());
 		}
 
 		return new TeamIdResponse(teamId);
