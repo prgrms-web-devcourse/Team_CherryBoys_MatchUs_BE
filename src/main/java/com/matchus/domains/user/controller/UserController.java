@@ -1,6 +1,7 @@
 package com.matchus.domains.user.controller;
 
 import com.matchus.domains.common.dto.SuccessResponse;
+import com.matchus.domains.user.dto.request.CheckDuplicatedResponse;
 import com.matchus.domains.user.dto.request.LoginRequest;
 import com.matchus.domains.user.dto.request.SignUpRequest;
 import com.matchus.domains.user.dto.request.UserChangeInfoRequest;
@@ -48,11 +49,9 @@ public class UserController {
 		notes = "사용자가 회원가입을 요청합니다."
 	)
 	@PostMapping
-	public ResponseEntity<Void> signUp(@RequestBody SignUpRequest request) {
+	public ResponseEntity<ApiResponse<SuccessResponse>> signUp(@RequestBody SignUpRequest request) {
 		userService.signUp(request);
-		return ResponseEntity
-			.ok()
-			.build();
+		return ResponseEntity.ok(ApiResponse.of(new SuccessResponse(true)));
 	}
 
 	@ApiOperation(
@@ -60,7 +59,7 @@ public class UserController {
 		notes = "회원가입 정보 입력시 email 중복 여부를 확인합니다."
 	)
 	@GetMapping("/email-check/{email}")
-	public ResponseEntity<ApiResponse<SuccessResponse>> checkEmail(@PathVariable String email) {
+	public ResponseEntity<ApiResponse<CheckDuplicatedResponse>> checkEmail(@PathVariable String email) {
 		return ResponseEntity.ok(ApiResponse.of(userService.checkEmail(email)));
 	}
 
@@ -69,7 +68,7 @@ public class UserController {
 		notes = "회원가입 정보 입력시 nickname 중복 여부를 확인합니다."
 	)
 	@GetMapping("/nickname-check/{nickname}")
-	public ResponseEntity<ApiResponse<SuccessResponse>> checkNickname(@PathVariable String nickname) {
+	public ResponseEntity<ApiResponse<CheckDuplicatedResponse>> checkNickname(@PathVariable String nickname) {
 		return ResponseEntity.ok(ApiResponse.of(userService.checkNickname(nickname)));
 	}
 
@@ -78,14 +77,10 @@ public class UserController {
 		notes = "가입된 계정을 탈퇴 처리합니다."
 	)
 	@DeleteMapping("/me")
-	public ResponseEntity<Void> deactivateUser(
-		@AuthenticationPrincipal JwtAuthentication authentication
-	) {
+	public ResponseEntity<ApiResponse<SuccessResponse>> deactivateUser(@AuthenticationPrincipal JwtAuthentication authentication) {
 		userService.deactivateUser(authentication.username);
 
-		return ResponseEntity
-			.ok()
-			.build();
+		return ResponseEntity.ok(ApiResponse.of(new SuccessResponse(true)));
 	}
 
 	@ApiOperation(

@@ -1,13 +1,13 @@
 package com.matchus.domains.user.service;
 
 import com.matchus.domains.common.AgeGroup;
-import com.matchus.domains.common.dto.SuccessResponse;
 import com.matchus.domains.sports.domain.Sports;
 import com.matchus.domains.sports.service.SportsService;
 import com.matchus.domains.team.service.TeamUserService;
 import com.matchus.domains.user.converter.UserConverter;
 import com.matchus.domains.user.domain.Grouping;
 import com.matchus.domains.user.domain.User;
+import com.matchus.domains.user.dto.request.CheckDuplicatedResponse;
 import com.matchus.domains.user.dto.request.LoginRequest;
 import com.matchus.domains.user.dto.request.SignUpRequest;
 import com.matchus.domains.user.dto.request.UserChangeInfoRequest;
@@ -65,14 +65,14 @@ public class UserService {
 			userConverter.convertToUser(signUpRequest, sports, grouping, password));
 	}
 
-	public SuccessResponse checkEmail(String email) {
+	public CheckDuplicatedResponse checkEmail(String email) {
 		boolean isExistence = userRepository.existsByEmail(email);
-		return new SuccessResponse(isExistence);
+		return new CheckDuplicatedResponse(isExistence);
 	}
 
-	public SuccessResponse checkNickname(String nickname) {
+	public CheckDuplicatedResponse checkNickname(String nickname) {
 		boolean isExistence = userRepository.existsByNickname(nickname);
-		return new SuccessResponse(isExistence);
+		return new CheckDuplicatedResponse(isExistence);
 	}
 
 	public LoginResponse login(LoginRequest request) {

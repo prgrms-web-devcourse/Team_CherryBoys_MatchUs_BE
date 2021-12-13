@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 import com.matchus.domains.common.AgeGroup;
-import com.matchus.domains.common.dto.SuccessResponse;
 import com.matchus.domains.sports.domain.Sports;
 import com.matchus.domains.sports.service.SportsService;
 import com.matchus.domains.team.service.TeamUserService;
@@ -12,6 +11,7 @@ import com.matchus.domains.user.converter.UserConverter;
 import com.matchus.domains.user.domain.Gender;
 import com.matchus.domains.user.domain.Grouping;
 import com.matchus.domains.user.domain.User;
+import com.matchus.domains.user.dto.request.CheckDuplicatedResponse;
 import com.matchus.domains.user.dto.request.SignUpRequest;
 import com.matchus.domains.user.repository.UserRepository;
 import java.util.Optional;
@@ -61,10 +61,10 @@ class UserServiceTest {
 			.willReturn(true);
 
 		//when
-		SuccessResponse successResponse = userService.checkEmail(email);
+		CheckDuplicatedResponse checkDuplicatedResponse = userService.checkEmail(email);
 
 		//then
-		assertThat(successResponse.isIsduplicated()).isTrue();
+		assertThat(checkDuplicatedResponse.isDuplicated()).isTrue();
 	}
 
 	@Test
@@ -76,10 +76,10 @@ class UserServiceTest {
 			.willReturn(false);
 
 		//when
-		SuccessResponse successResponse = userService.checkNickname(nickname);
+		CheckDuplicatedResponse checkDuplicatedResponse = userService.checkNickname(nickname);
 
 		//then
-		assertThat(successResponse.isIsduplicated()).isFalse();
+		assertThat(checkDuplicatedResponse.isDuplicated()).isFalse();
 	}
 
 	@Test
