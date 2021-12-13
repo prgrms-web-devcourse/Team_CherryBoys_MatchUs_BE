@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.matchus.BaseIntegrationTest;
-import com.matchus.domains.common.dto.SuccessResponse;
+import com.matchus.domains.user.dto.request.CheckDuplicatedResponse;
 import com.matchus.domains.user.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,9 +25,9 @@ class UserControllerTest extends BaseIntegrationTest {
 
 		String email = "sun77@gmail.com";
 
-		SuccessResponse successResponse = new SuccessResponse(true);
+		CheckDuplicatedResponse checkDuplicatedResponse = new CheckDuplicatedResponse(true);
 
-		given(userService.checkEmail(email)).willReturn(successResponse);
+		given(userService.checkEmail(email)).willReturn(checkDuplicatedResponse);
 
 		mockMvc
 			.perform(
@@ -45,9 +45,9 @@ class UserControllerTest extends BaseIntegrationTest {
 
 		String nickName = "삐약삐약";
 
-		SuccessResponse successResponse = new SuccessResponse(false);
+		CheckDuplicatedResponse checkDuplicatedResponse = new CheckDuplicatedResponse(false);
 
-		given(userService.checkNickname(nickName)).willReturn(successResponse);
+		given(userService.checkNickname(nickName)).willReturn(checkDuplicatedResponse);
 
 		mockMvc
 			.perform(
