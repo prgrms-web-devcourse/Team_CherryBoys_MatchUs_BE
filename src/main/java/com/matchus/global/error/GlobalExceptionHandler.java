@@ -1,8 +1,11 @@
 package com.matchus.global.error;
 
+import com.matchus.domains.common.exception.AgeGroupNotFoundException;
 import com.matchus.domains.sports.exception.SportsNotFoundException;
+import com.matchus.domains.team.exception.GradeNotFoundException;
 import com.matchus.domains.user.exception.RoleNotFoundException;
 import com.matchus.domains.user.exception.UserNotFoundException;
+import com.matchus.global.error.exception.BusinessException;
 import com.matchus.global.error.exception.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -36,11 +39,23 @@ public class GlobalExceptionHandler {
 		{
 			SportsNotFoundException.class,
 			UserNotFoundException.class,
-			RoleNotFoundException.class
+			RoleNotFoundException.class,
 		}
 	)
 	public ResponseEntity<ErrorResponse> handleNotFound(EntityNotFoundException exception) {
 		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.ENTITY_NOT_FOUND);
+		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(AgeGroupNotFoundException.class)
+	public ResponseEntity<ErrorResponse> handleAgeGroupNotFound(BusinessException exception) {
+		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.AGEGROUP_NOT_FOUND);
+		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(GradeNotFoundException.class)
+	public ResponseEntity<ErrorResponse> handleGradeNotFound(BusinessException exception) {
+		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.GRADE_NOT_FOUND);
 		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 
