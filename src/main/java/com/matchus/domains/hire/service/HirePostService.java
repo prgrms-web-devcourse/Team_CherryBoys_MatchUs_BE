@@ -16,6 +16,7 @@ import com.matchus.domains.hire.dto.response.HirePostModifyResponse;
 import com.matchus.domains.hire.dto.response.HirePostRetrieveByFilterResponse;
 import com.matchus.domains.hire.dto.response.HirePostWriteResponse;
 import com.matchus.domains.hire.exception.HirePostNotFoundException;
+import com.matchus.domains.hire.repository.HireApplicationRepository;
 import com.matchus.domains.hire.repository.HirePostRepository;
 import com.matchus.domains.location.domain.Location;
 import com.matchus.domains.location.service.LocationService;
@@ -43,7 +44,7 @@ public class HirePostService {
 	private final HirePostConverter hirePostConverter;
 	private final TeamService teamService;
 	private final LocationService locationService;
-	private final HireApplicationService hireApplicationService;
+	private final HireApplicationRepository hireApplicationRepository;
 
 	@Transactional(readOnly = true)
 	public HirePostRetrieveByFilterResponse retrieveHirePostsNoOffsetByFilter(
@@ -133,7 +134,7 @@ public class HirePostService {
 	@Transactional(readOnly = true)
 	public HireApplicationsResponse getHireApplications(Long postId) {
 		List<HireApplication> applications =
-			hireApplicationService.getHireApplicationsByHirePostId(postId);
+			hireApplicationRepository.findAllByHirePostId(postId);
 
 		List<HireApplyUser> applyUsers = applications
 			.stream()
