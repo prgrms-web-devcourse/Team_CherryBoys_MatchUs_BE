@@ -118,11 +118,12 @@ public class MatchService {
 		} else {
 			throw new InvalidTeamWaitingException(ErrorCode.INVALID_WAITIMG_TYPE);
 		}
-		return new MatchIdResponse(teamWaiting
-									   .getMatch()
-									   .setAwayTeam(teamWaiting.getTeam())
-		);
 
+		Match match = teamWaiting.getMatch();
+
+		match.achieveAwayTeam(teamWaiting.getTeam());
+
+		return new MatchIdResponse(match.getId());
 	}
 
 	public Match findExistingMatch(Long matchId) {

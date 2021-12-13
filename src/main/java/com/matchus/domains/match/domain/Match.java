@@ -126,11 +126,9 @@ public class Match extends BaseEntity {
 		this.detail = detail;
 	}
 
-	public Long setAwayTeam(Team awayTeam) {
+	public void achieveAwayTeam(Team awayTeam) {
 		this.status = MatchStatus.COMPLETION;
 		this.awayTeam = awayTeam;
-
-		return this.id;
 	}
 
 }
