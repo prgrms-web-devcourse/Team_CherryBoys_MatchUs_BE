@@ -34,6 +34,7 @@ import com.matchus.domains.user.domain.User;
 import com.matchus.domains.user.exception.UserNotFoundException;
 import com.matchus.domains.user.service.UserService;
 import com.matchus.global.error.ErrorCode;
+import com.matchus.global.response.CheckDuplicatedResponse;
 import com.matchus.global.service.FileUploadService;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -213,5 +214,10 @@ public class TeamService {
 		);
 
 		return new TeamIdResponse(teamId);
+	}
+
+	@Transactional(readOnly = true)
+	public CheckDuplicatedResponse checkTeamName(String teamName) {
+		return new CheckDuplicatedResponse(teamRepository.existsByName(teamName));
 	}
 }
