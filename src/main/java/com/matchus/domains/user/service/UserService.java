@@ -142,7 +142,7 @@ public class UserService {
 			.map(Tag::getName)
 			.collect(Collectors.toList());
 
-		List<TeamSimpleInfo.TeamNameAndLogo> myTemas = teamUserService
+		List<TeamSimpleInfo.TeamNameAndLogo> myTeams = teamUserService
 			.getMyTeamUsers(user.getId())
 			.stream()
 			.map(teamUser -> teamUser.getTeam())
@@ -151,7 +151,7 @@ public class UserService {
 			))
 			.collect(Collectors.toList());
 
-		return userConverter.convertToUserInfoResponse(user, myTemas, tagNames);
+		return userConverter.convertToUserInfoResponse(user, myTeams, tagNames);
 	}
 
 	public User findActiveUser(String email) {

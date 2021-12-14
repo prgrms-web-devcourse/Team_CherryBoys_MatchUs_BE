@@ -4,7 +4,6 @@ import lombok.Getter;
 
 public class TeamSimpleInfo {
 
-
 	@Getter
 	public static class TeamName {
 
