@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -36,4 +37,25 @@ public class UserMatchHistory {
 		referencedColumnName = "id"
 	)
 	private Match match;
+
+	@Builder
+	public UserMatchHistory(Long id, User user, Match match) {
+		this.id = id;
+		setUser(user);
+		this.match = match;
+	}
+
+	public void setUser(User user) {
+		if (this.user != null) {
+			this.user
+				.getUserMatchHistorys()
+				.remove(this);
+		}
+
+		this.user = user;
+		user
+			.getUserMatchHistorys()
+			.add(this);
+	}
+
 }

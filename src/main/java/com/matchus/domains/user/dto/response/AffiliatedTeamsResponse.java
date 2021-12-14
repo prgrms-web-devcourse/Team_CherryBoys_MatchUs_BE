@@ -7,9 +7,9 @@ import lombok.Getter;
 @Getter
 public class AffiliatedTeamsResponse {
 
-	private final List<TeamSimpleInfo> teamSimpleInfos;
+	private final List<TeamSimpleInfo.TeamName> teamSimpleInfos;
 
-	public AffiliatedTeamsResponse(List<TeamSimpleInfo> teamSimpleInfos) {
+	public AffiliatedTeamsResponse(List<TeamSimpleInfo.TeamName> teamSimpleInfos) {
 		this.teamSimpleInfos = teamSimpleInfos;
 	}
 
