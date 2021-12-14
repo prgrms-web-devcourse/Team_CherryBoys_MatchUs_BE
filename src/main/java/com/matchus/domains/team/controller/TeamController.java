@@ -1,6 +1,7 @@
 package com.matchus.domains.team.controller;
 
 import com.matchus.domains.team.dto.request.ChangeGradesRequest;
+import com.matchus.domains.team.dto.request.InviteUserRequest;
 import com.matchus.domains.team.dto.request.RemoveMembersRequest;
 import com.matchus.domains.team.dto.request.TeamCreateRequest;
 import com.matchus.domains.team.dto.request.TeamModifyRequest;
@@ -14,6 +15,7 @@ import com.matchus.domains.team.service.TeamService;
 import com.matchus.global.jwt.JwtAuthentication;
 import com.matchus.global.response.ApiResponse;
 import io.swagger.annotations.ApiOperation;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -140,6 +142,20 @@ public class TeamController {
 	) {
 		return ResponseEntity.ok(
 			ApiResponse.of(teamService.removeMembers(teamId, request))
+		);
+	}
+
+	@ApiOperation(
+		value = "팀원 초대",
+		notes = "특정 유저에게 팀으로의 초대 요청을 보냅니다."
+	)
+	@PostMapping("/{teamId}/members")
+	public ResponseEntity<ApiResponse<TeamIdResponse>> inviteUser(
+		@PathVariable Long teamId,
+		@Valid @RequestBody InviteUserRequest request
+	) {
+		return ResponseEntity.ok(
+			ApiResponse.of(teamService.inviteUser(teamId, request))
 		);
 	}
 }

@@ -126,8 +126,8 @@ public class UserService {
 			.findByEmailAndIsDisaffiliatedFalse(email)
 			.orElseThrow(() -> new UserNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
 	}
-  
-  	public User findUserByUserId(Long userId) {
+
+	public User findUserByUserId(Long userId) {
 		return userRepository
 			.findById(userId)
 			.orElseThrow(() -> new UserNotFoundException(ErrorCode.ENTITY_NOT_FOUND));

@@ -10,9 +10,11 @@ import com.matchus.domains.tag.service.TeamTagService;
 import com.matchus.domains.team.converter.TeamConverter;
 import com.matchus.domains.team.domain.Grade;
 import com.matchus.domains.team.domain.Team;
+import com.matchus.domains.team.domain.TeamInvitation;
 import com.matchus.domains.team.domain.TeamMember;
 import com.matchus.domains.team.domain.TeamUser;
 import com.matchus.domains.team.dto.request.ChangeGradesRequest;
+import com.matchus.domains.team.dto.request.InviteUserRequest;
 import com.matchus.domains.team.dto.request.RemoveMembersRequest;
 import com.matchus.domains.team.dto.request.TeamCreateRequest;
 import com.matchus.domains.team.dto.request.TeamModifyRequest;
@@ -23,12 +25,14 @@ import com.matchus.domains.team.dto.response.TeamMatchInfo;
 import com.matchus.domains.team.dto.response.TeamMatchesResponse;
 import com.matchus.domains.team.dto.response.TeamMembersResponse;
 import com.matchus.domains.team.dto.response.TeamModifyResponse;
+import com.matchus.domains.team.exception.TeamInvitationAlreadyExistsException;
 import com.matchus.domains.team.exception.TeamNotFoundException;
+import com.matchus.domains.team.repository.TeamInvitationRepository;
 import com.matchus.domains.team.repository.TeamRepository;
 import com.matchus.domains.team.repository.TeamUserRepository;
 import com.matchus.domains.user.domain.User;
 import com.matchus.domains.user.exception.UserNotFoundException;
-import com.matchus.domains.user.repository.UserRepository;
+import com.matchus.domains.user.service.UserService;
 import com.matchus.global.error.ErrorCode;
 import com.matchus.global.service.FileUploadService;
 import java.util.ArrayList;
@@ -50,16 +54,15 @@ public class TeamService {
 	private final FileUploadService uploadService;
 	private final TeamTagService teamTagService;
 	private final TeamUserRepository teamUserRepository;
-	private final UserRepository userRepository;
+	private final UserService userService;
+	private final TeamInvitationRepository teamInvitationRepository;
 
 	public TeamCreateResponse createTeam(TeamCreateRequest request, String userEmail) {
 		String logo = uploadService.uploadImage(request.getLogo());
 		Sports sports = sportsService
 			.getSports(request.getSports());
 
-		User user = userRepository
-			.findByEmailAndIsDisaffiliatedFalse(userEmail)
-			.orElseThrow(() -> new UserNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
+		User user = userService.findActiveUser(userEmail);
 
 		Team createdTeam = teamRepository.save(
 			teamConverter.convertToTeam(request, logo, sports)
@@ -88,7 +91,7 @@ public class TeamService {
 		return teamRepository
 			.findByIdAndIsDeletedFalse(teamId)
 			.orElseThrow(
-				() -> new TeamNotFoundException(ErrorCode.ENTITY_NOT_FOUND)
+				() -> new TeamNotFoundException(ErrorCode.TEAM_NOT_FOUND)
 			);
 	}
 
@@ -193,5 +196,22 @@ public class TeamService {
 				));
 		}
 		return teamMembers;
+	}
+
+	public TeamIdResponse inviteUser(Long teamId, InviteUserRequest request) {
+		User user = userService.findActiveUser(request.getEmail());
+		if (teamInvitationRepository.existsByTeamIdAndUserId(teamId, user.getId())) {
+			throw new TeamInvitationAlreadyExistsException(ErrorCode.TEAM_INVITATION_ALREADY_EXISTS);
+		}
+
+		teamInvitationRepository.save(
+			TeamInvitation
+				.builder()
+				.team(findExistingTeam(teamId))
+				.user(user)
+				.build()
+		);
+
+		return new TeamIdResponse(teamId);
 	}
 }
