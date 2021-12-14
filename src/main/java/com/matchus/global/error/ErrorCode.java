@@ -15,6 +15,8 @@ public enum ErrorCode {
 	HIRE_APPLICATION_NOT_FOUND("유효하지 않은 용병 신청 내역입니다.", 400),
 	HIRE_POST_NOT_FOUND("해당 용병 게시글이 존재하지 않습니다.", 400),
 	TEAM_NOT_FOUND("존재하지 않는 팀 입니다.", 400),
+	USER_NOT_FOUND("해당 유저가 존재하지 않습니다.", 400),
+	TEAM_USER_NOT_FOUND("팀-팀원이 존재하지 않습니다.", 400),
 	AGEGROUP_NOT_FOUND("나이대가 존재하지 않습니다.", 400),
 	GENDER_NOT_FOUND("성별이 존재하지 않습니다.", 400),
 	GRADE_NOT_FOUND("등급이 존재하지 않습니다.", 400),
