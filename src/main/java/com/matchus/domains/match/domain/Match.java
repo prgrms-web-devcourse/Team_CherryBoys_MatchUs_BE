@@ -114,7 +114,7 @@ public class Match extends BaseEntity {
 		String detail
 	) {
 		this.id = id;
-		this.homeTeam = homeTeam;
+		setHomeTeam(homeTeam);
 		this.awayTeam = awayTeam;
 		this.sport = sport;
 		this.city = city;
@@ -126,9 +126,27 @@ public class Match extends BaseEntity {
 		this.detail = detail;
 	}
 
+	public void setHomeTeam(Team homeTeam) {
+		if (this.homeTeam != null) {
+			this.homeTeam.getHomeMatches().remove(this);
+		}
+
+		this.homeTeam = homeTeam;
+		homeTeam.getHomeMatches().add(this);
+	}
+
+	public void setAwayTeam(Team awayTeam) {
+		if (this.awayTeam != null) {
+			this.awayTeam.getAwayMatches().remove(this);
+		}
+
+		this.awayTeam = awayTeam;
+		awayTeam.getAwayMatches().add(this);
+	}
+
 	public void achieveAwayTeam(Team awayTeam) {
 		this.status = MatchStatus.COMPLETION;
-		this.awayTeam = awayTeam;
+		setAwayTeam(awayTeam);
 	}
 
 }
