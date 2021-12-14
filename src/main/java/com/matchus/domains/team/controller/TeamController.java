@@ -14,6 +14,7 @@ import com.matchus.domains.team.dto.response.TeamModifyResponse;
 import com.matchus.domains.team.service.TeamService;
 import com.matchus.global.jwt.JwtAuthentication;
 import com.matchus.global.response.ApiResponse;
+import com.matchus.global.response.CheckDuplicatedResponse;
 import io.swagger.annotations.ApiOperation;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -157,5 +159,16 @@ public class TeamController {
 		return ResponseEntity.ok(
 			ApiResponse.of(teamService.inviteUser(teamId, request))
 		);
+	}
+
+	@ApiOperation(
+		value = "팀명 중복 확인",
+		notes = "팀명 중복 확인합니다."
+	)
+	@GetMapping("/name-check")
+	public ResponseEntity<ApiResponse<CheckDuplicatedResponse>> checkTeamName(
+		@RequestParam String teamName
+	) {
+		return ResponseEntity.ok(ApiResponse.of(teamService.checkTeamName(teamName)));
 	}
 }
