@@ -1,6 +1,7 @@
 package com.matchus.domains.user.domain;
 
 import com.matchus.domains.common.AgeGroup;
+import com.matchus.domains.match.domain.UserMatchHistory;
 import com.matchus.domains.sports.domain.Sports;
 import com.matchus.domains.team.domain.TeamUser;
 import com.matchus.global.domain.BaseEntity;
@@ -83,6 +84,9 @@ public class User extends BaseEntity {
 	@OneToMany(mappedBy = "team", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private List<TeamUser> teamUsers = new ArrayList<>();
 
+	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	private List<UserMatchHistory> userMatchHistorys = new ArrayList<>();
+
 	@Builder
 	private User(
 		Long id,
@@ -106,6 +110,10 @@ public class User extends BaseEntity {
 		this.bio = bio;
 		this.gender = gender;
 		this.ageGroup = ageGroup;
+	}
+
+	public int getMatchCount() {
+		return this.userMatchHistorys.size();
 	}
 
 	public void checkPassword(PasswordEncoder passwordEncoder, String credentials) {

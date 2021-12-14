@@ -3,6 +3,9 @@ package com.matchus.domains.user.service;
 import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.sports.domain.Sports;
 import com.matchus.domains.sports.service.SportsService;
+import com.matchus.domains.tag.domain.Tag;
+import com.matchus.domains.tag.domain.UserTag;
+import com.matchus.domains.tag.service.UserTagService;
 import com.matchus.domains.team.domain.Grade;
 import com.matchus.domains.team.domain.TeamSimpleInfo;
 import com.matchus.domains.team.domain.TeamUser;
@@ -17,14 +20,17 @@ import com.matchus.domains.user.dto.request.UserChangeInfoRequest;
 import com.matchus.domains.user.dto.response.AffiliatedTeamsResponse;
 import com.matchus.domains.user.dto.response.LoginResponse;
 import com.matchus.domains.user.dto.response.UserChangeInfoResponse;
+import com.matchus.domains.user.dto.response.UserInfoResponse;
 import com.matchus.domains.user.exception.UserNotFoundException;
 import com.matchus.domains.user.repository.UserRepository;
 import com.matchus.global.error.ErrorCode;
 import com.matchus.global.jwt.JwtAuthentication;
 import com.matchus.global.jwt.JwtAuthenticationToken;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class UserService {
 
 	private final SportsService sportsService;
@@ -42,24 +49,7 @@ public class UserService {
 	private final AuthenticationManager authenticationManager;
 	private final TeamUserService teamUserService;
 	private final PasswordEncoder passwordEncoder;
-
-	public UserService(
-		SportsService sportsService,
-		UserRepository userRepository,
-		UserConverter userConverter,
-		GroupingService groupingService,
-		AuthenticationManager authenticationManager,
-		TeamUserService teamUserService,
-		PasswordEncoder passwordEncoder
-	) {
-		this.sportsService = sportsService;
-		this.userRepository = userRepository;
-		this.userConverter = userConverter;
-		this.groupingService = groupingService;
-		this.authenticationManager = authenticationManager;
-		this.teamUserService = teamUserService;
-		this.passwordEncoder = passwordEncoder;
-	}
+	private final UserTagService userTagService;
 
 	@Transactional
 	public void signUp(SignUpRequest signUpRequest) {
@@ -90,8 +80,7 @@ public class UserService {
 
 		User user = (User) resultToken.getDetails();
 
-		List<LoginResponse.UserGradeResponse> userGrades = teamUserService.getUserGrades(
-			user.getId());
+		List<LoginResponse.UserGradeResponse> userGrades = getUserGrades(user.getId());
 
 		return userConverter.convertToLoginResponse(user, authentication.token, userGrades);
 	}
@@ -120,8 +109,7 @@ public class UserService {
 
 		User user = findActiveUser(email);
 
-		List<LoginResponse.UserGradeResponse> userGrades = teamUserService.getUserGrades(
-			user.getId());
+		List<LoginResponse.UserGradeResponse> userGrades = getUserGrades(user.getId());
 
 		return userConverter.convertToLoginResponse(user, token, userGrades);
 
@@ -131,14 +119,39 @@ public class UserService {
 		User user = findActiveUser(email);
 
 		List<Grade> grades = Arrays.asList(Grade.CAPTAIN, Grade.SUB_CAPTAIN);
-		List<TeamSimpleInfo> teamSimpleInfoList = teamUserService
-			.getMyTeamUsers(user.getId(), grades)
+		List<TeamSimpleInfo.TeamName> teamSimpleInfoList = teamUserService
+			.getMyTeamUsersByGrades(user.getId(), grades)
 			.stream()
 			.map(TeamUser::getTeam)
-			.map(team -> new TeamSimpleInfo(team.getId(), team.getName()))
+			.map(team -> new TeamSimpleInfo.TeamName(team.getId(), team.getName()))
 			.collect(Collectors.toList());
 
 		return new AffiliatedTeamsResponse(teamSimpleInfoList);
+	}
+
+	public UserInfoResponse getMyInfo(String email) {
+		User user = findActiveUser(email);
+
+		List<String> tagNames = userTagService
+			.getUserTags(user.getId())
+			.stream()
+			.sorted(Comparator
+						.comparing(UserTag::getTagCount)
+						.reversed())
+			.map(UserTag::getTag)
+			.map(Tag::getName)
+			.collect(Collectors.toList());
+
+		List<TeamSimpleInfo.TeamNameAndLogo> myTemas = teamUserService
+			.getMyTeamUsers(user.getId())
+			.stream()
+			.map(teamUser -> teamUser.getTeam())
+			.map(team -> new TeamSimpleInfo.TeamNameAndLogo(team.getId(), team.getName(),
+															team.getLogo()
+			))
+			.collect(Collectors.toList());
+
+		return userConverter.convertToUserInfoResponse(user, myTemas, tagNames);
 	}
 
 	public User findActiveUser(String email) {
@@ -151,6 +164,18 @@ public class UserService {
 		return userRepository
 			.findById(userId)
 			.orElseThrow(() -> new UserNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
+	}
+
+	private List<LoginResponse.UserGradeResponse> getUserGrades(Long userId) {
+
+		return teamUserService
+			.getMyTeamUsers(userId)
+			.stream()
+			.map(teamUser -> new LoginResponse.UserGradeResponse(teamUser
+																	 .getTeam()
+																	 .getId(), teamUser.getGrade()))
+			.collect(Collectors.toList());
+
 	}
 
 }
