@@ -110,18 +110,6 @@ public class UserService {
 		return new UserChangeInfoResponse(user.getId());
 	}
 
-	public User findActiveUser(String email) {
-		return userRepository
-			.findByEmailAndIsDisaffiliatedFalse(email)
-			.orElseThrow(() -> new UserNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
-	}
-
-	public User findUserByUserId(Long userId) {
-		return userRepository
-			.findById(userId)
-			.orElseThrow(() -> new UserNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
-	}
-
 	public LoginResponse reissue(String email, String token) {
 
 		User user = findActiveUser(email);
@@ -133,4 +121,15 @@ public class UserService {
 
 	}
 
+	public User findActiveUser(String email) {
+		return userRepository
+			.findByEmailAndIsDisaffiliatedFalse(email)
+			.orElseThrow(() -> new UserNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
+	}
+  
+  	public User findUserByUserId(Long userId) {
+		return userRepository
+			.findById(userId)
+			.orElseThrow(() -> new UserNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
+	}
 }
