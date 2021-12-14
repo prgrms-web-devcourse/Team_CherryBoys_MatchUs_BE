@@ -1,8 +1,11 @@
 package com.matchus.domains.team.controller;
 
+import com.matchus.domains.team.dto.request.ChangeGradesRequest;
+import com.matchus.domains.team.dto.request.RemoveMembersRequest;
 import com.matchus.domains.team.dto.request.TeamCreateRequest;
 import com.matchus.domains.team.dto.request.TeamModifyRequest;
 import com.matchus.domains.team.dto.response.TeamCreateResponse;
+import com.matchus.domains.team.dto.response.TeamIdResponse;
 import com.matchus.domains.team.dto.response.TeamInfoResponse;
 import com.matchus.domains.team.dto.response.TeamMatchesResponse;
 import com.matchus.domains.team.dto.response.TeamMembersResponse;
@@ -14,11 +17,13 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -107,6 +112,34 @@ public class TeamController {
 	) {
 		return ResponseEntity.ok(
 			ApiResponse.of(teamService.getTeamMatches(teamId))
+		);
+	}
+
+	@ApiOperation(
+		value = "팀원 권한 수정",
+		notes = "복수의 팀원들의 권한을 수정합니다."
+	)
+	@PutMapping("/{teamId}/members")
+	public ResponseEntity<ApiResponse<TeamIdResponse>> changeMembersGrade(
+		@PathVariable Long teamId,
+		@RequestBody ChangeGradesRequest request
+	) {
+		return ResponseEntity.ok(
+			ApiResponse.of(teamService.changeMembersGrade(teamId, request))
+		);
+	}
+
+	@ApiOperation(
+		value = "팀원 방출",
+		notes = "팀에 속해있는 팀원/용병을 방출합니다."
+	)
+	@DeleteMapping("/{teamId}/members")
+	public ResponseEntity<ApiResponse<TeamIdResponse>> removeMembers(
+		@PathVariable Long teamId,
+		@RequestBody RemoveMembersRequest request
+	) {
+		return ResponseEntity.ok(
+			ApiResponse.of(teamService.removeMembers(teamId, request))
 		);
 	}
 }

@@ -41,6 +41,11 @@ public class TeamWaitingService {
 	public List<TeamWaiting> findAllByMatchIdAndType(Long matchId, WaitingType type) {
 		return teamWaitingReponsitory
 			.findAllByMatchIdAndType(matchId, type);
+
+	public TeamWaiting findByIdAndTypeNot(Long teamWaitingId, WaitingType type) {
+		return teamWaitingReponsitory
+			.findByIdAndTypeNot(teamWaitingId, type)
+			.orElseThrow(() -> new TeamWaitingNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
 	}
 
 }

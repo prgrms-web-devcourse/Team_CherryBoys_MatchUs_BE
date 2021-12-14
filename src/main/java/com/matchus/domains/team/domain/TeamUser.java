@@ -76,4 +76,8 @@ public class TeamUser {
 		this.user = user;
 		user.getTeamUsers().add(this);
 	}
+
+	public void changeGrade(Grade grade) {
+		this.grade = grade;
+	}
 }

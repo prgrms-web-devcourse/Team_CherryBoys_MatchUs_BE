@@ -56,4 +56,8 @@ public class TeamWaiting {
 		this.type = type;
 	}
 
+	public void changeWaitingType(WaitingType type) {
+		this.type = type;
+	}
+
 }

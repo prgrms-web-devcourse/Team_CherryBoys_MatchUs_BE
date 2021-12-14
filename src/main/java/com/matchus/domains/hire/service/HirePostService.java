@@ -3,16 +3,20 @@ package com.matchus.domains.hire.service;
 import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.common.Period;
 import com.matchus.domains.hire.converter.HirePostConverter;
+import com.matchus.domains.hire.domain.HireApplication;
+import com.matchus.domains.hire.domain.HireApplyUser;
 import com.matchus.domains.hire.domain.HirePost;
 import com.matchus.domains.hire.dto.request.HirePostModifyRequest;
 import com.matchus.domains.hire.dto.request.HirePostRetrieveFilterRequest;
 import com.matchus.domains.hire.dto.request.HirePostWriteRequest;
+import com.matchus.domains.hire.dto.response.HireApplicationsResponse;
 import com.matchus.domains.hire.dto.response.HirePostInfoResponse;
 import com.matchus.domains.hire.dto.response.HirePostListFilterResponseDto;
 import com.matchus.domains.hire.dto.response.HirePostModifyResponse;
 import com.matchus.domains.hire.dto.response.HirePostRetrieveByFilterResponse;
 import com.matchus.domains.hire.dto.response.HirePostWriteResponse;
 import com.matchus.domains.hire.exception.HirePostNotFoundException;
+import com.matchus.domains.hire.repository.HireApplicationRepository;
 import com.matchus.domains.hire.repository.HirePostRepository;
 import com.matchus.domains.location.domain.Location;
 import com.matchus.domains.location.service.LocationService;
@@ -20,10 +24,12 @@ import com.matchus.domains.sports.domain.Sports;
 import com.matchus.domains.sports.service.SportsService;
 import com.matchus.domains.team.domain.Team;
 import com.matchus.domains.team.service.TeamService;
+import com.matchus.domains.user.domain.User;
 import com.matchus.global.error.ErrorCode;
 import com.matchus.global.utils.PageRequest;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +44,7 @@ public class HirePostService {
 	private final HirePostConverter hirePostConverter;
 	private final TeamService teamService;
 	private final LocationService locationService;
+	private final HireApplicationRepository hireApplicationRepository;
 
 	@Transactional(readOnly = true)
 	public HirePostRetrieveByFilterResponse retrieveHirePostsNoOffsetByFilter(
@@ -122,5 +129,26 @@ public class HirePostService {
 		return hirePostRepository
 			.findById(postId)
 			.orElseThrow(() -> new HirePostNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
+	}
+
+	@Transactional(readOnly = true)
+	public HireApplicationsResponse getHireApplications(Long postId) {
+		List<HireApplication> applications =
+			hireApplicationRepository.findAllByHirePostId(postId);
+
+		List<HireApplyUser> applyUsers = applications
+			.stream()
+			.map(
+				hireApplication -> {
+					User user = hireApplication.getUser();
+					return new HireApplyUser(
+						hireApplication.getId(),
+						user.getId(),
+						user.getNickname()
+					);
+				}
+			).collect(Collectors.toList());
+
+		return new HireApplicationsResponse(applyUsers);
 	}
 }

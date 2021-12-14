@@ -12,8 +12,10 @@ public enum ErrorCode {
 	// 400
 	INVALID_INPUT_VALUE("올바른 입력 형식이 아닙니다.", 400),
 	ENTITY_NOT_FOUND("엔티티를 찾을 수 없습니다.", 400),
+	HIRE_APPLICATION_NOT_FOUND("유효하지 않은 용병 신청 내역입니다.", 400),
 	AGEGROUP_NOT_FOUND("나이대가 존재하지 않습니다.", 400),
 	GENDER_NOT_FOUND("성별이 존재하지 않습니다.", 400),
+	GRADE_NOT_FOUND("등급이 존재하지 않습니다.", 400),
 	INVALID_FILE_TYPE("잘못된 형식의 파일 입니다.", 400),
 
 	//401

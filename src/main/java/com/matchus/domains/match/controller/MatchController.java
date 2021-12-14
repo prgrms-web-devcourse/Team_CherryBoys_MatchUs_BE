@@ -2,7 +2,7 @@ package com.matchus.domains.match.controller;
 
 import com.matchus.domains.match.dto.request.MatchCreateRequest;
 import com.matchus.domains.match.dto.request.MatchRetrieveFilterRequest;
-import com.matchus.domains.match.dto.response.MatchCreateResponse;
+import com.matchus.domains.match.dto.response.MatchIdResponse;
 import com.matchus.domains.match.dto.response.MatchInfoResponse;
 import com.matchus.domains.match.dto.response.MatchRetrieveByFilterResponse;
 import com.matchus.domains.match.dto.response.MatchWaitingListResponse;
@@ -16,11 +16,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/matches")
 public class MatchController {
 
 	private final MatchService matchService;
@@ -33,8 +31,8 @@ public class MatchController {
 		value = "매치 글 작성",
 		notes = "매칭 글을 작성합니다."
 	)
-	@PostMapping
-	public ResponseEntity<ApiResponse<MatchCreateResponse>> createMatchPost(@RequestBody MatchCreateRequest request) {
+	@PostMapping("/matches")
+	public ResponseEntity<ApiResponse<MatchIdResponse>> createMatchPost(@RequestBody MatchCreateRequest request) {
 		return ResponseEntity.ok(ApiResponse.of(matchService.createMatchPost(request)));
 	}
 
@@ -42,7 +40,7 @@ public class MatchController {
 		value = "매치 글 상세 조회",
 		notes = "매칭 글을 매칭 대기 & 매칭 완료 상황에 따라 상세 조회합니다."
 	)
-	@GetMapping("/{matchId}")
+	@GetMapping("/matches/{matchId}")
 	public ResponseEntity<ApiResponse<MatchInfoResponse>> getMatchInfo(@PathVariable Long matchId) {
 		return ResponseEntity.ok(ApiResponse.of(matchService.getMatchInfo(matchId)));
 	}
@@ -51,7 +49,7 @@ public class MatchController {
 		value = "매치 게시글 리스트 필터 조회",
 		notes = "매치 게시글 리스트를 조회합니다. 필터를 설정하여 조회할 수 있습니다."
 	)
-	@GetMapping
+	@GetMapping("/matches")
 	public ResponseEntity<ApiResponse<MatchRetrieveByFilterResponse>> retrieveMatches(
 		@ModelAttribute MatchRetrieveFilterRequest filterRequest,
 		PageRequest pageRequest
@@ -72,6 +70,15 @@ public class MatchController {
 		@PathVariable long matchId
 	) {
 		return ResponseEntity.ok(ApiResponse.of(matchService.getMatchWaitingList(matchId)));
+
+	@ApiOperation(
+		value = "매치 신청 수락",
+		notes = "매치에 대한 특정 팀의 매칭 신청을 수락한다."
+	)
+	@PostMapping("/match-waitings/{teamWaitingId}")
+	public ResponseEntity<ApiResponse<MatchIdResponse>> acceptMatch(@PathVariable Long teamWaitingId) {
+
+		return ResponseEntity.ok(ApiResponse.of(matchService.acceptMatch(teamWaitingId)));
 	}
 
 }
