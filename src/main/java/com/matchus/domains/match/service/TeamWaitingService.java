@@ -7,6 +7,7 @@ import com.matchus.domains.match.exception.TeamWaitingNotFoundException;
 import com.matchus.domains.match.repository.TeamWaitingReponsitory;
 import com.matchus.domains.team.domain.Team;
 import com.matchus.global.error.ErrorCode;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +36,11 @@ public class TeamWaitingService {
 		return teamWaitingReponsitory
 			.findByMatchIdAndType(matchId, type)
 			.orElseThrow(() -> new TeamWaitingNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
+	}
+
+	public List<TeamWaiting> findAllByMatchIdAndType(Long matchId, WaitingType type) {
+		return teamWaitingReponsitory
+			.findAllByMatchIdAndType(matchId, type);
 	}
 
 	public TeamWaiting findByIdAndTypeNot(Long teamWaitingId, WaitingType type) {
