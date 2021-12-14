@@ -1,6 +1,7 @@
 package com.matchus.domains.team.controller;
 
 import com.matchus.domains.team.dto.request.ChangeGradesRequest;
+import com.matchus.domains.team.dto.request.RemoveMembersRequest;
 import com.matchus.domains.team.dto.request.TeamCreateRequest;
 import com.matchus.domains.team.dto.request.TeamModifyRequest;
 import com.matchus.domains.team.dto.response.TeamCreateResponse;
@@ -16,6 +17,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -124,6 +126,20 @@ public class TeamController {
 	) {
 		return ResponseEntity.ok(
 			ApiResponse.of(teamService.changeMembersGrade(teamId, request))
+		);
+	}
+
+	@ApiOperation(
+		value = "팀원 방출",
+		notes = "팀에 속해있는 팀원/용병을 방출합니다."
+	)
+	@DeleteMapping("/{teamId}/members")
+	public ResponseEntity<ApiResponse<TeamIdResponse>> removeMembers(
+		@PathVariable Long teamId,
+		@RequestBody RemoveMembersRequest request
+	) {
+		return ResponseEntity.ok(
+			ApiResponse.of(teamService.removeMembers(teamId, request))
 		);
 	}
 }
