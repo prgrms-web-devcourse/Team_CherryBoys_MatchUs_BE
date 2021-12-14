@@ -5,6 +5,7 @@ import com.matchus.domains.match.dto.request.MatchRetrieveFilterRequest;
 import com.matchus.domains.match.dto.response.MatchCreateResponse;
 import com.matchus.domains.match.dto.response.MatchInfoResponse;
 import com.matchus.domains.match.dto.response.MatchRetrieveByFilterResponse;
+import com.matchus.domains.match.dto.response.MatchWaitingListResponse;
 import com.matchus.domains.match.service.MatchService;
 import com.matchus.global.response.ApiResponse;
 import com.matchus.global.utils.PageRequest;
@@ -60,6 +61,17 @@ public class MatchController {
 				matchService.retrieveMatchNoOffsetByFilter(filterRequest, pageRequest)
 			)
 		);
+	}
+
+	@ApiOperation(
+		value = "매치 신청 대기팀 리스트 조회",
+		notes = "매치 신청 대기 팀&팀원 리스트를 조회합니다."
+	)
+	@GetMapping("/{matchId}/waitings")
+	public ResponseEntity<ApiResponse<MatchWaitingListResponse>> getMatchWaitingList(
+		@PathVariable long matchId
+	) {
+		return ResponseEntity.ok(ApiResponse.of(matchService.getMatchWaitingList(matchId)));
 	}
 
 }

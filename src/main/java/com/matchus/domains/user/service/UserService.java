@@ -110,12 +110,6 @@ public class UserService {
 		return new UserChangeInfoResponse(user.getId());
 	}
 
-	public User findActiveUser(String email) {
-		return userRepository
-			.findByEmailAndIsDisaffiliatedFalse(email)
-			.orElseThrow(() -> new UserNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
-	}
-
 	public LoginResponse reissue(String email, String token) {
 
 		User user = findActiveUser(email);
@@ -125,6 +119,12 @@ public class UserService {
 
 		return userConverter.convertToLoginResponse(user, token, userGrades);
 
+	}
+
+	public User findActiveUser(String email) {
+		return userRepository
+			.findByEmailAndIsDisaffiliatedFalse(email)
+			.orElseThrow(() -> new UserNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
 	}
 
 }

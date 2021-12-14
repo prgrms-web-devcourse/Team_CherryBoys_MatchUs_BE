@@ -14,6 +14,8 @@ import com.matchus.domains.match.dto.response.MatchInfoResponse;
 import com.matchus.domains.match.dto.response.MatchListByFilterResponse;
 import com.matchus.domains.match.dto.response.MatchMember;
 import com.matchus.domains.match.dto.response.MatchRetrieveByFilterResponse;
+import com.matchus.domains.match.dto.response.MatchWaitingListResponse;
+import com.matchus.domains.match.dto.response.MatchWaitingTeam;
 import com.matchus.domains.match.exception.MatchNotFoundException;
 import com.matchus.domains.match.repository.MatchRepository;
 import com.matchus.domains.sports.domain.Sports;
@@ -25,6 +27,7 @@ import com.matchus.domains.team.service.TeamService;
 import com.matchus.domains.user.domain.User;
 import com.matchus.global.error.ErrorCode;
 import com.matchus.global.utils.PageRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -71,22 +74,6 @@ public class MatchService {
 		return new MatchCreateResponse(match.getId());
 	}
 
-	public MatchInfoResponse getMatchInfo(Long matchId) {
-		Match match = findExistingMatch(matchId);
-
-		MatchInfoResponse.TeamInfo regiserTeamInfo = buildTeamInfoResponse(
-			match, WaitingType.REGISTER);
-
-		switch (match.getStatus()) {
-			case WAITING:
-				return matchConverter.convertToMatchInfoResponse(
-					match, regiserTeamInfo, null);
-			default:
-				return matchConverter.convertToMatchInfoResponse(
-					match, regiserTeamInfo, buildTeamInfoResponse(match, WaitingType.SELECTED));
-		}
-	}
-
 	public MatchRetrieveByFilterResponse retrieveMatchNoOffsetByFilter(
 		MatchRetrieveFilterRequest filterRequest,
 		PageRequest pageRequest
@@ -107,6 +94,45 @@ public class MatchService {
 		return new MatchRetrieveByFilterResponse(matchs);
 	}
 
+	public MatchInfoResponse getMatchInfo(Long matchId) {
+		Match match = findExistingMatch(matchId);
+
+		TeamWaiting registerTamWaiting = teamWaitingService.findByMatchIdAndType(
+			match.getId(), WaitingType.REGISTER);
+
+		MatchInfoResponse.TeamInfo regiserTeamInfo = buildTeamInfoResponse(
+			registerTamWaiting);
+
+		switch (match.getStatus()) {
+			case WAITING:
+				return matchConverter.convertToMatchInfoResponse(
+					match, regiserTeamInfo, null);
+			default:
+				TeamWaiting applyTamWaiting = teamWaitingService.findByMatchIdAndType(
+					match.getId(), WaitingType.SELECTED);
+
+				return matchConverter.convertToMatchInfoResponse(
+					match, regiserTeamInfo, buildTeamInfoResponse(applyTamWaiting));
+		}
+	}
+
+	public MatchWaitingListResponse getMatchWaitingList(Long matchId) {
+
+		List<TeamWaiting> teamWaitings = teamWaitingService.findAllByMatchIdAndType(
+			matchId, WaitingType.WAITING);
+
+		List<MatchWaitingTeam> matchWaitingTeams = new ArrayList<>();
+
+		for (TeamWaiting teamWaiting : teamWaitings) {
+
+			matchWaitingTeams.add(
+				new MatchWaitingTeam(teamWaiting.getId(), buildTeamInfoResponse(teamWaiting)));
+
+		}
+
+		return new MatchWaitingListResponse(matchWaitingTeams);
+
+	}
 
 	public Match findExistingMatch(Long matchId) {
 		return matchRepository
@@ -117,12 +143,8 @@ public class MatchService {
 	}
 
 	private MatchInfoResponse.TeamInfo buildTeamInfoResponse(
-		Match match,
-		WaitingType waitingType
+		TeamWaiting teamWaiting
 	) {
-
-		TeamWaiting teamWaiting = teamWaitingService.findByMatchIdAndType(
-			match.getId(), waitingType);
 
 		Team team = teamWaiting.getTeam();
 
@@ -133,9 +155,11 @@ public class MatchService {
 			.map(memberWaiting -> new MatchMember(
 				memberWaiting
 					.getUser()
-					.getId(), memberWaiting
+					.getId(),
+				memberWaiting
 					.getUser()
-					.getName()))
+					.getName()
+			))
 			.collect(Collectors.toList());
 
 		User captain = team
