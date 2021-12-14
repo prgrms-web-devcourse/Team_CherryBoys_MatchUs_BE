@@ -18,7 +18,7 @@ import com.matchus.domains.team.repository.TeamRepository;
 import com.matchus.domains.team.repository.TeamUserRepository;
 import com.matchus.domains.user.domain.Gender;
 import com.matchus.domains.user.domain.User;
-import com.matchus.domains.user.repository.UserRepository;
+import com.matchus.domains.user.service.UserService;
 import com.matchus.global.service.FileUploadService;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -54,7 +54,7 @@ class TeamServiceTest {
 	private TeamUserRepository teamUserRepository;
 
 	@Mock
-	private UserRepository userRepository;
+	private UserService userService;
 
 	@DisplayName("팀 생성 서비스 성공 테스트")
 	@Test
@@ -98,8 +98,7 @@ class TeamServiceTest {
 			.build();
 		given(sportsService.getSports(any())).willReturn(sport);
 		given(uploadService.uploadImage(any())).willReturn(logo);
-		given(userRepository.findByEmailAndIsDisaffiliatedFalse(any())).willReturn(
-			Optional.of(user));
+		given(userService.findActiveUser(any())).willReturn(user);
 		given(teamConverter.convertToTeam(any(), any(), any())).willReturn(team);
 		given(teamRepository.save(any())).willReturn(team);
 		given(teamUserRepository.save(any())).willReturn(teamUser);
