@@ -2,11 +2,13 @@ package com.matchus.domains.user.converter;
 
 import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.sports.domain.Sports;
+import com.matchus.domains.team.domain.TeamSimpleInfo;
 import com.matchus.domains.user.domain.Gender;
 import com.matchus.domains.user.domain.Grouping;
 import com.matchus.domains.user.domain.User;
 import com.matchus.domains.user.dto.request.SignUpRequest;
 import com.matchus.domains.user.dto.response.LoginResponse;
+import com.matchus.domains.user.dto.response.UserInfoResponse;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
@@ -62,5 +64,31 @@ public class UserConverter {
 			.build();
 	}
 
+	public UserInfoResponse convertToUserInfoResponse(
+		User user,
+		List<TeamSimpleInfo.TeamNameAndLogo> myTeams,
+		List<String> tagNames
+	) {
+
+		return UserInfoResponse
+			.builder()
+			.name(user.getName())
+			.nickname(user.getNickname())
+			.sportsName(user
+							.getSport()
+							.getName())
+			.gender(user
+						.getGender()
+						.getGender())
+			.ageGrouop(user
+						   .getAgeGroup()
+						   .getAgeGroup())
+			.tagNames(tagNames)
+			.mannerTemperature(user.getMannerTemperature())
+			.myTeams(myTeams)
+			.matchCount(user.getMatchCount())
+			.build();
+
+	}
 
 }

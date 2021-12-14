@@ -24,18 +24,13 @@ public class TeamUserService {
 	private final UserRepository userRepository;
 
 	@Transactional(readOnly = true)
-	public List<LoginResponse.UserGradeResponse> getUserGrades(Long userId) {
+	public List<TeamUser> getMyTeamUsers(Long userId) {
 		return teamUserRepository
-			.findAllByUserId(userId)
-			.stream()
-			.map(teamUser -> new LoginResponse.UserGradeResponse(teamUser
-																	 .getTeam()
-																	 .getId(), teamUser.getGrade()))
-			.collect(Collectors.toList());
+			.findAllByUserId(userId);
 	}
 
 	@Transactional(readOnly = true)
-	public List<TeamUser> getMyTeamUsers(Long userId, List<Grade> grades) {
+	public List<TeamUser> getMyTeamUsersByGrades(Long userId, List<Grade> grades) {
 
 		return teamUserRepository
 			.findAllByUserIdAndGradeIn(userId, grades);
