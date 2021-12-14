@@ -1,6 +1,7 @@
 package com.matchus.domains.match.controller;
 
 import com.matchus.domains.match.dto.request.MatchCreateRequest;
+import com.matchus.domains.match.dto.request.MatchModifyRequest;
 import com.matchus.domains.match.dto.request.MatchRetrieveFilterRequest;
 import com.matchus.domains.match.dto.response.MatchIdResponse;
 import com.matchus.domains.match.dto.response.MatchInfoResponse;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -43,6 +45,18 @@ public class MatchController {
 	@GetMapping("/matches/{matchId}")
 	public ResponseEntity<ApiResponse<MatchInfoResponse>> getMatchInfo(@PathVariable Long matchId) {
 		return ResponseEntity.ok(ApiResponse.of(matchService.getMatchInfo(matchId)));
+	}
+
+	@ApiOperation(
+		value = "매치 정보 수정",
+		notes = "매칭 정보를 수정합니다."
+	)
+	@PutMapping("/matches/{matchId}")
+	public ResponseEntity<ApiResponse<MatchIdResponse>> changeMatchInfo(
+		@PathVariable Long matchId, @RequestBody
+		MatchModifyRequest request
+	) {
+		return ResponseEntity.ok(ApiResponse.of(matchService.matchChangeInfo(request, matchId)));
 	}
 
 	@ApiOperation(
