@@ -3,6 +3,9 @@ package com.matchus.domains.user.service;
 import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.sports.domain.Sports;
 import com.matchus.domains.sports.service.SportsService;
+import com.matchus.domains.team.domain.Grade;
+import com.matchus.domains.team.domain.TeamSimpleInfo;
+import com.matchus.domains.team.domain.TeamUser;
 import com.matchus.domains.team.service.TeamUserService;
 import com.matchus.domains.user.converter.UserConverter;
 import com.matchus.domains.user.domain.Grouping;
@@ -11,6 +14,7 @@ import com.matchus.domains.user.dto.request.CheckDuplicatedResponse;
 import com.matchus.domains.user.dto.request.LoginRequest;
 import com.matchus.domains.user.dto.request.SignUpRequest;
 import com.matchus.domains.user.dto.request.UserChangeInfoRequest;
+import com.matchus.domains.user.dto.response.AffiliatedTeamsResponse;
 import com.matchus.domains.user.dto.response.LoginResponse;
 import com.matchus.domains.user.dto.response.UserChangeInfoResponse;
 import com.matchus.domains.user.exception.UserNotFoundException;
@@ -18,7 +22,9 @@ import com.matchus.domains.user.repository.UserRepository;
 import com.matchus.global.error.ErrorCode;
 import com.matchus.global.jwt.JwtAuthentication;
 import com.matchus.global.jwt.JwtAuthenticationToken;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -121,6 +127,20 @@ public class UserService {
 
 	}
 
+	public AffiliatedTeamsResponse getMyTeams(String email) {
+		User user = findActiveUser(email);
+
+		List<Grade> grades = Arrays.asList(Grade.CAPTAIN, Grade.SUB_CAPTAIN);
+		List<TeamSimpleInfo> teamSimpleInfoList = teamUserService
+			.getMyTeamUsers(user.getId(), grades)
+			.stream()
+			.map(TeamUser::getTeam)
+			.map(team -> new TeamSimpleInfo(team.getId(), team.getName()))
+			.collect(Collectors.toList());
+
+		return new AffiliatedTeamsResponse(teamSimpleInfoList);
+	}
+
 	public User findActiveUser(String email) {
 		return userRepository
 			.findByEmailAndIsDisaffiliatedFalse(email)
@@ -132,4 +152,5 @@ public class UserService {
 			.findById(userId)
 			.orElseThrow(() -> new UserNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
 	}
+
 }
