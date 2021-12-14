@@ -65,7 +65,7 @@ public class MatchController {
 		value = "매치 신청 대기팀 리스트 조회",
 		notes = "매치 신청 대기 팀&팀원 리스트를 조회합니다."
 	)
-	@GetMapping("/{matchId}/waitings")
+	@GetMapping("/matches/{matchId}/waitings")
 	public ResponseEntity<ApiResponse<MatchWaitingListResponse>> getMatchWaitingList(
 		@PathVariable long matchId
 	) {
