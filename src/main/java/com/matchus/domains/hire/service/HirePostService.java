@@ -6,9 +6,11 @@ import com.matchus.domains.hire.converter.HirePostConverter;
 import com.matchus.domains.hire.domain.HireApplication;
 import com.matchus.domains.hire.domain.HireApplyUser;
 import com.matchus.domains.hire.domain.HirePost;
+import com.matchus.domains.hire.dto.request.ApplicationsAcceptRequest;
 import com.matchus.domains.hire.dto.request.HirePostModifyRequest;
 import com.matchus.domains.hire.dto.request.HirePostRetrieveFilterRequest;
 import com.matchus.domains.hire.dto.request.HirePostWriteRequest;
+import com.matchus.domains.hire.dto.response.ApplicationsAcceptResponse;
 import com.matchus.domains.hire.dto.response.HireApplicationsResponse;
 import com.matchus.domains.hire.dto.response.HirePostInfoResponse;
 import com.matchus.domains.hire.dto.response.HirePostListFilterResponseDto;
@@ -22,9 +24,13 @@ import com.matchus.domains.location.domain.Location;
 import com.matchus.domains.location.service.LocationService;
 import com.matchus.domains.sports.domain.Sports;
 import com.matchus.domains.sports.service.SportsService;
+import com.matchus.domains.team.domain.Grade;
 import com.matchus.domains.team.domain.Team;
+import com.matchus.domains.team.domain.TeamUser;
 import com.matchus.domains.team.service.TeamService;
+import com.matchus.domains.team.service.TeamUserService;
 import com.matchus.domains.user.domain.User;
+import com.matchus.domains.user.service.UserService;
 import com.matchus.global.error.ErrorCode;
 import com.matchus.global.utils.PageRequest;
 import java.time.LocalDate;
@@ -45,6 +51,8 @@ public class HirePostService {
 	private final TeamService teamService;
 	private final LocationService locationService;
 	private final HireApplicationRepository hireApplicationRepository;
+	private final TeamUserService teamUserService;
+	private final UserService userService;
 
 	@Transactional(readOnly = true)
 	public HirePostRetrieveByFilterResponse retrieveHirePostsNoOffsetByFilter(
@@ -128,7 +136,7 @@ public class HirePostService {
 	public HirePost findHirePost(Long postId) {
 		return hirePostRepository
 			.findById(postId)
-			.orElseThrow(() -> new HirePostNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
+			.orElseThrow(() -> new HirePostNotFoundException(ErrorCode.HIRE_POST_NOT_FOUND));
 	}
 
 	@Transactional(readOnly = true)
@@ -150,5 +158,26 @@ public class HirePostService {
 			).collect(Collectors.toList());
 
 		return new HireApplicationsResponse(applyUsers);
+	}
+
+	public ApplicationsAcceptResponse acceptHireApplications(
+		Long postId,
+		ApplicationsAcceptRequest request
+	) {
+		HirePost hirePost = findHirePost(postId);
+		for (HireApplyUser hireApplyUser : request.getApplications()) {
+			User user = userService.findUserByUserId(hireApplyUser.getUserId());
+			teamUserService.addHireMember(
+				TeamUser
+					.builder()
+					.team(hirePost.getTeam())
+					.user(user)
+					.grade(Grade.HIRED)
+					.build()
+			);
+			hireApplicationRepository.deleteById(hireApplyUser.getApplicationId());
+		}
+
+		return new ApplicationsAcceptResponse(hirePost.getId());
 	}
 }
