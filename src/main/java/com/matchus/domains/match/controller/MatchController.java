@@ -70,6 +70,7 @@ public class MatchController {
 		@PathVariable long matchId
 	) {
 		return ResponseEntity.ok(ApiResponse.of(matchService.getMatchWaitingList(matchId)));
+	}
 
 	@ApiOperation(
 		value = "매치 신청 수락",

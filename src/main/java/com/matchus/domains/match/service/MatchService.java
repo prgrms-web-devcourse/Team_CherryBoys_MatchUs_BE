@@ -131,7 +131,7 @@ public class MatchService {
 		}
 
 		return new MatchWaitingListResponse(matchWaitingTeams);
-
+	}
 
 	@Transactional
 	public MatchIdResponse acceptMatch(Long teamWaitingId) {
