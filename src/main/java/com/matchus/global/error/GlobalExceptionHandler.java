@@ -4,6 +4,8 @@ import com.matchus.domains.common.exception.AgeGroupNotFoundException;
 import com.matchus.domains.hire.exception.HireApplicationNotFoundException;
 import com.matchus.domains.sports.exception.SportsNotFoundException;
 import com.matchus.domains.team.exception.GradeNotFoundException;
+import com.matchus.domains.team.exception.TeamInvitationAlreadyExistsException;
+import com.matchus.domains.team.exception.TeamNotFoundException;
 import com.matchus.domains.user.exception.RoleNotFoundException;
 import com.matchus.domains.user.exception.UserNotFoundException;
 import com.matchus.global.error.exception.BusinessException;
@@ -42,6 +44,7 @@ public class GlobalExceptionHandler {
 			UserNotFoundException.class,
 			RoleNotFoundException.class,
 			HireApplicationNotFoundException.class,
+			TeamNotFoundException.class,
 		}
 	)
 	public ResponseEntity<ErrorResponse> handleNotFound(EntityNotFoundException e) {
@@ -51,14 +54,20 @@ public class GlobalExceptionHandler {
 	}
 
 	@ExceptionHandler(AgeGroupNotFoundException.class)
-	public ResponseEntity<ErrorResponse> handleAgeGroupNotFound(BusinessException exception) {
-		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.AGEGROUP_NOT_FOUND);
+	public ResponseEntity<ErrorResponse> handleAgeGroupNotFound(BusinessException e) {
+		ErrorResponse errorResponse = ErrorResponse.of(e.getErrorCode());
 		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(GradeNotFoundException.class)
-	public ResponseEntity<ErrorResponse> handleGradeNotFound(BusinessException exception) {
-		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.GRADE_NOT_FOUND);
+	public ResponseEntity<ErrorResponse> handleGradeNotFound(BusinessException e) {
+		ErrorResponse errorResponse = ErrorResponse.of(e.getErrorCode());
+		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(TeamInvitationAlreadyExistsException.class)
+	public ResponseEntity<ErrorResponse> handleAlreadyExists(BusinessException e) {
+		ErrorResponse errorResponse = ErrorResponse.of(e.getErrorCode());
 		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 
