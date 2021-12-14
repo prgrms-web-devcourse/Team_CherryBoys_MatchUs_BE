@@ -5,6 +5,7 @@ import com.matchus.domains.user.dto.request.CheckDuplicatedResponse;
 import com.matchus.domains.user.dto.request.LoginRequest;
 import com.matchus.domains.user.dto.request.SignUpRequest;
 import com.matchus.domains.user.dto.request.UserChangeInfoRequest;
+import com.matchus.domains.user.dto.response.AffiliatedTeamsResponse;
 import com.matchus.domains.user.dto.response.LoginResponse;
 import com.matchus.domains.user.dto.response.UserChangeInfoResponse;
 import com.matchus.domains.user.service.UserService;
@@ -107,6 +108,18 @@ public class UserController {
 		return ResponseEntity.ok(
 			ApiResponse.of(
 				userService.changeInfoUser(userChangeInfoRequest, authentication.username)));
+	}
+
+	@ApiOperation(
+		value = "부주장 이상 권한을 가진 소속된 팀 리스트 조회",
+		notes = "자신이 소속된 팀 중 부주장 또는 주장의 권한을 맡고 있는 팀 리스트를 조회합니다."
+	)
+	@GetMapping("/me/teams")
+	public ResponseEntity<ApiResponse<AffiliatedTeamsResponse>> getMyTeams(@AuthenticationPrincipal JwtAuthentication authentication) {
+
+		return ResponseEntity.ok(
+			ApiResponse.of(
+				userService.getMyTeams(authentication.username)));
 	}
 
 }

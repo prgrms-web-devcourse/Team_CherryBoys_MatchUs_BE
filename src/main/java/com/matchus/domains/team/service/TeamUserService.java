@@ -1,5 +1,6 @@
 package com.matchus.domains.team.service;
 
+import com.matchus.domains.team.domain.Grade;
 import com.matchus.domains.team.domain.TeamUser;
 import com.matchus.domains.team.repository.TeamUserRepository;
 import com.matchus.domains.user.dto.response.LoginResponse;
@@ -28,7 +29,16 @@ public class TeamUserService {
 			.collect(Collectors.toList());
 	}
 
+	@Transactional(readOnly = true)
+	public List<TeamUser> getMyTeamUsers(Long userId, List<Grade> grades) {
+
+		return teamUserRepository
+			.findAllByUserIdAndGradeIn(userId, grades);
+
+	}
+
 	public void addHireMember(TeamUser teamUser) {
 		teamUserRepository.save(teamUser);
 	}
+
 }
