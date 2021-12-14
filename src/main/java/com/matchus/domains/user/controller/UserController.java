@@ -1,7 +1,5 @@
 package com.matchus.domains.user.controller;
 
-import com.matchus.domains.common.dto.SuccessResponse;
-import com.matchus.domains.user.dto.request.CheckDuplicatedResponse;
 import com.matchus.domains.user.dto.request.LoginRequest;
 import com.matchus.domains.user.dto.request.SignUpRequest;
 import com.matchus.domains.user.dto.request.UserChangeInfoRequest;
@@ -11,6 +9,8 @@ import com.matchus.domains.user.dto.response.UserChangeInfoResponse;
 import com.matchus.domains.user.service.UserService;
 import com.matchus.global.jwt.JwtAuthentication;
 import com.matchus.global.response.ApiResponse;
+import com.matchus.global.response.CheckDuplicatedResponse;
+import com.matchus.global.response.SuccessResponse;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

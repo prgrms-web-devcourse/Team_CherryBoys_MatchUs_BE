@@ -1,11 +1,11 @@
 package com.matchus.domains.hire.controller;
 
-import com.matchus.domains.common.dto.SuccessResponse;
 import com.matchus.domains.hire.dto.request.HireApplyRequest;
 import com.matchus.domains.hire.dto.response.HireApplyResponse;
 import com.matchus.domains.hire.service.HireApplicationService;
 import com.matchus.global.jwt.JwtAuthentication;
 import com.matchus.global.response.ApiResponse;
+import com.matchus.global.response.SuccessResponse;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
