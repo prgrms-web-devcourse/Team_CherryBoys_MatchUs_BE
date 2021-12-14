@@ -1,5 +1,6 @@
 package com.matchus.domains.team.service;
 
+import com.matchus.domains.team.domain.TeamUser;
 import com.matchus.domains.team.repository.TeamUserRepository;
 import com.matchus.domains.user.dto.response.LoginResponse;
 import java.util.List;
@@ -27,4 +28,7 @@ public class TeamUserService {
 			.collect(Collectors.toList());
 	}
 
+	public void addHireMember(TeamUser teamUser) {
+		teamUserRepository.save(teamUser);
+	}
 }

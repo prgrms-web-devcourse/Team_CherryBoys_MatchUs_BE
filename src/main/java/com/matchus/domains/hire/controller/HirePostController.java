@@ -1,8 +1,10 @@
 package com.matchus.domains.hire.controller;
 
+import com.matchus.domains.hire.dto.request.ApplicationsAcceptRequest;
 import com.matchus.domains.hire.dto.request.HirePostModifyRequest;
 import com.matchus.domains.hire.dto.request.HirePostRetrieveFilterRequest;
 import com.matchus.domains.hire.dto.request.HirePostWriteRequest;
+import com.matchus.domains.hire.dto.response.ApplicationsAcceptResponse;
 import com.matchus.domains.hire.dto.response.HireApplicationsResponse;
 import com.matchus.domains.hire.dto.response.HirePostInfoResponse;
 import com.matchus.domains.hire.dto.response.HirePostModifyResponse;
@@ -109,6 +111,20 @@ public class HirePostController {
 	public ResponseEntity<ApiResponse<HireApplicationsResponse>> getHireApplications(@PathVariable Long postId) {
 		return ResponseEntity.ok(
 			ApiResponse.of(hirePostService.getHireApplications(postId))
+		);
+	}
+
+	@ApiOperation(
+		value = "용병 수락",
+		notes = "용병 구인 게시글의 용병 신청을 수락하여 용병 팀원으로 등록합니다."
+	)
+	@PostMapping("/{postId}/applications")
+	public ResponseEntity<ApiResponse<ApplicationsAcceptResponse>> acceptHireApplications(
+		@PathVariable Long postId,
+		@RequestBody ApplicationsAcceptRequest request
+	) {
+		return ResponseEntity.ok(
+			ApiResponse.of(hirePostService.acceptHireApplications(postId, request))
 		);
 	}
 }
