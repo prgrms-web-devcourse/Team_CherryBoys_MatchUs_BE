@@ -8,8 +8,8 @@ import com.matchus.domains.match.domain.Match;
 import com.matchus.domains.match.domain.TeamWaiting;
 import com.matchus.domains.match.domain.WaitingType;
 import com.matchus.domains.match.dto.request.MatchCreateRequest;
-import com.matchus.domains.match.dto.request.MatchMemberModiftyRequest;
 import com.matchus.domains.match.dto.request.MatchRetrieveFilterRequest;
+import com.matchus.domains.match.dto.request.MatchTeamInfoRequest;
 import com.matchus.domains.match.dto.response.MatchIdResponse;
 import com.matchus.domains.match.dto.response.MatchInfoResponse;
 import com.matchus.domains.match.dto.response.MatchListByFilterResponse;
@@ -67,10 +67,8 @@ public class MatchService {
 					location
 				));
 
-		TeamWaiting teamWaiting = teamWaitingService.createTeamWaiting(
-			registerTeam, match, WaitingType.REGISTER);
-
-		memberWaitingService.saveMemberWaitings(matchCreateRequest.getPlayers(), teamWaiting);
+		createMatchWaiting(
+			registerTeam, match, WaitingType.REGISTER, matchCreateRequest.getPlayers());
 
 		return new MatchIdResponse(match.getId());
 	}
@@ -135,7 +133,7 @@ public class MatchService {
 	}
 
 	@Transactional
-	public MatchIdResponse changeMatchMembersInfo(MatchMemberModiftyRequest request, Long matchId) {
+	public MatchIdResponse changeMatchMembersInfo(MatchTeamInfoRequest request, Long matchId) {
 		TeamWaiting teamWaiting = teamWaitingService.findByMatchIdAndTeamId(
 			matchId, request.getTeamId()
 		);
@@ -162,12 +160,28 @@ public class MatchService {
 		return new MatchIdResponse(match.getId());
 	}
 
+	@Transactional
+	public MatchIdResponse applyMatch(Long matchId, MatchTeamInfoRequest request) {
+		Match match = findExistingMatch(matchId);
+		Team team = teamService.findExistingTeam(request.getTeamId());
+
+		createMatchWaiting(team, match, WaitingType.WAITING, request.getPlayers());
+
+		return new MatchIdResponse(matchId);
+	}
+
 	public Match findExistingMatch(Long matchId) {
 		return matchRepository
 			.findById(matchId)
 			.orElseThrow(
 				() -> new MatchNotFoundException(ErrorCode.ENTITY_NOT_FOUND)
 			);
+	}
+
+	private void createMatchWaiting(Team team, Match match, WaitingType type, List<Long> players) {
+		TeamWaiting teamWaiting = teamWaitingService.createTeamWaiting(team, match, type);
+
+		memberWaitingService.saveMemberWaitings(players, teamWaiting);
 	}
 
 	private MatchInfoResponse.TeamInfo buildTeamInfoResponse(
