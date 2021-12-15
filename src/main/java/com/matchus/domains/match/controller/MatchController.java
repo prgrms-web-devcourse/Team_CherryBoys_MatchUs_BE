@@ -1,6 +1,7 @@
 package com.matchus.domains.match.controller;
 
 import com.matchus.domains.match.dto.request.MatchCreateRequest;
+import com.matchus.domains.match.dto.request.MatchMemberModiftyRequest;
 import com.matchus.domains.match.dto.request.MatchRetrieveFilterRequest;
 import com.matchus.domains.match.dto.response.MatchIdResponse;
 import com.matchus.domains.match.dto.response.MatchInfoResponse;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -80,6 +82,20 @@ public class MatchController {
 	public ResponseEntity<ApiResponse<MatchIdResponse>> acceptMatch(@PathVariable Long teamWaitingId) {
 
 		return ResponseEntity.ok(ApiResponse.of(matchService.acceptMatch(teamWaitingId)));
+	}
+
+	@ApiOperation(
+		value = "매치 팀원 명단 수정",
+		notes = "매치에 등록한 팀원 명단을 수정한다."
+	)
+	@PutMapping("/matches/{matchId}/members")
+	public ResponseEntity<ApiResponse<MatchIdResponse>> acceptMatch(
+		@PathVariable Long matchId,
+		@RequestBody MatchMemberModiftyRequest request
+	) {
+
+		return ResponseEntity.ok(
+			ApiResponse.of(matchService.changeMatchMembersInfo(request, matchId)));
 	}
 
 }
