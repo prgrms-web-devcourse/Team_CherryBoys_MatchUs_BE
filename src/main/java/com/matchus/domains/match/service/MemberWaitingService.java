@@ -4,9 +4,7 @@ import com.matchus.domains.match.domain.MemberWaiting;
 import com.matchus.domains.match.domain.TeamWaiting;
 import com.matchus.domains.match.repository.MemberWaitingReponsitory;
 import com.matchus.domains.user.domain.User;
-import com.matchus.domains.user.exception.UserNotFoundException;
-import com.matchus.domains.user.repository.UserRepository;
-import com.matchus.global.error.ErrorCode;
+import com.matchus.domains.user.service.UserService;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,23 +14,21 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberWaitingService {
 
 	private final MemberWaitingReponsitory memberWaitingReponsitory;
-	private final UserRepository userRepository;
+	private final UserService userService;
 
 	public MemberWaitingService(
 		MemberWaitingReponsitory memberWaitingReponsitory,
-		UserRepository userRepository
+		UserService userService
 	) {
 		this.memberWaitingReponsitory = memberWaitingReponsitory;
-		this.userRepository = userRepository;
+		this.userService = userService;
 	}
 
 	@Transactional
 	public void saveMemberWaitings(List<Long> userIds, TeamWaiting teamWaiting) {
 
 		for (Long id : userIds) {
-			User user = userRepository
-				.findById(id)
-				.orElseThrow(() -> new UserNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
+			User user = userService.findUserByUserId(id);
 
 			memberWaitingReponsitory.save(MemberWaiting
 											  .builder()
@@ -43,8 +39,13 @@ public class MemberWaitingService {
 
 	}
 
-	public List<MemberWaiting> getMemberWaitings(TeamWaiting teamWaiting) {
-		return memberWaitingReponsitory.findAllByTeamWaitingId(teamWaiting.getId());
+	public List<MemberWaiting> getMemberWaitings(Long teamWaitingId) {
+		return memberWaitingReponsitory.findAllByTeamWaitingId(teamWaitingId);
+	}
+
+	@Transactional
+	public void removeAllMemberWaitings(Long teamWaitingId) {
+		memberWaitingReponsitory.deleteAllByTeamWaitingId(teamWaitingId);
 	}
 
 }

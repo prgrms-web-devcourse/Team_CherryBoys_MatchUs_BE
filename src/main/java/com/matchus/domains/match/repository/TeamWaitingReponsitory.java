@@ -14,4 +14,6 @@ public interface TeamWaitingReponsitory extends JpaRepository<TeamWaiting, Long>
 
 	List<TeamWaiting> findAllByMatchIdAndType(Long matchId, WaitingType type);
 
+	Optional<TeamWaiting> findByMatchIdAndTeamId(Long matchId, Long teamId);
+
 }

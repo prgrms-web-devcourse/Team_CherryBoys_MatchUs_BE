@@ -10,6 +10,7 @@ import com.matchus.domains.match.domain.TeamWaiting;
 import com.matchus.domains.match.domain.WaitingType;
 import com.matchus.domains.match.dto.request.MatchCreateRequest;
 import com.matchus.domains.match.dto.request.MatchModifyRequest;
+import com.matchus.domains.match.dto.request.MatchMemberModiftyRequest;
 import com.matchus.domains.match.dto.request.MatchRetrieveFilterRequest;
 import com.matchus.domains.match.dto.response.MatchIdResponse;
 import com.matchus.domains.match.dto.response.MatchInfoResponse;
@@ -153,6 +154,19 @@ public class MatchService {
 	}
 
 	@Transactional
+	public MatchIdResponse changeMatchMembersInfo(MatchMemberModiftyRequest request, Long matchId) {
+		TeamWaiting teamWaiting = teamWaitingService.findByMatchIdAndTeamId(
+			matchId, request.getTeamId()
+		);
+
+		memberWaitingService.removeAllMemberWaitings(teamWaiting.getId());
+
+		memberWaitingService.saveMemberWaitings(request.getPlayers(), teamWaiting);
+
+		return new MatchIdResponse(matchId);
+	}
+
+	@Transactional
 	public MatchIdResponse acceptMatch(Long teamWaitingId) {
 
 		TeamWaiting teamWaiting = teamWaitingService.findByIdAndTypeNot(
@@ -183,7 +197,7 @@ public class MatchService {
 
 		List<MatchMember> matchMembers = memberWaitingService
 			.getMemberWaitings(
-				teamWaiting)
+				teamWaiting.getId())
 			.stream()
 			.map(memberWaiting -> new MatchMember(
 				memberWaiting
