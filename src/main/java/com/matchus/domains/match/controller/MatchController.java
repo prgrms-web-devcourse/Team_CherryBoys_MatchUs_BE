@@ -106,9 +106,7 @@ public class MatchController {
 		@PathVariable Long matchId,
 		@RequestBody MatchTeamInfoRequest request
 	) {
-
 		return ResponseEntity.ok(
 			ApiResponse.of(matchService.changeMatchMembersInfo(request, matchId)));
 	}
-
 }
