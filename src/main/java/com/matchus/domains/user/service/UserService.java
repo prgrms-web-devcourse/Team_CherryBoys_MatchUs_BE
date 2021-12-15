@@ -137,26 +137,13 @@ public class UserService {
 	public UserInfoResponse getMyInfo(String email) {
 		User user = findActiveUser(email);
 
-		List<String> tagNames = userTagService
-			.getUserTags(user.getId())
-			.stream()
-			.sorted(Comparator
-						.comparing(UserTag::getTagCount)
-						.reversed())
-			.map(UserTag::getTag)
-			.map(Tag::getName)
-			.collect(Collectors.toList());
+		return buildUserInfoRespose(user);
+	}
 
-		List<TeamSimpleInfo.TeamNameAndLogo> myTeams = teamUserService
-			.getMyTeamUsers(user.getId())
-			.stream()
-			.map(TeamUser::getTeam)
-			.map(team -> new TeamSimpleInfo.TeamNameAndLogo(team.getId(), team.getName(),
-															team.getLogo()
-			))
-			.collect(Collectors.toList());
+	public UserInfoResponse getUserInfo(Long id) {
+		User user = findUserByUserId(id);
 
-		return userConverter.convertToUserInfoResponse(user, myTeams, tagNames);
+		return buildUserInfoRespose(user);
 	}
 
 	public UserMatchesResponse getUserMatches(Long userId) {
@@ -202,13 +189,13 @@ public class UserService {
 	public User findActiveUser(String email) {
 		return userRepository
 			.findByEmailAndIsDisaffiliatedFalse(email)
-			.orElseThrow(() -> new UserNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
+			.orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
 	}
 
 	public User findUserByUserId(Long userId) {
 		return userRepository
 			.findById(userId)
-			.orElseThrow(() -> new UserNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
+			.orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
 	}
 
 	private List<LoginResponse.UserGradeResponse> getUserGrades(Long userId) {
@@ -220,6 +207,31 @@ public class UserService {
 																	 .getTeam()
 																	 .getId(), teamUser.getGrade()))
 			.collect(Collectors.toList());
+
+	}
+
+	private UserInfoResponse buildUserInfoRespose(User user) {
+
+		List<String> tagNames = userTagService
+			.getUserTags(user.getId())
+			.stream()
+			.sorted(Comparator
+						.comparing(UserTag::getTagCount)
+						.reversed())
+			.map(UserTag::getTag)
+			.map(Tag::getName)
+			.collect(Collectors.toList());
+
+		List<TeamSimpleInfo.TeamNameAndLogo> myTeams = teamUserService
+			.getMyTeamUsers(user.getId())
+			.stream()
+			.map(teamUser -> teamUser.getTeam())
+			.map(team -> new TeamSimpleInfo.TeamNameAndLogo(team.getId(), team.getName(),
+															team.getLogo()
+			))
+			.collect(Collectors.toList());
+
+		return userConverter.convertToUserInfoResponse(user, myTeams, tagNames);
 
 	}
 
