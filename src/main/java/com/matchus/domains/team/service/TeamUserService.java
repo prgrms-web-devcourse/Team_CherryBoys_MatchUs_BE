@@ -1,17 +1,17 @@
 package com.matchus.domains.team.service;
 
 import com.matchus.domains.team.domain.Grade;
+import com.matchus.domains.team.domain.Team;
 import com.matchus.domains.team.domain.TeamUser;
 import com.matchus.domains.team.dto.response.TeamIdResponse;
+import com.matchus.domains.team.exception.TeamUserAlreadyExistsException;
 import com.matchus.domains.team.exception.TeamUserNotFoundException;
 import com.matchus.domains.team.repository.TeamUserRepository;
 import com.matchus.domains.user.domain.User;
-import com.matchus.domains.user.dto.response.LoginResponse;
 import com.matchus.domains.user.exception.UserNotFoundException;
 import com.matchus.domains.user.repository.UserRepository;
 import com.matchus.global.error.ErrorCode;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,5 +52,17 @@ public class TeamUserService {
 		teamUserRepository.delete(teamUser);
 
 		return new TeamIdResponse(teamId);
+	}
+
+	public TeamUser saveTeamUser(Team team, User user) {
+		if (teamUserRepository.existsByUser(user)) {
+			throw new TeamUserAlreadyExistsException(ErrorCode.TEAM_USER_ALREADY_EXISTS);
+		}
+		return teamUserRepository.save(TeamUser
+										   .builder()
+										   .team(team)
+										   .user(user)
+										   .grade(Grade.GENERAL)
+										   .build());
 	}
 }

@@ -17,12 +17,14 @@ public enum ErrorCode {
 	TEAM_NOT_FOUND("존재하지 않는 팀 입니다.", 400),
 	USER_NOT_FOUND("해당 유저가 존재하지 않습니다.", 400),
 	TEAM_USER_NOT_FOUND("팀-팀원이 존재하지 않습니다.", 400),
+	TEAM_INVITATION_NOT_FOUND("팀원 초대 요청이 존재하지 않습니다.", 400),
 	AGEGROUP_NOT_FOUND("나이대가 존재하지 않습니다.", 400),
 	GENDER_NOT_FOUND("성별이 존재하지 않습니다.", 400),
 	GRADE_NOT_FOUND("등급이 존재하지 않습니다.", 400),
 	TEAM_WAITING_NOT_FOUND("매칭 팀이 존재하지 않습니다.", 400),
 	INVALID_FILE_TYPE("잘못된 형식의 파일 입니다.", 400),
 	TEAM_INVITATION_ALREADY_EXISTS("기존 초대 요청이 존재합니다.", 400),
+	TEAM_USER_ALREADY_EXISTS("기존 팀원이 존재합니다.", 400),
 
 	//401
 	UNAUTHORIZED_USER("권한이 없는 사용자입니다.", 401),
