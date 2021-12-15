@@ -9,7 +9,6 @@ import com.matchus.domains.match.domain.Match;
 import com.matchus.domains.match.domain.TeamWaiting;
 import com.matchus.domains.match.domain.WaitingType;
 import com.matchus.domains.match.dto.request.MatchCreateRequest;
-import com.matchus.domains.match.dto.request.MatchMemberModiftyRequest;
 import com.matchus.domains.match.dto.request.MatchModifyRequest;
 import com.matchus.domains.match.dto.request.MatchRetrieveFilterRequest;
 import com.matchus.domains.match.dto.request.MatchTeamInfoRequest;
