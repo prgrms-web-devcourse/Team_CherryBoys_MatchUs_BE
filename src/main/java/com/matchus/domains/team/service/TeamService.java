@@ -143,7 +143,7 @@ public class TeamService {
 	}
 
 	@Transactional(readOnly = true)
-	public TeamMembersResponse getTeamUsers(Long teamId) {
+	public TeamMembersResponse getTotalTeamMembers(Long teamId) {
 		List<TeamUser> teamUsers = teamUserRepository
 			.findAllByTeamId(teamId)
 			.stream()

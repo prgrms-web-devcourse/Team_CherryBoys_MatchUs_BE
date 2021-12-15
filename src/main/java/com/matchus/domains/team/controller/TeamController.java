@@ -107,15 +107,15 @@ public class TeamController {
 	}
 
 	@ApiOperation(
-		value = "팀에 소속된 전체 사용자 조회",
-		notes = "팀원과 용병을 포함한 전체 팀 소속 사용자를 조회합니다."
+		value = "전체 팀원 조회",
+		notes = "팀에 소속되어있는 용병을 포함한 전체 팀원 리스트를 조회합니다."
 	)
-	@GetMapping("/{teamId}/team-users")
-	public ResponseEntity<ApiResponse<TeamMembersResponse>> getTeamUsers(
+	@GetMapping("/{teamId}/total-members")
+	public ResponseEntity<ApiResponse<TeamMembersResponse>> getTotalTeamMembers(
 		@PathVariable Long teamId
 	) {
 		return ResponseEntity.ok(
-			ApiResponse.of(teamService.getTeamUsers(teamId))
+			ApiResponse.of(teamService.getTotalTeamMembers(teamId))
 		);
 	}
 
