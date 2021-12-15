@@ -6,8 +6,7 @@ import com.matchus.domains.team.dto.response.TeamInvitationList;
 import com.matchus.domains.team.exception.TeamInvitationNotFoundException;
 import com.matchus.domains.team.repository.TeamInvitationRepository;
 import com.matchus.domains.user.domain.User;
-import com.matchus.domains.user.exception.UserNotFoundException;
-import com.matchus.domains.user.repository.UserRepository;
+import com.matchus.domains.user.service.UserService;
 import com.matchus.global.error.ErrorCode;
 import com.matchus.global.response.SuccessResponse;
 import java.util.List;
@@ -21,16 +20,16 @@ public class TeamInvitationService {
 
 	private final TeamInvitationRepository teamInvitationRepository;
 	private final TeamUserService teamUserService;
-	private final UserRepository userRepository;
+	private final UserService userService;
 
 	public TeamInvitationService(
 		TeamInvitationRepository teamInvitationRepository,
 		TeamUserService teamUserService,
-		UserRepository userRepository
+		UserService userService
 	) {
 		this.teamInvitationRepository = teamInvitationRepository;
 		this.teamUserService = teamUserService;
-		this.userRepository = userRepository;
+		this.userService = userService;
 	}
 
 	@Transactional
@@ -52,9 +51,7 @@ public class TeamInvitationService {
 	}
 
 	public TeamInvitationList getTeamInvitations(String email) {
-		User user = userRepository
-			.findByEmail(email)
-			.orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
+		User user = userService.findActiveUser(email);
 
 		List<TeamInvitationInfo> teamInvitationInfos = teamInvitationRepository
 			.findAllByUserId(user.getId())

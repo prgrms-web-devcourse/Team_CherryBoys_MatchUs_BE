@@ -40,10 +40,7 @@ public class TeamInvitationController {
 		notes = "팀 초대 리스트를 조회합니다."
 	)
 	@GetMapping("/me")
-	public ResponseEntity<ApiResponse<TeamInvitationList>> acceptTeamInvitation(
-		@AuthenticationPrincipal
-			JwtAuthentication authentication
-	) {
+	public ResponseEntity<ApiResponse<TeamInvitationList>> acceptTeamInvitation(@AuthenticationPrincipal JwtAuthentication authentication) {
 
 		return ResponseEntity.ok(
 			ApiResponse.of(teamInvitationService.getTeamInvitations(authentication.username)));
