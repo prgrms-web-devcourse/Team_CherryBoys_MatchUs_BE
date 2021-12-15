@@ -29,8 +29,8 @@ import com.matchus.domains.user.repository.UserRepository;
 import com.matchus.global.error.ErrorCode;
 import com.matchus.global.jwt.JwtAuthentication;
 import com.matchus.global.jwt.JwtAuthenticationToken;
-import java.util.ArrayList;
 import com.matchus.global.response.CheckDuplicatedResponse;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -102,7 +102,7 @@ public class UserService {
 		User user = findActiveUser(email);
 		Sports sports = sportsService.getSports(request.getSportName());
 
-		user.changeInfo(request.getNickname(), passwordEncoder.encode(request.getPassword()),
+		user.changeInfo(request.getNickname(),
 						request.getBio(),
 						AgeGroup.findGroup(request.getAgeGroup()), sports
 		);
