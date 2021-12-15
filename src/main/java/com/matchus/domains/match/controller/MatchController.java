@@ -53,8 +53,8 @@ public class MatchController {
 	)
 	@PutMapping("/matches/{matchId}")
 	public ResponseEntity<ApiResponse<MatchIdResponse>> changeMatchInfo(
-		@PathVariable Long matchId, @RequestBody
-		MatchModifyRequest request
+		@PathVariable Long matchId,
+		@RequestBody MatchModifyRequest request
 	) {
 		return ResponseEntity.ok(ApiResponse.of(matchService.matchChangeInfo(request, matchId)));
 	}
