@@ -40,7 +40,6 @@ public class TeamInvitationService {
 	}
 
 	@Transactional(readOnly = true)
-
 	public TeamInvitation findTeamInvitationById(Long invitationId) {
 
 		return teamInvitationRepository
