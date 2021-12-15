@@ -6,6 +6,7 @@ import com.matchus.domains.sports.exception.SportsNotFoundException;
 import com.matchus.domains.team.exception.GradeNotFoundException;
 import com.matchus.domains.team.exception.TeamInvitationAlreadyExistsException;
 import com.matchus.domains.team.exception.TeamNotFoundException;
+import com.matchus.domains.team.exception.TeamUserNotFoundException;
 import com.matchus.domains.user.exception.RoleNotFoundException;
 import com.matchus.domains.user.exception.UserNotFoundException;
 import com.matchus.global.error.exception.BusinessException;
@@ -45,6 +46,7 @@ public class GlobalExceptionHandler {
 			RoleNotFoundException.class,
 			HireApplicationNotFoundException.class,
 			TeamNotFoundException.class,
+			TeamUserNotFoundException.class,
 		}
 	)
 	public ResponseEntity<ErrorResponse> handleNotFound(EntityNotFoundException e) {
