@@ -2,6 +2,7 @@ package com.matchus.domains.team.service;
 
 import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.match.domain.Match;
+import com.matchus.domains.match.domain.MatchInfo;
 import com.matchus.domains.sports.domain.Sports;
 import com.matchus.domains.sports.service.SportsService;
 import com.matchus.domains.tag.domain.Tag;
@@ -21,7 +22,6 @@ import com.matchus.domains.team.dto.request.TeamModifyRequest;
 import com.matchus.domains.team.dto.response.TeamCreateResponse;
 import com.matchus.domains.team.dto.response.TeamIdResponse;
 import com.matchus.domains.team.dto.response.TeamInfoResponse;
-import com.matchus.domains.team.dto.response.TeamMatchInfo;
 import com.matchus.domains.team.dto.response.TeamMatchesResponse;
 import com.matchus.domains.team.dto.response.TeamMembersResponse;
 import com.matchus.domains.team.dto.response.TeamModifyResponse;
@@ -102,7 +102,9 @@ public class TeamService {
 		List<String> tagNames = teamTagService
 			.getTeamTags(teamId)
 			.stream()
-			.sorted(Comparator.comparing(TeamTag::getTagCount).reversed())
+			.sorted(Comparator
+						.comparing(TeamTag::getTagCount)
+						.reversed())
 			.map(TeamTag::getTag)
 			.map(Tag::getName)
 			.collect(Collectors.toList());
@@ -110,7 +112,9 @@ public class TeamService {
 		User captain = teamUserRepository
 			.findAllByTeamId(teamId)
 			.stream()
-			.filter(teamUser -> teamUser.getGrade().equals(Grade.CAPTAIN))
+			.filter(teamUser -> teamUser
+				.getGrade()
+				.equals(Grade.CAPTAIN))
 			.findFirst()
 			.map(TeamUser::getUser)
 			.orElseThrow(() -> new UserNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
@@ -142,24 +146,38 @@ public class TeamService {
 	public TeamMatchesResponse getTeamMatches(Long teamId) {
 		Team team = findExistingTeam(teamId);
 
-		List<TeamMatchInfo> teamMatchInfos = new ArrayList<>();
+		List<MatchInfo> matchInfos = new ArrayList<>();
 		for (Match match : team.getAllMatches()) {
-			teamMatchInfos.add(
-				new TeamMatchInfo(
+			matchInfos.add(
+				new MatchInfo(
 					match.getId(),
-					match.getHomeTeam().getId(),
-					match.getHomeTeam().getName(),
-					match.getHomeTeam().getLogo(),
-					match.getAwayTeam() != null ? match.getAwayTeam().getId() : null,
-					match.getAwayTeam() != null ? match.getAwayTeam().getName() : null,
-					match.getAwayTeam() != null ? match.getAwayTeam().getLogo() : null,
-					match.getPeriod().getDate(),
+					match
+						.getHomeTeam()
+						.getId(),
+					match
+						.getHomeTeam()
+						.getName(),
+					match
+						.getHomeTeam()
+						.getLogo(),
+					match.getAwayTeam() != null ? match
+						.getAwayTeam()
+						.getId() : null,
+					match.getAwayTeam() != null ? match
+						.getAwayTeam()
+						.getName() : null,
+					match.getAwayTeam() != null ? match
+						.getAwayTeam()
+						.getLogo() : null,
+					match
+						.getPeriod()
+						.getDate(),
 					match.getStatus()
 				)
 			);
 		}
 
-		return new TeamMatchesResponse(teamMatchInfos);
+		return new TeamMatchesResponse(matchInfos);
 	}
 
 	public TeamIdResponse changeMembersGrade(Long teamId, ChangeGradesRequest request) {
@@ -193,7 +211,9 @@ public class TeamService {
 				new TeamMember(
 					user.getId(),
 					user.getName(),
-					teamUser.getGrade().getType()
+					teamUser
+						.getGrade()
+						.getType()
 				));
 		}
 		return teamMembers;
@@ -202,7 +222,8 @@ public class TeamService {
 	public TeamIdResponse inviteUser(Long teamId, InviteUserRequest request) {
 		User user = userService.findActiveUser(request.getEmail());
 		if (teamInvitationRepository.existsByTeamIdAndUserId(teamId, user.getId())) {
-			throw new TeamInvitationAlreadyExistsException(ErrorCode.TEAM_INVITATION_ALREADY_EXISTS);
+			throw new TeamInvitationAlreadyExistsException(
+				ErrorCode.TEAM_INVITATION_ALREADY_EXISTS);
 		}
 
 		teamInvitationRepository.save(
