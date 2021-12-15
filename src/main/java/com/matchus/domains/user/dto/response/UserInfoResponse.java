@@ -13,6 +13,7 @@ public class UserInfoResponse {
 	private final String nickname;
 	private final String sportsName;
 	private final String gender;
+	private final String bio;
 	private final String ageGrouop;
 	private final List<String> tagNames;
 	private final int matchCount;
@@ -25,6 +26,7 @@ public class UserInfoResponse {
 		String nickname,
 		String sportsName,
 		String gender,
+		String bio,
 		String ageGrouop,
 		List<String> tagNames,
 		int matchCount,
@@ -35,6 +37,7 @@ public class UserInfoResponse {
 		this.nickname = nickname;
 		this.sportsName = sportsName;
 		this.gender = gender;
+		this.bio = bio;
 		this.ageGrouop = ageGrouop;
 		this.tagNames = tagNames;
 		this.matchCount = matchCount;

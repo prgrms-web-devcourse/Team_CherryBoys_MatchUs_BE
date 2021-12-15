@@ -1,6 +1,7 @@
 package com.matchus.domains.match.service;
 
 import com.matchus.domains.common.AgeGroup;
+import com.matchus.domains.common.Period;
 import com.matchus.domains.location.domain.Location;
 import com.matchus.domains.location.service.LocationService;
 import com.matchus.domains.match.converter.MatchConverter;
@@ -8,6 +9,7 @@ import com.matchus.domains.match.domain.Match;
 import com.matchus.domains.match.domain.TeamWaiting;
 import com.matchus.domains.match.domain.WaitingType;
 import com.matchus.domains.match.dto.request.MatchCreateRequest;
+import com.matchus.domains.match.dto.request.MatchModifyRequest;
 import com.matchus.domains.match.dto.request.MatchRetrieveFilterRequest;
 import com.matchus.domains.match.dto.request.MatchTeamInfoRequest;
 import com.matchus.domains.match.dto.response.MatchIdResponse;
@@ -69,6 +71,23 @@ public class MatchService {
 
 		createMatchWaiting(
 			registerTeam, match, WaitingType.REGISTER, matchCreateRequest.getPlayers());
+
+		return new MatchIdResponse(match.getId());
+	}
+
+	@Transactional
+	public MatchIdResponse matchChangeInfo(MatchModifyRequest request, Long matchId) {
+		Match match = findExistingMatch(matchId);
+
+		Location location = locationService.getLocation(
+			request.getCity(), request.getRegion(), request.getGround());
+
+		Period period = new Period(request.getDate(), request.getStartTime(), request.getEndTime());
+
+		match.changeInfo(
+			location.getCity(), location.getRegion(), location.getGround(), period,
+			request.getCost(), AgeGroup.findGroup(request.getAgeGroup()), request.getDetail()
+		);
 
 		return new MatchIdResponse(match.getId());
 	}
