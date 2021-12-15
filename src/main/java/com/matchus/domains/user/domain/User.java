@@ -140,4 +140,7 @@ public class User extends BaseEntity {
 		this.sport = sport;
 	}
 
+	public void updateMannerTemperature(BigDecimal value) {
+		this.mannerTemperature = value;
+	}
 }

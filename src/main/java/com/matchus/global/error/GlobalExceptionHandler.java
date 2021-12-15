@@ -2,6 +2,7 @@ package com.matchus.global.error;
 
 import com.matchus.domains.common.exception.AgeGroupNotFoundException;
 import com.matchus.domains.hire.exception.HireApplicationNotFoundException;
+import com.matchus.domains.match.exception.TeamWaitingNotFoundException;
 import com.matchus.domains.sports.exception.SportsNotFoundException;
 import com.matchus.domains.team.exception.GradeNotFoundException;
 import com.matchus.domains.team.exception.TeamInvitationAlreadyExistsException;
@@ -47,6 +48,7 @@ public class GlobalExceptionHandler {
 			HireApplicationNotFoundException.class,
 			TeamNotFoundException.class,
 			TeamUserNotFoundException.class,
+			TeamWaitingNotFoundException.class,
 		}
 	)
 	public ResponseEntity<ErrorResponse> handleNotFound(EntityNotFoundException e) {

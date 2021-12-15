@@ -49,4 +49,13 @@ public class TeamWaitingService {
 			.orElseThrow(() -> new TeamWaitingNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
 	}
 
+	public TeamWaiting findByMatchAndTeam(Match match, Team reviewedTeam) {
+		return teamWaitingReponsitory
+			.findByMatchIdAndTeamId(
+				match.getId(),
+				reviewedTeam.getId()
+			)
+			.orElseThrow(() -> new TeamWaitingNotFoundException(ErrorCode.TEAM_WAITING_NOT_FOUND));
+	}
+
 }
