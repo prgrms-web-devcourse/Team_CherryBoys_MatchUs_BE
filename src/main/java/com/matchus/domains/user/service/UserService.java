@@ -1,6 +1,9 @@
 package com.matchus.domains.user.service;
 
 import com.matchus.domains.common.AgeGroup;
+import com.matchus.domains.match.domain.Match;
+import com.matchus.domains.match.domain.MatchInfo;
+import com.matchus.domains.match.domain.UserMatchHistory;
 import com.matchus.domains.sports.domain.Sports;
 import com.matchus.domains.sports.service.SportsService;
 import com.matchus.domains.tag.domain.Tag;
@@ -20,11 +23,13 @@ import com.matchus.domains.user.dto.response.AffiliatedTeamsResponse;
 import com.matchus.domains.user.dto.response.LoginResponse;
 import com.matchus.domains.user.dto.response.UserChangeInfoResponse;
 import com.matchus.domains.user.dto.response.UserInfoResponse;
+import com.matchus.domains.user.dto.response.UserMatchesResponse;
 import com.matchus.domains.user.exception.UserNotFoundException;
 import com.matchus.domains.user.repository.UserRepository;
 import com.matchus.global.error.ErrorCode;
 import com.matchus.global.jwt.JwtAuthentication;
 import com.matchus.global.jwt.JwtAuthenticationToken;
+import java.util.ArrayList;
 import com.matchus.global.response.CheckDuplicatedResponse;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -57,7 +62,7 @@ public class UserService {
 		Grouping grouping = groupingService.findByName("USER_GROUP");
 		String password = passwordEncoder.encode(signUpRequest.getPassword());
 
-		User user = userRepository.save(
+		userRepository.save(
 			userConverter.convertToUser(signUpRequest, sports, grouping, password));
 	}
 
@@ -140,6 +145,46 @@ public class UserService {
 
 		return buildUserInfoRespose(user);
 	}
+
+	public UserMatchesResponse getUserMatches(Long userId) {
+		User user = findUserByUserId(userId);
+
+		List<MatchInfo> matchInfos = new ArrayList<>();
+
+		for (UserMatchHistory userMatchHistory : user.getAllMatches()) {
+			Match match = userMatchHistory.getMatch();
+			matchInfos.add(
+				new MatchInfo(
+					match.getId(),
+					match
+						.getHomeTeam()
+						.getId(),
+					match
+						.getHomeTeam()
+						.getName(),
+					match
+						.getHomeTeam()
+						.getLogo(),
+					match
+						.getAwayTeam()
+						.getId(),
+					match
+						.getAwayTeam()
+						.getName(),
+					match
+						.getAwayTeam()
+						.getLogo(),
+					match
+						.getPeriod()
+						.getDate(),
+					match.getStatus()
+				)
+			);
+		}
+
+		return new UserMatchesResponse(matchInfos);
+	}
+
 
 	public User findActiveUser(String email) {
 		return userRepository

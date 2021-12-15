@@ -7,6 +7,7 @@ import com.matchus.domains.user.dto.response.AffiliatedTeamsResponse;
 import com.matchus.domains.user.dto.response.LoginResponse;
 import com.matchus.domains.user.dto.response.UserChangeInfoResponse;
 import com.matchus.domains.user.dto.response.UserInfoResponse;
+import com.matchus.domains.user.dto.response.UserMatchesResponse;
 import com.matchus.domains.user.service.UserService;
 import com.matchus.global.jwt.JwtAuthentication;
 import com.matchus.global.response.ApiResponse;
@@ -134,7 +135,7 @@ public class UserController {
 			ApiResponse.of(
 				userService.getMyInfo(authentication.username)));
 	}
-
+  
 	@ApiOperation(
 		value = "사용자 페이지 조회",
 		notes = "다른 사용자의 마이 페이지를 조회합니다."
@@ -145,6 +146,18 @@ public class UserController {
 		return ResponseEntity.ok(
 			ApiResponse.of(
 				userService.getUserInfo(userId)));
+  }
+
+	@ApiOperation(
+		value = "사용자의 경기 리스트 조회",
+		notes = "사용자가 참여한 경기 리스트를 조회합니다."
+	)
+	@GetMapping("/{userId}/matches")
+	public ResponseEntity<ApiResponse<UserMatchesResponse>> getUserMatches(@PathVariable Long userId) {
+
+		return ResponseEntity.ok(
+			ApiResponse.of(
+				userService.getUserMatches(userId)));
 	}
 
 }
