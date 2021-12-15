@@ -127,12 +127,24 @@ public class UserController {
 		value = "마이 페이지 조회",
 		notes = "사용자의 마이 페이지를 조회합니다."
 	)
-	@GetMapping("/users/me")
+	@GetMapping("/me")
 	public ResponseEntity<ApiResponse<UserInfoResponse>> getMyInfo(@AuthenticationPrincipal JwtAuthentication authentication) {
 
 		return ResponseEntity.ok(
 			ApiResponse.of(
 				userService.getMyInfo(authentication.username)));
+	}
+
+	@ApiOperation(
+		value = "사용자 페이지 조회",
+		notes = "다른 사용자의 마이 페이지를 조회합니다."
+	)
+	@GetMapping("/{userId}")
+	public ResponseEntity<ApiResponse<UserInfoResponse>> getUserInfo(@PathVariable Long userId) {
+
+		return ResponseEntity.ok(
+			ApiResponse.of(
+				userService.getUserInfo(userId)));
 	}
 
 }

@@ -132,6 +132,41 @@ public class UserService {
 	public UserInfoResponse getMyInfo(String email) {
 		User user = findActiveUser(email);
 
+		return buildUserInfoRespose(user);
+	}
+
+	public UserInfoResponse getUserInfo(Long id) {
+		User user = findUserByUserId(id);
+
+		return buildUserInfoRespose(user);
+	}
+
+	public User findActiveUser(String email) {
+		return userRepository
+			.findByEmailAndIsDisaffiliatedFalse(email)
+			.orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
+	}
+
+	public User findUserByUserId(Long userId) {
+		return userRepository
+			.findById(userId)
+			.orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
+	}
+
+	private List<LoginResponse.UserGradeResponse> getUserGrades(Long userId) {
+
+		return teamUserService
+			.getMyTeamUsers(userId)
+			.stream()
+			.map(teamUser -> new LoginResponse.UserGradeResponse(teamUser
+																	 .getTeam()
+																	 .getId(), teamUser.getGrade()))
+			.collect(Collectors.toList());
+
+	}
+
+	private UserInfoResponse buildUserInfoRespose(User user) {
+
 		List<String> tagNames = userTagService
 			.getUserTags(user.getId())
 			.stream()
@@ -152,29 +187,6 @@ public class UserService {
 			.collect(Collectors.toList());
 
 		return userConverter.convertToUserInfoResponse(user, myTeams, tagNames);
-	}
-
-	public User findActiveUser(String email) {
-		return userRepository
-			.findByEmailAndIsDisaffiliatedFalse(email)
-			.orElseThrow(() -> new UserNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
-	}
-
-	public User findUserByUserId(Long userId) {
-		return userRepository
-			.findById(userId)
-			.orElseThrow(() -> new UserNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
-	}
-
-	private List<LoginResponse.UserGradeResponse> getUserGrades(Long userId) {
-
-		return teamUserService
-			.getMyTeamUsers(userId)
-			.stream()
-			.map(teamUser -> new LoginResponse.UserGradeResponse(teamUser
-																	 .getTeam()
-																	 .getId(), teamUser.getGrade()))
-			.collect(Collectors.toList());
 
 	}
 
