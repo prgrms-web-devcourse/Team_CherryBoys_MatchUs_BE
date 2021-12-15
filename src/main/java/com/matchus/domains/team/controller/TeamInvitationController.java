@@ -5,6 +5,7 @@ import com.matchus.global.response.ApiResponse;
 import com.matchus.global.response.SuccessResponse;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +30,17 @@ public class TeamInvitationController {
 
 		return ResponseEntity.ok(
 			ApiResponse.of(teamInvitationService.acceptTeamInvitation(invitationId)));
+	}
+
+	@ApiOperation(
+		value = "팀 초대 요청 거절",
+		notes = "팀 초대 요청을 거절합니다."
+	)
+	@DeleteMapping("/{invitationId}")
+	public ResponseEntity<ApiResponse<SuccessResponse>> rejectTeamInvitation(@PathVariable Long invitationId) {
+
+		return ResponseEntity.ok(
+			ApiResponse.of(teamInvitationService.rejectTeamInvitation(invitationId)));
 	}
 
 }

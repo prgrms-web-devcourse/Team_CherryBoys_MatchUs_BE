@@ -32,6 +32,13 @@ public class TeamInvitationService {
 		return new SuccessResponse(true);
 	}
 
+	@Transactional
+	public SuccessResponse rejectTeamInvitation(Long invitationId) {
+		teamInvitationRepository.delete(findTeamInvitationById(invitationId));
+
+		return new SuccessResponse(true);
+	}
+
 	@Transactional(readOnly = true)
 	public TeamInvitation findTeamInvitationById(Long invitationId) {
 
