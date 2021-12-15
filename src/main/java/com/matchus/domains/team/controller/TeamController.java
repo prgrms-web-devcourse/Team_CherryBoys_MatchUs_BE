@@ -107,6 +107,19 @@ public class TeamController {
 	}
 
 	@ApiOperation(
+		value = "전체 팀원 조회",
+		notes = "팀에 소속되어있는 용병을 포함한 전체 팀원 리스트를 조회합니다."
+	)
+	@GetMapping("/{teamId}/total-members")
+	public ResponseEntity<ApiResponse<TeamMembersResponse>> getTotalTeamMembers(
+		@PathVariable Long teamId
+	) {
+		return ResponseEntity.ok(
+			ApiResponse.of(teamService.getTotalTeamMembers(teamId))
+		);
+	}
+
+	@ApiOperation(
 		value = "팀 매칭 리스트 조회",
 		notes = "팀이 참여한 매치 리스트를 조회합니다."
 	)
