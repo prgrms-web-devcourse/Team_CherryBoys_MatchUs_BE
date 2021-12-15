@@ -144,7 +144,13 @@ public class TeamService {
 
 	@Transactional(readOnly = true)
 	public TeamMembersResponse getTeamUsers(Long teamId) {
-		List<TeamUser> teamUsers = teamUserRepository.findAllByTeamId(teamId);
+		List<TeamUser> teamUsers = teamUserRepository
+			.findAllByTeamId(teamId)
+			.stream()
+			.sorted(Comparator.comparing((TeamUser teamUser) -> teamUser
+				.getGrade()
+				.getOrder()))
+			.collect(Collectors.toList());
 
 		return new TeamMembersResponse(getTeamMembers(teamUsers));
 	}
