@@ -84,6 +84,7 @@ public class UserConverter {
 						   .getAgeGroup()
 						   .getAgeGroup())
 			.tagNames(tagNames)
+			.bio(user.getBio())
 			.mannerTemperature(user.getMannerTemperature())
 			.myTeams(myTeams)
 			.matchCount(user.getMatchCount())
