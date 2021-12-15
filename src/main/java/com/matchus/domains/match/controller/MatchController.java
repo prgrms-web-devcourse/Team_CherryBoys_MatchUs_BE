@@ -4,6 +4,7 @@ import com.matchus.domains.match.dto.request.MatchCreateRequest;
 import com.matchus.domains.match.dto.request.MatchMemberModiftyRequest;
 import com.matchus.domains.match.dto.request.MatchModifyRequest;
 import com.matchus.domains.match.dto.request.MatchRetrieveFilterRequest;
+import com.matchus.domains.match.dto.request.MatchTeamInfoRequest;
 import com.matchus.domains.match.dto.response.MatchIdResponse;
 import com.matchus.domains.match.dto.response.MatchInfoResponse;
 import com.matchus.domains.match.dto.response.MatchRetrieveByFilterResponse;
@@ -105,6 +106,19 @@ public class MatchController {
 	}
 
 	@ApiOperation(
+		value = "매치 신청",
+		notes = "매치 게시글에 대해 매치를 신청한다."
+	)
+	@PostMapping("/matchs/{matchId}/waitings")
+	public ResponseEntity<ApiResponse<MatchIdResponse>> applyMatch(
+		@PathVariable Long matchId,
+		@RequestBody MatchTeamInfoRequest request
+	) {
+
+		return ResponseEntity.ok(ApiResponse.of(matchService.applyMatch(matchId, request)));
+	}
+
+	@ApiOperation(
 		value = "매치 신청 수락",
 		notes = "매치에 대한 특정 팀의 매칭 신청을 수락한다."
 	)
@@ -121,11 +135,9 @@ public class MatchController {
 	@PutMapping("/matches/{matchId}/members")
 	public ResponseEntity<ApiResponse<MatchIdResponse>> acceptMatch(
 		@PathVariable Long matchId,
-		@RequestBody MatchMemberModiftyRequest request
+		@RequestBody MatchTeamInfoRequest request
 	) {
-
 		return ResponseEntity.ok(
 			ApiResponse.of(matchService.changeMatchMembersInfo(request, matchId)));
 	}
-
 }

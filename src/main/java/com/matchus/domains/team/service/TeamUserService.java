@@ -1,9 +1,11 @@
 package com.matchus.domains.team.service;
 
 import com.matchus.domains.team.domain.Grade;
+import com.matchus.domains.team.domain.Team;
 import com.matchus.domains.team.domain.TeamUser;
 import com.matchus.domains.team.dto.response.TeamIdResponse;
 import com.matchus.domains.team.exception.LowerGradeException;
+import com.matchus.domains.team.exception.TeamUserAlreadyExistsException;
 import com.matchus.domains.team.exception.TeamUserNotFoundException;
 import com.matchus.domains.team.repository.TeamUserRepository;
 import com.matchus.domains.user.domain.User;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class TeamUserService {
 
 	private final TeamUserRepository teamUserRepository;
@@ -63,4 +66,17 @@ public class TeamUserService {
 			throw new LowerGradeException(ErrorCode.UNAUTHORIZED_TEAM_USER);
 		}
 	}
+
+	public TeamUser saveTeamUser(Team team, User user) {
+		if (teamUserRepository.existsByUser(user)) {
+			throw new TeamUserAlreadyExistsException(ErrorCode.TEAM_USER_ALREADY_EXISTS);
+		}
+		return teamUserRepository.save(TeamUser
+										   .builder()
+										   .team(team)
+										   .user(user)
+										   .grade(Grade.GENERAL)
+										   .build());
+	}
+
 }
