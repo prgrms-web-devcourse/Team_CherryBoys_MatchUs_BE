@@ -223,12 +223,12 @@ public class MatchService {
 		teamTagService.calculateTeamTags(reviewedTeam, request.getTagIds());
 
 		TeamWaiting teamWaiting = teamWaitingService.findByMatchAndTeam(match, reviewedTeam);
-		List<MemberWaiting> memberWaitings = memberWaitingService.getMemberWaitings(teamWaiting);
+		List<MemberWaiting> memberWaitings = memberWaitingService.getMemberWaitings(teamWaiting.getId());
 		userTagService.calculateUserTags(memberWaitings, request.getTagIds());
 
 		return new MatchIdResponse(matchId);
-  }
-  
+	}
+
 	private void createMatchWaiting(Team team, Match match, WaitingType type, List<Long> players) {
 		TeamWaiting teamWaiting = teamWaitingService.createTeamWaiting(team, match, type);
 
