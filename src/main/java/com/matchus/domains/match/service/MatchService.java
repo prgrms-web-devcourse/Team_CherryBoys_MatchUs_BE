@@ -9,8 +9,8 @@ import com.matchus.domains.match.domain.Match;
 import com.matchus.domains.match.domain.TeamWaiting;
 import com.matchus.domains.match.domain.WaitingType;
 import com.matchus.domains.match.dto.request.MatchCreateRequest;
-import com.matchus.domains.match.dto.request.MatchModifyRequest;
 import com.matchus.domains.match.dto.request.MatchMemberModiftyRequest;
+import com.matchus.domains.match.dto.request.MatchModifyRequest;
 import com.matchus.domains.match.dto.request.MatchRetrieveFilterRequest;
 import com.matchus.domains.match.dto.response.MatchIdResponse;
 import com.matchus.domains.match.dto.response.MatchInfoResponse;
@@ -28,7 +28,9 @@ import com.matchus.domains.team.domain.Team;
 import com.matchus.domains.team.exception.TeamUserNotFoundException;
 import com.matchus.domains.team.service.TeamService;
 import com.matchus.domains.user.domain.User;
+import com.matchus.domains.user.service.UserService;
 import com.matchus.global.error.ErrorCode;
+import com.matchus.global.response.SuccessResponse;
 import com.matchus.global.utils.PageRequest;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +51,7 @@ public class MatchService {
 	private final MemberWaitingService memberWaitingService;
 	private final LocationService locationService;
 	private final TeamWaitingService teamWaitingService;
+	private final UserService userService;
 
 	@Transactional
 	public MatchIdResponse createMatchPost(MatchCreateRequest matchCreateRequest) {
@@ -75,6 +78,18 @@ public class MatchService {
 		memberWaitingService.saveMemberWaitings(matchCreateRequest.getPlayers(), teamWaiting);
 
 		return new MatchIdResponse(match.getId());
+	}
+
+	@Transactional
+	public SuccessResponse removeMatch(String email, Long matchId) {
+
+		Match match = findExistingMatch(matchId);
+		userService.validTeamUser(match
+									  .getHomeTeam()
+									  .getId(), email);
+
+		matchRepository.delete(match);
+		return new SuccessResponse(true);
 	}
 
 	@Transactional

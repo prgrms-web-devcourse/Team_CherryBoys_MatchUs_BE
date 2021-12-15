@@ -235,4 +235,9 @@ public class UserService {
 
 	}
 
+	public void validTeamUser(Long teamId, String email) {
+
+		teamUserService.validGrade(teamId, findActiveUser(email).getId());
+	}
+
 }
