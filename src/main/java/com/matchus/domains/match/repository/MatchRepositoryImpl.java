@@ -51,7 +51,7 @@ public class MatchRepositoryImpl implements MatchRepositoryCustom {
 					team.id.as("teamId"),
 					team.logo.as("teamLogo"),
 					team.name.as("teamName"),
-					team.mannerTemperature.as("teamMannerTemperature")
+					team.mannerTemperature.as("mannerTemperature")
 				)
 			)
 			.from(match)
