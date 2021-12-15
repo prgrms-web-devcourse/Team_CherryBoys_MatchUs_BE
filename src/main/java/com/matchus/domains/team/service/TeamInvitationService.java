@@ -32,6 +32,7 @@ public class TeamInvitationService {
 		return new SuccessResponse(true);
 	}
 
+	@Transactional(readOnly = true)
 	public TeamInvitation findTeamInvitationById(Long invitationId) {
 
 		return teamInvitationRepository

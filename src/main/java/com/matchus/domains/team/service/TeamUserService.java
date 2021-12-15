@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class TeamUserService {
 
 	private final TeamUserRepository teamUserRepository;
@@ -65,4 +66,5 @@ public class TeamUserService {
 										   .grade(Grade.GENERAL)
 										   .build());
 	}
+
 }
