@@ -8,4 +8,6 @@ public interface MemberWaitingReponsitory extends JpaRepository<MemberWaiting, L
 
 	List<MemberWaiting> findAllByTeamWaitingId(Long teamWaitingId);
 
+	void deleteAllByTeamWaitingId(Long teamWaitingId);
+
 }
