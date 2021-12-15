@@ -4,12 +4,12 @@ import java.util.List;
 import lombok.Getter;
 
 @Getter
-public class MatchMemberModiftyRequest {
+public class MatchTeamInfoRequest {
 
 	private final Long teamId;
 	private final List<Long> players;
 
-	public MatchMemberModiftyRequest(
+	public MatchTeamInfoRequest(
 		Long teamId,
 		List<Long> players
 	) {
