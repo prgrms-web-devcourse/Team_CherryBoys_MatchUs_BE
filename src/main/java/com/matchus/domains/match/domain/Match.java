@@ -134,20 +134,28 @@ public class Match extends BaseEntity {
 
 	public void setHomeTeam(Team homeTeam) {
 		if (this.homeTeam != null) {
-			this.homeTeam.getHomeMatches().remove(this);
+			this.homeTeam
+				.getHomeMatches()
+				.remove(this);
 		}
 
 		this.homeTeam = homeTeam;
-		homeTeam.getHomeMatches().add(this);
+		homeTeam
+			.getHomeMatches()
+			.add(this);
 	}
 
 	public void setAwayTeam(Team awayTeam) {
 		if (this.awayTeam != null) {
-			this.awayTeam.getAwayMatches().remove(this);
+			this.awayTeam
+				.getAwayMatches()
+				.remove(this);
 		}
 
 		this.awayTeam = awayTeam;
-		awayTeam.getAwayMatches().add(this);
+		awayTeam
+			.getAwayMatches()
+			.add(this);
 	}
 
 	public void achieveAwayTeam(Team awayTeam) {
@@ -165,5 +173,23 @@ public class Match extends BaseEntity {
 
 	public void changeStatusReview() {
 		this.status = MatchStatus.REVIEWED;
+	}
+  
+	public void changeInfo(
+		City city,
+		Region region,
+		Ground ground,
+		Period period,
+		int cost,
+		AgeGroup ageGroup,
+		String detail
+	) {
+		this.city = city;
+		this.region = region;
+		this.ground = ground;
+		this.period = period;
+		this.ageGroup = ageGroup;
+		this.cost = cost;
+		this.detail = detail;
 	}
 }

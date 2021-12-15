@@ -14,6 +14,7 @@ import com.matchus.domains.team.dto.response.TeamModifyResponse;
 import com.matchus.domains.team.service.TeamService;
 import com.matchus.global.jwt.JwtAuthentication;
 import com.matchus.global.response.ApiResponse;
+import com.matchus.global.response.CheckDuplicatedResponse;
 import io.swagger.annotations.ApiOperation;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -105,6 +107,19 @@ public class TeamController {
 	}
 
 	@ApiOperation(
+		value = "전체 팀원 조회",
+		notes = "팀에 소속되어있는 용병을 포함한 전체 팀원 리스트를 조회합니다."
+	)
+	@GetMapping("/{teamId}/total-members")
+	public ResponseEntity<ApiResponse<TeamMembersResponse>> getTotalTeamMembers(
+		@PathVariable Long teamId
+	) {
+		return ResponseEntity.ok(
+			ApiResponse.of(teamService.getTotalTeamMembers(teamId))
+		);
+	}
+
+	@ApiOperation(
 		value = "팀 매칭 리스트 조회",
 		notes = "팀이 참여한 매치 리스트를 조회합니다."
 	)
@@ -157,5 +172,16 @@ public class TeamController {
 		return ResponseEntity.ok(
 			ApiResponse.of(teamService.inviteUser(teamId, request))
 		);
+	}
+
+	@ApiOperation(
+		value = "팀명 중복 확인",
+		notes = "팀명 중복 확인합니다."
+	)
+	@GetMapping("/name-check")
+	public ResponseEntity<ApiResponse<CheckDuplicatedResponse>> checkTeamName(
+		@RequestParam String teamName
+	) {
+		return ResponseEntity.ok(ApiResponse.of(teamService.checkTeamName(teamName)));
 	}
 }

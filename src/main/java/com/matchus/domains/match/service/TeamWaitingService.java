@@ -35,7 +35,7 @@ public class TeamWaitingService {
 	public TeamWaiting findByMatchIdAndType(Long matchId, WaitingType type) {
 		return teamWaitingReponsitory
 			.findByMatchIdAndType(matchId, type)
-			.orElseThrow(() -> new TeamWaitingNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
+			.orElseThrow(() -> new TeamWaitingNotFoundException(ErrorCode.TEAM_WAITING_NOT_FOUND));
 	}
 
 	public List<TeamWaiting> findAllByMatchIdAndType(Long matchId, WaitingType type) {
@@ -46,7 +46,13 @@ public class TeamWaitingService {
 	public TeamWaiting findByIdAndTypeNot(Long teamWaitingId, WaitingType type) {
 		return teamWaitingReponsitory
 			.findByIdAndTypeNot(teamWaitingId, type)
-			.orElseThrow(() -> new TeamWaitingNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
+			.orElseThrow(() -> new TeamWaitingNotFoundException(ErrorCode.TEAM_WAITING_NOT_FOUND));
+	}
+
+	public TeamWaiting findByMatchIdAndTeamId(Long matchId, Long teamId) {
+		return teamWaitingReponsitory
+			.findByMatchIdAndTeamId(matchId, teamId)
+			.orElseThrow(() -> new TeamWaitingNotFoundException(ErrorCode.TEAM_WAITING_NOT_FOUND));
 	}
 
 	public TeamWaiting findByMatchAndTeam(Match match, Team reviewedTeam) {

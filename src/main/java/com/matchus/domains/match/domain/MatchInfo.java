@@ -1,11 +1,10 @@
-package com.matchus.domains.team.dto.response;
+package com.matchus.domains.match.domain;
 
-import com.matchus.domains.match.domain.MatchStatus;
 import java.time.LocalDate;
 import lombok.Getter;
 
 @Getter
-public class TeamMatchInfo {
+public class MatchInfo {
 
 	private final Long matchId;
 	private final Long registerTeamId;
@@ -17,7 +16,7 @@ public class TeamMatchInfo {
 	private final LocalDate matchDate;
 	private final MatchStatus status;
 
-	public TeamMatchInfo(
+	public MatchInfo(
 		Long matchId,
 		Long registerTeamId,
 		String registerTeamName,

@@ -1,8 +1,10 @@
 package com.matchus.domains.match.controller;
 
 import com.matchus.domains.match.dto.request.MatchCreateRequest;
+import com.matchus.domains.match.dto.request.MatchModifyRequest;
 import com.matchus.domains.match.dto.request.MatchRetrieveFilterRequest;
 import com.matchus.domains.match.dto.request.MatchReviewRequest;
+import com.matchus.domains.match.dto.request.MatchTeamInfoRequest;
 import com.matchus.domains.match.dto.response.MatchIdResponse;
 import com.matchus.domains.match.dto.response.MatchInfoResponse;
 import com.matchus.domains.match.dto.response.MatchRetrieveByFilterResponse;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -47,6 +50,18 @@ public class MatchController {
 	}
 
 	@ApiOperation(
+		value = "매치 정보 수정",
+		notes = "매칭 정보를 수정합니다."
+	)
+	@PutMapping("/matches/{matchId}")
+	public ResponseEntity<ApiResponse<MatchIdResponse>> changeMatchInfo(
+		@PathVariable Long matchId,
+		@RequestBody MatchModifyRequest request
+	) {
+		return ResponseEntity.ok(ApiResponse.of(matchService.matchChangeInfo(request, matchId)));
+	}
+
+	@ApiOperation(
 		value = "매치 게시글 리스트 필터 조회",
 		notes = "매치 게시글 리스트를 조회합니다. 필터를 설정하여 조회할 수 있습니다."
 	)
@@ -74,6 +89,19 @@ public class MatchController {
 	}
 
 	@ApiOperation(
+		value = "매치 신청",
+		notes = "매치 게시글에 대해 매치를 신청한다."
+	)
+	@PostMapping("/matchs/{matchId}/waitings")
+	public ResponseEntity<ApiResponse<MatchIdResponse>> applyMatch(
+		@PathVariable Long matchId,
+		@RequestBody MatchTeamInfoRequest request
+	) {
+
+		return ResponseEntity.ok(ApiResponse.of(matchService.applyMatch(matchId, request)));
+	}
+
+	@ApiOperation(
 		value = "매치 신청 수락",
 		notes = "매치에 대한 특정 팀의 매칭 신청을 수락한다."
 	)
@@ -95,5 +123,18 @@ public class MatchController {
 		return ResponseEntity.ok(
 			ApiResponse.of(matchService.reviewMatch(matchId, request))
 		);
+  }
+  
+  @ApiOperation(
+		value = "매치 팀원 명단 수정",
+		notes = "매치에 등록한 팀원 명단을 수정한다."
+	)
+	@PutMapping("/matches/{matchId}/members")
+	public ResponseEntity<ApiResponse<MatchIdResponse>> acceptMatch(
+		@PathVariable Long matchId,
+		@RequestBody MatchTeamInfoRequest request
+	) {
+		return ResponseEntity.ok(
+			ApiResponse.of(matchService.changeMatchMembersInfo(request, matchId)));
 	}
 }

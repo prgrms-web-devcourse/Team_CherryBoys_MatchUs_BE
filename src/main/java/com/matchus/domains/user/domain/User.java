@@ -7,7 +7,9 @@ import com.matchus.domains.team.domain.TeamUser;
 import com.matchus.global.domain.BaseEntity;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -112,6 +114,20 @@ public class User extends BaseEntity {
 		this.ageGroup = ageGroup;
 	}
 
+	public List<UserMatchHistory> getAllMatches() {
+		return this.userMatchHistorys
+			.stream()
+			.sorted(Comparator
+						.comparing(
+							(UserMatchHistory userMatchHistory) -> userMatchHistory
+								.getMatch()
+								.getPeriod()
+								.getDate()
+						)
+						.reversed())
+			.collect(Collectors.toList());
+	}
+
 	public int getMatchCount() {
 		return this.userMatchHistorys.size();
 	}
@@ -128,13 +144,11 @@ public class User extends BaseEntity {
 
 	public void changeInfo(
 		String nickname,
-		String password,
 		String bio,
 		AgeGroup ageGroup,
 		Sports sport
 	) {
 		this.nickname = nickname;
-		this.password = password;
 		this.bio = bio;
 		this.ageGroup = ageGroup;
 		this.sport = sport;
