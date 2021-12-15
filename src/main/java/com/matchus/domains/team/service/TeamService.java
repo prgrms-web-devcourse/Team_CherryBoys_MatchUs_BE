@@ -143,6 +143,13 @@ public class TeamService {
 	}
 
 	@Transactional(readOnly = true)
+	public TeamMembersResponse getTeamUsers(Long teamId) {
+		List<TeamUser> teamUsers = teamUserRepository.findAllByTeamId(teamId);
+
+		return new TeamMembersResponse(getTeamMembers(teamUsers));
+	}
+
+	@Transactional(readOnly = true)
 	public TeamMatchesResponse getTeamMatches(Long teamId) {
 		Team team = findExistingTeam(teamId);
 
