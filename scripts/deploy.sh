@@ -35,3 +35,27 @@ nohup java -jar \
   -Dspring.config.location=classpath:/application.yml,classpath:/application-prod.yml \
   -Dspring.profiles.active=prod \
   $JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
+
+CURRENT_PORT=$(cat /home/ec2-user/service_url.inc | grep -Po '[0-9]+' | tail -1)
+
+echo "> 애플리케이션 health check 'http://127.0.0.1:${CURRENT_PORT}'"
+
+for RETRY_COUNT in {1...10}
+do
+  echo "> #${RETRY_COUNT} trying..."
+  RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:${CURRENT_PORT}/health-check)
+
+  if [ ${RESPONSE_CODE} -eq 200 ]; then
+    echo "> WAS가 성공적으로 작동 중입니다 :)"
+    exit 0
+  elif [ ${RETRY_COUNT} -eq 10 ]; then
+    echo "> Health check failed :("
+    exit 1
+  fi
+  sleep 10
+done
+
+# Reload Nginx
+sudo service nginx reload
+
+echo "> Nginx reloaded."
