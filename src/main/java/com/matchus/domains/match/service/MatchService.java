@@ -6,6 +6,7 @@ import com.matchus.domains.location.domain.Location;
 import com.matchus.domains.location.service.LocationService;
 import com.matchus.domains.match.converter.MatchConverter;
 import com.matchus.domains.match.domain.Match;
+import com.matchus.domains.match.domain.MatchStatus;
 import com.matchus.domains.match.domain.MemberWaiting;
 import com.matchus.domains.match.domain.TeamType;
 import com.matchus.domains.match.domain.TeamWaiting;
@@ -22,6 +23,7 @@ import com.matchus.domains.match.dto.response.MatchMember;
 import com.matchus.domains.match.dto.response.MatchRetrieveByFilterResponse;
 import com.matchus.domains.match.dto.response.MatchWaitingListResponse;
 import com.matchus.domains.match.dto.response.MatchWaitingTeam;
+import com.matchus.domains.match.exception.ApplyTeamAlreadyExistException;
 import com.matchus.domains.match.exception.MatchNotFoundException;
 import com.matchus.domains.match.repository.MatchRepository;
 import com.matchus.domains.sports.domain.Sports;
@@ -33,6 +35,7 @@ import com.matchus.domains.team.domain.Team;
 import com.matchus.domains.team.exception.TeamUserNotFoundException;
 import com.matchus.domains.team.service.TeamService;
 import com.matchus.domains.user.domain.User;
+import com.matchus.domains.user.service.UserMatchHistoryService;
 import com.matchus.domains.user.service.UserService;
 import com.matchus.global.error.ErrorCode;
 import com.matchus.global.response.SuccessResponse;
@@ -59,6 +62,7 @@ public class MatchService {
 	private final TeamTagService teamTagService;
 	private final UserTagService userTagService;
 	private final UserService userService;
+	private final UserMatchHistoryService userMatchHistoryService;
 
 	@Transactional
 	public MatchIdResponse createMatchPost(MatchCreateRequest matchCreateRequest) {
@@ -187,16 +191,26 @@ public class MatchService {
 	}
 
 	@Transactional
-	public MatchIdResponse acceptMatch(Long teamWaitingId) {
+	public MatchIdResponse acceptMatch(Long applyTeamWaitingId) {
 
-		TeamWaiting teamWaiting = teamWaitingService.findByIdAndTypeNot(
-			teamWaitingId, WaitingType.REGISTER);
+		TeamWaiting teamWaiting = teamWaitingService.findByIdAndType(
+			applyTeamWaitingId, WaitingType.WAITING);
 
 		teamWaiting.changeWaitingType(WaitingType.SELECTED);
 
 		Match match = teamWaiting.getMatch();
 
+		if (match.getStatus() != MatchStatus.WAITING) {
+			throw new ApplyTeamAlreadyExistException(ErrorCode.APPLY_TEAM_ALREADY_EXISTS);
+		}
+
 		match.achieveAwayTeam(teamWaiting.getTeam());
+
+		recordUserMatchHistory(applyTeamWaitingId, match);
+
+		TeamWaiting registerTeamWaiting = teamWaitingService.findByMatchIdAndType(
+			match.getId(), WaitingType.REGISTER);
+		recordUserMatchHistory(registerTeamWaiting.getId(), match);
 
 		return new MatchIdResponse(match.getId());
 	}
@@ -217,6 +231,15 @@ public class MatchService {
 			.orElseThrow(
 				() -> new MatchNotFoundException(ErrorCode.ENTITY_NOT_FOUND)
 			);
+	}
+
+	private void recordUserMatchHistory(Long teamWaitingId, Match match) {
+
+		List<MemberWaiting> memberWaitings = memberWaitingService.getMemberWaitings(teamWaitingId);
+
+		for (MemberWaiting memberWaiting : memberWaitings) {
+			userMatchHistoryService.saveUserMatchHistory(memberWaiting.getUser(), match);
+		}
 	}
 
 	@Transactional
@@ -241,7 +264,8 @@ public class MatchService {
 			match.getId(),
 			reviewedTeam.getId()
 		);
-		List<MemberWaiting> memberWaitings = memberWaitingService.getMemberWaitings(teamWaiting.getId());
+		List<MemberWaiting> memberWaitings = memberWaitingService.getMemberWaitings(
+			teamWaiting.getId());
 		userTagService.calculateUserTags(memberWaitings, request.getTagIds());
 
 		return new MatchIdResponse(matchId);

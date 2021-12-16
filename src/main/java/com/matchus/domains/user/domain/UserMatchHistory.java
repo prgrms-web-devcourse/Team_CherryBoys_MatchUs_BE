@@ -1,6 +1,6 @@
-package com.matchus.domains.match.domain;
+package com.matchus.domains.user.domain;
 
-import com.matchus.domains.user.domain.User;
+import com.matchus.domains.match.domain.Match;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;

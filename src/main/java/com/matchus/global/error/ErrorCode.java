@@ -28,6 +28,7 @@ public enum ErrorCode {
 	TEAM_INVITATION_ALREADY_EXISTS("기존 초대 요청이 존재합니다.", 400),
 	UNAUTHORIZED_TEAM_USER("권한이 없는 팀원입니다.", 400),
 	TEAM_USER_ALREADY_EXISTS("기존 팀원이 존재합니다.", 400),
+	APPLY_TEAM_ALREADY_EXISTS("기존 상대 팀이 존재합니다.", 400),
 
 	//401
 	UNAUTHORIZED_USER("권한이 없는 사용자입니다.", 401),

@@ -1,7 +1,6 @@
 package com.matchus.domains.user.domain;
 
 import com.matchus.domains.common.AgeGroup;
-import com.matchus.domains.match.domain.UserMatchHistory;
 import com.matchus.domains.sports.domain.Sports;
 import com.matchus.domains.team.domain.TeamUser;
 import com.matchus.global.domain.BaseEntity;
