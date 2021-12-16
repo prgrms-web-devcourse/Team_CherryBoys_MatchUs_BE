@@ -234,6 +234,7 @@ public class MatchService {
 		for (MemberWaiting memberWaiting : memberWaitings) {
 			userMatchHistoryService.saveUserMatchHistory(memberWaiting.getUser(), match);
 		}
+	}
 
 	@Transactional
 	public MatchIdResponse reviewMatch(Long matchId, MatchReviewRequest request) {
@@ -257,7 +258,8 @@ public class MatchService {
 			match.getId(),
 			reviewedTeam.getId()
 		);
-		List<MemberWaiting> memberWaitings = memberWaitingService.getMemberWaitings(teamWaiting.getId());
+		List<MemberWaiting> memberWaitings = memberWaitingService.getMemberWaitings(
+			teamWaiting.getId());
 		userTagService.calculateUserTags(memberWaitings, request.getTagIds());
 
 		return new MatchIdResponse(matchId);
