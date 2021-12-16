@@ -12,6 +12,7 @@ public class TeamInfoResponse {
 	private final Long teamId;
 	private final String teamName;
 	private final String bio;
+	private final String logo;
 	private final String sportsName;
 	private final int matchCount;
 	private final BigDecimal mannerTemperature;
@@ -25,6 +26,7 @@ public class TeamInfoResponse {
 		Long teamId,
 		String teamName,
 		String bio,
+		String logo,
 		String sportsName,
 		int matchCount,
 		BigDecimal mannerTemperature,
@@ -37,6 +39,7 @@ public class TeamInfoResponse {
 		this.teamId = teamId;
 		this.teamName = teamName;
 		this.bio = bio;
+		this.logo = logo;
 		this.sportsName = sportsName;
 		this.matchCount = matchCount;
 		this.mannerTemperature = mannerTemperature;

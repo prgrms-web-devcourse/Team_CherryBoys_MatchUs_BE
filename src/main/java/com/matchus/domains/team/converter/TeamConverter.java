@@ -28,6 +28,7 @@ public class TeamConverter {
 			team.getId(),
 			team.getName(),
 			team.getBio(),
+			team.getLogo(),
 			team.getSport().getName(),
 			team.getMatchCount(),
 			team.getMannerTemperature(),
