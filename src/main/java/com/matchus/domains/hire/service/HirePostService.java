@@ -4,6 +4,7 @@ import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.common.Period;
 import com.matchus.domains.hire.converter.HirePostConverter;
 import com.matchus.domains.hire.domain.HireApplication;
+import com.matchus.domains.hire.domain.HireApplyTeam;
 import com.matchus.domains.hire.domain.HireApplyUser;
 import com.matchus.domains.hire.domain.HirePost;
 import com.matchus.domains.hire.dto.request.ApplicationsAcceptRequest;
@@ -11,6 +12,7 @@ import com.matchus.domains.hire.dto.request.HirePostModifyRequest;
 import com.matchus.domains.hire.dto.request.HirePostRetrieveFilterRequest;
 import com.matchus.domains.hire.dto.request.HirePostWriteRequest;
 import com.matchus.domains.hire.dto.response.ApplicationsAcceptResponse;
+import com.matchus.domains.hire.dto.response.HireApplicationTeamsResponse;
 import com.matchus.domains.hire.dto.response.HireApplicationsResponse;
 import com.matchus.domains.hire.dto.response.HirePostInfoResponse;
 import com.matchus.domains.hire.dto.response.HirePostListFilterResponseDto;
@@ -155,9 +157,32 @@ public class HirePostService {
 						user.getNickname()
 					);
 				}
-			).collect(Collectors.toList());
+			)
+			.collect(Collectors.toList());
 
 		return new HireApplicationsResponse(applyUsers);
+	}
+
+	@Transactional(readOnly = true)
+	public HireApplicationTeamsResponse getHireApplyTeams(String name) {
+		User user = userService.findActiveUser(name);
+
+		List<HireApplyTeam> hireApplyTeams = hireApplicationRepository
+			.findAllByUserId(user.getId())
+			.stream()
+			.map(hireApplication -> hireApplication.getHirePost())
+			.map(hirePost -> new HireApplyTeam(
+				hirePost.getId(),
+				hirePost
+					.getTeam()
+					.getId(),
+				hirePost
+					.getTeam()
+					.getName()
+			))
+			.collect(Collectors.toList());
+
+		return new HireApplicationTeamsResponse(hireApplyTeams);
 	}
 
 	public ApplicationsAcceptResponse acceptHireApplications(

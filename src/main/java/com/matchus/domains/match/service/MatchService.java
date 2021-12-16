@@ -7,11 +7,13 @@ import com.matchus.domains.location.service.LocationService;
 import com.matchus.domains.match.converter.MatchConverter;
 import com.matchus.domains.match.domain.Match;
 import com.matchus.domains.match.domain.MemberWaiting;
+import com.matchus.domains.match.domain.TeamType;
 import com.matchus.domains.match.domain.TeamWaiting;
 import com.matchus.domains.match.domain.WaitingType;
 import com.matchus.domains.match.dto.request.MatchCreateRequest;
 import com.matchus.domains.match.dto.request.MatchModifyRequest;
 import com.matchus.domains.match.dto.request.MatchRetrieveFilterRequest;
+import com.matchus.domains.match.dto.request.MatchReviewRequest;
 import com.matchus.domains.match.dto.request.MatchTeamInfoRequest;
 import com.matchus.domains.match.dto.response.MatchIdResponse;
 import com.matchus.domains.match.dto.response.MatchInfoResponse;
@@ -24,6 +26,8 @@ import com.matchus.domains.match.exception.MatchNotFoundException;
 import com.matchus.domains.match.repository.MatchRepository;
 import com.matchus.domains.sports.domain.Sports;
 import com.matchus.domains.sports.service.SportsService;
+import com.matchus.domains.tag.service.TeamTagService;
+import com.matchus.domains.tag.service.UserTagService;
 import com.matchus.domains.team.domain.Grade;
 import com.matchus.domains.team.domain.Team;
 import com.matchus.domains.team.exception.TeamUserNotFoundException;
@@ -53,6 +57,8 @@ public class MatchService {
 	private final MemberWaitingService memberWaitingService;
 	private final LocationService locationService;
 	private final TeamWaitingService teamWaitingService;
+	private final TeamTagService teamTagService;
+	private final UserTagService userTagService;
 	private final UserService userService;
 	private final UserMatchHistoryService userMatchHistoryService;
 
@@ -229,6 +235,32 @@ public class MatchService {
 			userMatchHistoryService.saveUserMatchHistory(memberWaiting.getUser(), match);
 		}
 
+	@Transactional
+	public MatchIdResponse reviewMatch(Long matchId, MatchReviewRequest request) {
+		Match match = findExistingMatch(matchId);
+
+		TeamType type = TeamType.findTeamType(request.getReviewerTeamType());
+		if (type == TeamType.REGISTER) {
+			match.completeHomeTeamReview();
+		} else if (type == TeamType.APPLY) {
+			match.completeAwayTeamReview();
+		}
+
+		if (match.isHomeTeamReviewed() && match.isAwayTeamReviewed()) {
+			match.changeStatusReview();
+		}
+
+		Team reviewedTeam = teamService.findExistingTeam(request.getReviewedTeamId());
+		teamTagService.calculateTeamTags(reviewedTeam, request.getTagIds());
+
+		TeamWaiting teamWaiting = teamWaitingService.findByMatchIdAndTeamId(
+			match.getId(),
+			reviewedTeam.getId()
+		);
+		List<MemberWaiting> memberWaitings = memberWaitingService.getMemberWaitings(teamWaiting.getId());
+		userTagService.calculateUserTags(memberWaitings, request.getTagIds());
+
+		return new MatchIdResponse(matchId);
 	}
 
 	private void createMatchWaiting(Team team, Match match, WaitingType type, List<Long> players) {

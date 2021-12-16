@@ -109,4 +109,8 @@ public class Team extends BaseEntity {
 			))
 			.collect(Collectors.toList());
 	}
+
+	public void updateMannerTemperature(BigDecimal value) {
+		this.mannerTemperature = value;
+	}
 }

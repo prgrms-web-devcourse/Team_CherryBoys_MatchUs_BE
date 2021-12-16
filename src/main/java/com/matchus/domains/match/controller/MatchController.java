@@ -3,6 +3,7 @@ package com.matchus.domains.match.controller;
 import com.matchus.domains.match.dto.request.MatchCreateRequest;
 import com.matchus.domains.match.dto.request.MatchModifyRequest;
 import com.matchus.domains.match.dto.request.MatchRetrieveFilterRequest;
+import com.matchus.domains.match.dto.request.MatchReviewRequest;
 import com.matchus.domains.match.dto.request.MatchTeamInfoRequest;
 import com.matchus.domains.match.dto.response.MatchIdResponse;
 import com.matchus.domains.match.dto.response.MatchInfoResponse;
@@ -128,6 +129,20 @@ public class MatchController {
 	}
 
 	@ApiOperation(
+		value = "매칭 상대팀 평가",
+		notes = "매치 후 상대팀을 평가한다."
+	)
+	@PostMapping("/matches/{matchId}/review")
+	public ResponseEntity<ApiResponse<MatchIdResponse>> reviewMatch(
+		@PathVariable Long matchId,
+		@RequestBody MatchReviewRequest request
+	) {
+		return ResponseEntity.ok(
+			ApiResponse.of(matchService.reviewMatch(matchId, request))
+		);
+  }
+  
+  @ApiOperation(
 		value = "매치 팀원 명단 수정",
 		notes = "매치에 등록한 팀원 명단을 수정한다."
 	)
