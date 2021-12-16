@@ -4,6 +4,7 @@ import com.matchus.domains.team.dto.response.TeamIdResponse;
 import com.matchus.domains.team.service.TeamUserService;
 import com.matchus.global.jwt.JwtAuthentication;
 import com.matchus.global.response.ApiResponse;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(tags = "팀")
 @RequiredArgsConstructor
 @RestController
 public class TeamUserController {
