@@ -222,7 +222,10 @@ public class MatchService {
 		Team reviewedTeam = teamService.findExistingTeam(request.getReviewedTeamId());
 		teamTagService.calculateTeamTags(reviewedTeam, request.getTagIds());
 
-		TeamWaiting teamWaiting = teamWaitingService.findByMatchAndTeam(match, reviewedTeam);
+		TeamWaiting teamWaiting = teamWaitingService.findByMatchIdAndTeamId(
+			match.getId(),
+			reviewedTeam.getId()
+		);
 		List<MemberWaiting> memberWaitings = memberWaitingService.getMemberWaitings(teamWaiting.getId());
 		userTagService.calculateUserTags(memberWaitings, request.getTagIds());
 
