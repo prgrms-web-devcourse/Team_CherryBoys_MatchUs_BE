@@ -15,8 +15,8 @@ public enum Grade {
 	HIRED("용병", 3),
 	;
 
-
 	public static final Set<Grade> VALID_GRADE = Set.of(CAPTAIN, SUB_CAPTAIN);
+
 	private final String type;
 	private final int order;
 
