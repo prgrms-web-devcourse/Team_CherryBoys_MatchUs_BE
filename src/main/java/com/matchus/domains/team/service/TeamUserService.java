@@ -4,7 +4,7 @@ import com.matchus.domains.team.domain.Grade;
 import com.matchus.domains.team.domain.Team;
 import com.matchus.domains.team.domain.TeamUser;
 import com.matchus.domains.team.dto.response.TeamIdResponse;
-import com.matchus.domains.team.exception.LowerGradeException;
+import com.matchus.domains.team.exception.InsufficientGradeException;
 import com.matchus.domains.team.exception.TeamUserAlreadyExistsException;
 import com.matchus.domains.team.exception.TeamUserNotFoundException;
 import com.matchus.domains.team.repository.TeamUserRepository;
@@ -63,7 +63,7 @@ public class TeamUserService {
 			.orElseThrow(() -> new TeamUserNotFoundException(ErrorCode.TEAM_USER_NOT_FOUND));
 
 		if (teamUser.getGrade() == Grade.GENERAL || teamUser.getGrade() == Grade.HIRED) {
-			throw new LowerGradeException(ErrorCode.UNAUTHORIZED_TEAM_USER);
+			throw new InsufficientGradeException(ErrorCode.UNAUTHORIZED_TEAM_USER);
 		}
 	}
 
