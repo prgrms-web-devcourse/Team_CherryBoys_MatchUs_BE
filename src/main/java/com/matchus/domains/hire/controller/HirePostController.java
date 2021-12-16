@@ -5,12 +5,14 @@ import com.matchus.domains.hire.dto.request.HirePostModifyRequest;
 import com.matchus.domains.hire.dto.request.HirePostRetrieveFilterRequest;
 import com.matchus.domains.hire.dto.request.HirePostWriteRequest;
 import com.matchus.domains.hire.dto.response.ApplicationsAcceptResponse;
+import com.matchus.domains.hire.dto.response.HireApplicationTeamsResponse;
 import com.matchus.domains.hire.dto.response.HireApplicationsResponse;
 import com.matchus.domains.hire.dto.response.HirePostInfoResponse;
 import com.matchus.domains.hire.dto.response.HirePostModifyResponse;
 import com.matchus.domains.hire.dto.response.HirePostRetrieveByFilterResponse;
 import com.matchus.domains.hire.dto.response.HirePostWriteResponse;
 import com.matchus.domains.hire.service.HirePostService;
+import com.matchus.global.jwt.JwtAuthentication;
 import com.matchus.global.response.ApiResponse;
 import com.matchus.global.utils.PageRequest;
 import io.swagger.annotations.ApiOperation;
@@ -18,6 +20,7 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -63,6 +66,18 @@ public class HirePostController {
 			ApiResponse.of(
 				hirePostService.getHirePost(postId)
 			)
+		);
+	}
+
+	@ApiOperation(
+		value = "지원한 용병 구인 게시글 리스트 조회",
+		notes = "지원했던 용병 구인 게시글 리스트를 조회합니다."
+	)
+	@GetMapping("/me")
+	public ResponseEntity<ApiResponse<HireApplicationTeamsResponse>> getHireApplyTeams(@AuthenticationPrincipal JwtAuthentication authentication) {
+
+		return ResponseEntity.ok(
+			ApiResponse.of(hirePostService.getHireApplyTeams(authentication.username))
 		);
 	}
 
