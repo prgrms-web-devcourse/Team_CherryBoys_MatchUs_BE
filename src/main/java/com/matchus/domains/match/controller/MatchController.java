@@ -14,6 +14,7 @@ import com.matchus.global.jwt.JwtAuthentication;
 import com.matchus.global.response.ApiResponse;
 import com.matchus.global.response.SuccessResponse;
 import com.matchus.global.utils.PageRequest;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(tags = "매치")
 @RestController
 public class MatchController {
 

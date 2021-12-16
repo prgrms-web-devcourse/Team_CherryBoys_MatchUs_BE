@@ -6,6 +6,7 @@ import com.matchus.domains.hire.service.HireApplicationService;
 import com.matchus.global.jwt.JwtAuthentication;
 import com.matchus.global.response.ApiResponse;
 import com.matchus.global.response.SuccessResponse;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(tags = "용병")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/hire-applications")

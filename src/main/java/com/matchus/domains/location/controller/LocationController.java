@@ -3,12 +3,14 @@ package com.matchus.domains.location.controller;
 import com.matchus.domains.location.dto.response.LocationResult;
 import com.matchus.domains.location.service.LocationService;
 import com.matchus.global.response.ApiResponse;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(tags = "위치")
 @RequiredArgsConstructor
 @RestController
 public class LocationController {

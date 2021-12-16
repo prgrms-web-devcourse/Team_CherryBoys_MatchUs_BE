@@ -13,6 +13,7 @@ import com.matchus.global.jwt.JwtAuthentication;
 import com.matchus.global.response.ApiResponse;
 import com.matchus.global.response.CheckDuplicatedResponse;
 import com.matchus.global.response.SuccessResponse;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(tags = "사용자")
 @RestController
 @RequestMapping(value = "/users")
 public class UserController {
@@ -135,7 +137,7 @@ public class UserController {
 			ApiResponse.of(
 				userService.getMyInfo(authentication.username)));
 	}
-  
+
 	@ApiOperation(
 		value = "사용자 페이지 조회",
 		notes = "다른 사용자의 마이 페이지를 조회합니다."
@@ -146,7 +148,7 @@ public class UserController {
 		return ResponseEntity.ok(
 			ApiResponse.of(
 				userService.getUserInfo(userId)));
-  }
+	}
 
 	@ApiOperation(
 		value = "사용자의 경기 리스트 조회",
