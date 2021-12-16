@@ -5,6 +5,9 @@ import com.matchus.domains.common.Period;
 import com.matchus.domains.hire.domain.HirePost;
 import com.matchus.domains.hire.dto.request.HirePostWriteRequest;
 import com.matchus.domains.hire.dto.response.HirePostInfoResponse;
+import com.matchus.domains.hire.dto.response.HirePostListFilterResponse;
+import com.matchus.domains.hire.dto.response.HirePostListFilterResult;
+import com.matchus.domains.hire.dto.response.HirePostRetrieveByFilterResponse;
 import com.matchus.domains.location.domain.Location;
 import com.matchus.domains.team.domain.Grade;
 import com.matchus.domains.team.domain.Team;
@@ -14,6 +17,8 @@ import com.matchus.global.error.ErrorCode;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -85,5 +90,34 @@ public class HirePostConverter {
 			.detail(request.getDetail())
 			.hirePlayerNumber(request.getHirePlayerNumber())
 			.build();
+	}
+
+	public HirePostRetrieveByFilterResponse convertToRetrieveByFilterResponse(
+		List<HirePostListFilterResult> results
+	) {
+		return new HirePostRetrieveByFilterResponse(
+			results
+				.stream()
+				.map(
+					result -> new HirePostListFilterResponse(
+						result.getPostId(),
+						result.getPosition(),
+						result.getCity(),
+						result.getRegion(),
+						result.getGroundName(),
+						result.getDate(),
+						result.getStartTime(),
+						result.getEndTime(),
+						result.getAgeGroup().getAgeGroup(),
+						result.getDetail(),
+						result.getHirePlayerNumber(),
+						result.getTeamId(),
+						result.getTeamLogo(),
+						result.getTeamName(),
+						result.getTeamMannerTemperature()
+					)
+				)
+				.collect(Collectors.toList())
+		);
 	}
 }

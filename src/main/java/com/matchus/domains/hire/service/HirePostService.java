@@ -15,7 +15,7 @@ import com.matchus.domains.hire.dto.response.ApplicationsAcceptResponse;
 import com.matchus.domains.hire.dto.response.HireApplicationTeamsResponse;
 import com.matchus.domains.hire.dto.response.HireApplicationsResponse;
 import com.matchus.domains.hire.dto.response.HirePostInfoResponse;
-import com.matchus.domains.hire.dto.response.HirePostListFilterResponseDto;
+import com.matchus.domains.hire.dto.response.HirePostListFilterResult;
 import com.matchus.domains.hire.dto.response.HirePostModifyResponse;
 import com.matchus.domains.hire.dto.response.HirePostRetrieveByFilterResponse;
 import com.matchus.domains.hire.dto.response.HirePostWriteResponse;
@@ -64,7 +64,7 @@ public class HirePostService {
 		Sports sports = sportsService.getSportsOrNull(filterRequest.getSports());
 		AgeGroup ageGroup = AgeGroup.findGroupOrNull(filterRequest.getAgeGroup());
 
-		List<HirePostListFilterResponseDto> hirePosts = hirePostRepository.findAllNoOffsetByFilter(
+		List<HirePostListFilterResult> results = hirePostRepository.findAllNoOffsetByFilter(
 			filterRequest.getPosition(),
 			sports == null ? null : sports.getId(),
 			ageGroup,
@@ -75,7 +75,7 @@ public class HirePostService {
 			pageRequest
 		);
 
-		return new HirePostRetrieveByFilterResponse(hirePosts);
+		return hirePostConverter.convertToRetrieveByFilterResponse(results);
 	}
 
 	@Transactional(readOnly = true)
@@ -170,7 +170,7 @@ public class HirePostService {
 		List<HireApplyTeam> hireApplyTeams = hireApplicationRepository
 			.findAllByUserId(user.getId())
 			.stream()
-			.map(hireApplication -> hireApplication.getHirePost())
+			.map(HireApplication::getHirePost)
 			.map(hirePost -> new HireApplyTeam(
 				hirePost.getId(),
 				hirePost

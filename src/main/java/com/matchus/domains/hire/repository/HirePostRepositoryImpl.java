@@ -8,7 +8,7 @@ import static com.matchus.domains.team.domain.QTeam.*;
 
 import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.hire.domain.HirePost;
-import com.matchus.domains.hire.dto.response.HirePostListFilterResponseDto;
+import com.matchus.domains.hire.dto.response.HirePostListFilterResult;
 import com.matchus.global.utils.PageRequest;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -34,7 +34,7 @@ public class HirePostRepositoryImpl implements HirePostRepositoryCustom {
 	}
 
 	@Override
-	public List<HirePostListFilterResponseDto> findAllNoOffsetByFilter(
+	public List<HirePostListFilterResult> findAllNoOffsetByFilter(
 		String position,
 		Long sportsId,
 		AgeGroup ageGroup,
@@ -47,7 +47,7 @@ public class HirePostRepositoryImpl implements HirePostRepositoryCustom {
 		return queryFactory
 			.select(
 				Projections.constructor(
-					HirePostListFilterResponseDto.class,
+					HirePostListFilterResult.class,
 					hirePost.id.as("postId"),
 					hirePost.position.as("position"),
 					city.name.as("city"),
