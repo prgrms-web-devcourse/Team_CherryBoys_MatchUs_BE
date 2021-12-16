@@ -49,8 +49,12 @@ public class UserConverter {
 						   .getName())
 			.bio(user.getBio())
 			.nickname(user.getNickname())
-			.ageGroup(user.getAgeGroup())
-			.gender(user.getGender())
+			.ageGroup(user
+						  .getAgeGroup()
+						  .getAgeGroup())
+			.gender(user
+						.getGender()
+						.getGender())
 			.sports(user
 						.getSport()
 						.getName())

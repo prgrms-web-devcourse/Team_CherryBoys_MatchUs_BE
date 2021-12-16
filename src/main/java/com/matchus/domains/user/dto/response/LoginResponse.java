@@ -1,8 +1,6 @@
 package com.matchus.domains.user.dto.response;
 
-import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.team.domain.Grade;
-import com.matchus.domains.user.domain.Gender;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,8 +28,8 @@ public class LoginResponse {
 		private final String nickname;
 		private final String bio;
 		private final String sports;
-		private final Gender gender;
-		private final AgeGroup ageGroup;
+		private final String gender;
+		private final String ageGroup;
 		private final String roleGroup;
 		private final List<UserGradeResponse> userGradeResponse;
 
@@ -42,8 +40,8 @@ public class LoginResponse {
 			String nickname,
 			String bio,
 			String sports,
-			Gender gender,
-			AgeGroup ageGroup,
+			String gender,
+			String ageGroup,
 			String roleGroup,
 			List<UserGradeResponse> userGradeResponse
 		) {

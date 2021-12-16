@@ -62,7 +62,7 @@ public class TeamUserService {
 			.findByTeamIdAndUserId(teamId, userId)
 			.orElseThrow(() -> new TeamUserNotFoundException(ErrorCode.TEAM_USER_NOT_FOUND));
 
-		if (teamUser.getGrade() == Grade.GENERAL || teamUser.getGrade() == Grade.HIRED) {
+		if (!Grade.VALID_GRADE.contains(teamUser.getGrade())) {
 			throw new InsufficientGradeException(ErrorCode.UNAUTHORIZED_TEAM_USER);
 		}
 	}

@@ -31,7 +31,8 @@ class UserControllerTest extends BaseIntegrationTest {
 
 		mockMvc
 			.perform(
-				get("/users/email-check/{email}", email)
+				get("/users/email-check")
+					.param("email", email)
 					.contentType(MediaType.APPLICATION_JSON)
 					.characterEncoding("UTF-8"))
 			.andDo(print())
@@ -51,7 +52,8 @@ class UserControllerTest extends BaseIntegrationTest {
 
 		mockMvc
 			.perform(
-				get("/users/nickname-check/{nickname}", nickName)
+				get("/users/nickname-check")
+					.param("nickname", nickName)
 					.contentType(MediaType.APPLICATION_JSON)
 					.characterEncoding("UTF-8"))
 			.andDo(print())
