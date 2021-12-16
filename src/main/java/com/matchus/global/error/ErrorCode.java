@@ -26,6 +26,7 @@ public enum ErrorCode {
 	TEAM_INVITATION_NOT_FOUND("팀원 초대 요청이 존재하지 않습니다.", 400),
 	INVALID_FILE_TYPE("잘못된 형식의 파일 입니다.", 400),
 	TEAM_INVITATION_ALREADY_EXISTS("기존 초대 요청이 존재합니다.", 400),
+	UNAUTHORIZED_TEAM_USER("권한이 없는 팀원입니다.", 400),
 	TEAM_USER_ALREADY_EXISTS("기존 팀원이 존재합니다.", 400),
 
 	//401

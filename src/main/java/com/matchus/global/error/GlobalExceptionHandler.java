@@ -5,6 +5,7 @@ import com.matchus.domains.hire.exception.HireApplicationNotFoundException;
 import com.matchus.domains.match.exception.TeamWaitingNotFoundException;
 import com.matchus.domains.sports.exception.SportsNotFoundException;
 import com.matchus.domains.team.exception.GradeNotFoundException;
+import com.matchus.domains.team.exception.InsufficientGradeException;
 import com.matchus.domains.team.exception.TeamInvitationAlreadyExistsException;
 import com.matchus.domains.team.exception.TeamInvitationNotFoundException;
 import com.matchus.domains.team.exception.TeamNotFoundException;
@@ -79,6 +80,12 @@ public class GlobalExceptionHandler {
 		}
 	)
 	public ResponseEntity<ErrorResponse> handleAlreadyExists(BusinessException e) {
+		ErrorResponse errorResponse = ErrorResponse.of(e.getErrorCode());
+		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(InsufficientGradeException.class)
+	public ResponseEntity<ErrorResponse> handleLowerGrade(BusinessException e) {
 		ErrorResponse errorResponse = ErrorResponse.of(e.getErrorCode());
 		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}

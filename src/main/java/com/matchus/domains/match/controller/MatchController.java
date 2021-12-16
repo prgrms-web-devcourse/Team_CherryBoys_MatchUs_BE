@@ -10,10 +10,14 @@ import com.matchus.domains.match.dto.response.MatchInfoResponse;
 import com.matchus.domains.match.dto.response.MatchRetrieveByFilterResponse;
 import com.matchus.domains.match.dto.response.MatchWaitingListResponse;
 import com.matchus.domains.match.service.MatchService;
+import com.matchus.global.jwt.JwtAuthentication;
 import com.matchus.global.response.ApiResponse;
+import com.matchus.global.response.SuccessResponse;
 import com.matchus.global.utils.PageRequest;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,6 +63,19 @@ public class MatchController {
 		@RequestBody MatchModifyRequest request
 	) {
 		return ResponseEntity.ok(ApiResponse.of(matchService.matchChangeInfo(request, matchId)));
+	}
+
+	@ApiOperation(
+		value = "매치 삭제",
+		notes = "등록한 매치를 삭제합니다."
+	)
+	@DeleteMapping("/matches/{matchId}")
+	public ResponseEntity<ApiResponse<SuccessResponse>> removeMatch(
+		@PathVariable Long matchId,
+		@AuthenticationPrincipal JwtAuthentication authentication
+	) {
+		return ResponseEntity.ok(
+			ApiResponse.of(matchService.removeMatch(authentication.username, matchId)));
 	}
 
 	@ApiOperation(

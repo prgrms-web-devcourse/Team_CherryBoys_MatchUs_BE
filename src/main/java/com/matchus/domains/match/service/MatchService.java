@@ -33,7 +33,9 @@ import com.matchus.domains.team.domain.Team;
 import com.matchus.domains.team.exception.TeamUserNotFoundException;
 import com.matchus.domains.team.service.TeamService;
 import com.matchus.domains.user.domain.User;
+import com.matchus.domains.user.service.UserService;
 import com.matchus.global.error.ErrorCode;
+import com.matchus.global.response.SuccessResponse;
 import com.matchus.global.utils.PageRequest;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +58,7 @@ public class MatchService {
 	private final TeamWaitingService teamWaitingService;
 	private final TeamTagService teamTagService;
 	private final UserTagService userTagService;
+	private final UserService userService;
 
 	@Transactional
 	public MatchIdResponse createMatchPost(MatchCreateRequest matchCreateRequest) {
@@ -80,6 +83,18 @@ public class MatchService {
 			registerTeam, match, WaitingType.REGISTER, matchCreateRequest.getPlayers());
 
 		return new MatchIdResponse(match.getId());
+	}
+
+	@Transactional
+	public SuccessResponse removeMatch(String email, Long matchId) {
+
+		Match match = findExistingMatch(matchId);
+		userService.validTeamUser(match
+									  .getHomeTeam()
+									  .getId(), email);
+
+		matchRepository.delete(match);
+		return new SuccessResponse(true);
 	}
 
 	@Transactional
