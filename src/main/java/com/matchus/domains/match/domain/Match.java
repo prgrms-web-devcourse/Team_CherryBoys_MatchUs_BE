@@ -96,6 +96,12 @@ public class Match extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private MatchStatus status = MatchStatus.WAITING;
 
+	@Column(name = "is_register_team_reviewed", nullable = false, columnDefinition = "BOOLEAN default false")
+	private boolean isHomeTeamReviewed = false;
+
+	@Column(name = "is_apply_team_reviewed", nullable = false, columnDefinition = "BOOLEAN default false")
+	private boolean isAwayTeamReviewed = false;
+
 	@Column(nullable = false, columnDefinition = "BOOLEAN default false")
 	private boolean isCancelled = false;
 
@@ -157,6 +163,18 @@ public class Match extends BaseEntity {
 		setAwayTeam(awayTeam);
 	}
 
+	public void completeHomeTeamReview() {
+		this.isHomeTeamReviewed = true;
+	}
+
+	public void completeAwayTeamReview() {
+		this.isAwayTeamReviewed = true;
+	}
+
+	public void changeStatusReview() {
+		this.status = MatchStatus.REVIEWED;
+	}
+  
 	public void changeInfo(
 		City city,
 		Region region,
@@ -174,5 +192,4 @@ public class Match extends BaseEntity {
 		this.cost = cost;
 		this.detail = detail;
 	}
-
 }

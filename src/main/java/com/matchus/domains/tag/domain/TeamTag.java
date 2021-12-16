@@ -39,7 +39,7 @@ public class TeamTag {
 	)
 	private Team team;
 
-	@Column(nullable = false, columnDefinition = "INT default 0")
+	@Column(nullable = false, columnDefinition = "INT default 1")
 	private int tagCount;
 
 	@Builder
@@ -48,5 +48,9 @@ public class TeamTag {
 		this.tag = tag;
 		this.team = team;
 		this.tagCount = tagCount;
+	}
+
+	public void increaseTagCount() {
+		this.tagCount += 1;
 	}
 }
