@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Api(tags = "사용자")
@@ -63,8 +64,8 @@ public class UserController {
 		value = "email 중복 확인",
 		notes = "회원가입 정보 입력시 email 중복 여부를 확인합니다."
 	)
-	@GetMapping("/email-check/{email}")
-	public ResponseEntity<ApiResponse<CheckDuplicatedResponse>> checkEmail(@PathVariable String email) {
+	@GetMapping("/email-check")
+	public ResponseEntity<ApiResponse<CheckDuplicatedResponse>> checkEmail(@RequestParam String email) {
 		return ResponseEntity.ok(ApiResponse.of(userService.checkEmail(email)));
 	}
 
@@ -72,8 +73,8 @@ public class UserController {
 		value = "nickname 중복 확인",
 		notes = "회원가입 정보 입력시 nickname 중복 여부를 확인합니다."
 	)
-	@GetMapping("/nickname-check/{nickname}")
-	public ResponseEntity<ApiResponse<CheckDuplicatedResponse>> checkNickname(@PathVariable String nickname) {
+	@GetMapping("/nickname-check")
+	public ResponseEntity<ApiResponse<CheckDuplicatedResponse>> checkNickname(@RequestParam String nickname) {
 		return ResponseEntity.ok(ApiResponse.of(userService.checkNickname(nickname)));
 	}
 
