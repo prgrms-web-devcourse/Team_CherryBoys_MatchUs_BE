@@ -166,7 +166,7 @@ class HirePostControllerTest {
 			region.getName(),
 			ground.getName(),
 			position,
-			ageGroup,
+			ageGroup.getAgeGroup(),
 			hirePlayerNumber,
 			detail,
 			period.getDate(),
