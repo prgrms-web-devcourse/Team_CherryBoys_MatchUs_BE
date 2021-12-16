@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.common.Period;
 import com.matchus.domains.hire.dto.response.HirePostInfoResponse;
-import com.matchus.domains.hire.dto.response.HirePostListFilterResponseDto;
+import com.matchus.domains.hire.dto.response.HirePostListFilterResponse;
 import com.matchus.domains.hire.dto.response.HirePostRetrieveByFilterResponse;
 import com.matchus.domains.hire.service.HirePostService;
 import com.matchus.domains.location.domain.City;
@@ -68,7 +68,7 @@ class HirePostControllerTest {
 		// given
 		HirePostRetrieveByFilterResponse response = new HirePostRetrieveByFilterResponse(
 			List.of(
-				new HirePostListFilterResponseDto(
+				new HirePostListFilterResponse(
 					30L,
 					"윙백",
 					"서울",
@@ -77,7 +77,7 @@ class HirePostControllerTest {
 					LocalDate.now(),
 					LocalTime.now(),
 					LocalTime.now().plusHours(2),
-					AgeGroup.TWENTIES,
+					AgeGroup.TWENTIES.getAgeGroup(),
 					"세부내용",
 					1,
 					1L,
@@ -85,7 +85,7 @@ class HirePostControllerTest {
 					"팀이름1",
 					new BigDecimal("36.5")
 				),
-				new HirePostListFilterResponseDto(
+				new HirePostListFilterResponse(
 					29L,
 					"윙백",
 					"서울",
@@ -94,7 +94,7 @@ class HirePostControllerTest {
 					LocalDate.now(),
 					LocalTime.now(),
 					LocalTime.now().plusHours(2),
-					AgeGroup.TWENTIES,
+					AgeGroup.TWENTIES.getAgeGroup(),
 					"세부내용",
 					1,
 					1L,
@@ -102,7 +102,7 @@ class HirePostControllerTest {
 					"팀이름1",
 					new BigDecimal("36.5")
 				),
-				new HirePostListFilterResponseDto(
+				new HirePostListFilterResponse(
 					28L,
 					"윙백",
 					"서울",
@@ -111,7 +111,7 @@ class HirePostControllerTest {
 					LocalDate.now(),
 					LocalTime.now(),
 					LocalTime.now().plusHours(2),
-					AgeGroup.TWENTIES,
+					AgeGroup.TWENTIES.getAgeGroup(),
 					"세부내용",
 					1,
 					1L,

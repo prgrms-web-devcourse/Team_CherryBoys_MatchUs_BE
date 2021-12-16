@@ -9,7 +9,8 @@ import com.matchus.domains.hire.converter.HirePostConverter;
 import com.matchus.domains.hire.domain.HirePost;
 import com.matchus.domains.hire.dto.request.HirePostRetrieveFilterRequest;
 import com.matchus.domains.hire.dto.response.HirePostInfoResponse;
-import com.matchus.domains.hire.dto.response.HirePostListFilterResponseDto;
+import com.matchus.domains.hire.dto.response.HirePostListFilterResponse;
+import com.matchus.domains.hire.dto.response.HirePostListFilterResult;
 import com.matchus.domains.hire.dto.response.HirePostRetrieveByFilterResponse;
 import com.matchus.domains.hire.repository.HirePostRepository;
 import com.matchus.domains.location.domain.City;
@@ -53,8 +54,8 @@ class HirePostServiceTest {
 		// given
 		given(sportsService.getSportsOrNull(any())).willReturn(null);
 
-		List<HirePostListFilterResponseDto> hirePosts = List.of(
-			new HirePostListFilterResponseDto(
+		List<HirePostListFilterResult> results = List.of(
+			new HirePostListFilterResult(
 				30L,
 				"윙백",
 				"서울",
@@ -71,7 +72,7 @@ class HirePostServiceTest {
 				"팀이름1",
 				new BigDecimal("36.5")
 			),
-			new HirePostListFilterResponseDto(
+			new HirePostListFilterResult(
 				29L,
 				"윙백",
 				"서울",
@@ -88,7 +89,7 @@ class HirePostServiceTest {
 				"팀이름1",
 				new BigDecimal("36.5")
 			),
-			new HirePostListFilterResponseDto(
+			new HirePostListFilterResult(
 				28L,
 				"윙백",
 				"서울",
@@ -106,7 +107,6 @@ class HirePostServiceTest {
 				new BigDecimal("36.5")
 			)
 		);
-
 		PageRequest pageRequest = new PageRequest(null, 30);
 		given(hirePostRepository.findAllNoOffsetByFilter(
 			"윙백",
@@ -117,7 +117,64 @@ class HirePostServiceTest {
 			null,
 			null,
 			pageRequest
-		)).willReturn(hirePosts);
+		)).willReturn(results);
+
+		List<HirePostListFilterResponse> hirePosts = List.of(
+			new HirePostListFilterResponse(
+				30L,
+				"윙백",
+				"서울",
+				"광진구",
+				"아차산풋살장",
+				LocalDate.now(),
+				LocalTime.now(),
+				LocalTime.now().plusHours(2),
+				AgeGroup.TWENTIES.getAgeGroup(),
+				"세부내용",
+				1,
+				1L,
+				"팀로고1",
+				"팀이름1",
+				new BigDecimal("36.5")
+			),
+			new HirePostListFilterResponse(
+				29L,
+				"윙백",
+				"서울",
+				"광진구",
+				"아차산풋살장",
+				LocalDate.now(),
+				LocalTime.now(),
+				LocalTime.now().plusHours(2),
+				AgeGroup.TWENTIES.getAgeGroup(),
+				"세부내용",
+				1,
+				1L,
+				"팀로고1",
+				"팀이름1",
+				new BigDecimal("36.5")
+			),
+			new HirePostListFilterResponse(
+				28L,
+				"윙백",
+				"서울",
+				"광진구",
+				"아차산풋살장",
+				LocalDate.now(),
+				LocalTime.now(),
+				LocalTime.now().plusHours(2),
+				AgeGroup.TWENTIES.getAgeGroup(),
+				"세부내용",
+				1,
+				1L,
+				"팀로고1",
+				"팀이름1",
+				new BigDecimal("36.5")
+			)
+		);
+		given(hirePostConverter.convertToRetrieveByFilterResponse(results)).willReturn(
+			new HirePostRetrieveByFilterResponse(hirePosts)
+		);
 
 		HirePostRetrieveFilterRequest filterRequest = new HirePostRetrieveFilterRequest(
 			"윙백",

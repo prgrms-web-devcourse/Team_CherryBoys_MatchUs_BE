@@ -1,13 +1,12 @@
 package com.matchus.domains.hire.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.matchus.domains.common.AgeGroup;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import lombok.Getter;
 
-@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public class HirePostListFilterResponseDto {
+@Getter
+public class HirePostListFilterResponse {
 
 	private Long postId;
 	private String position;
@@ -17,7 +16,7 @@ public class HirePostListFilterResponseDto {
 	private LocalDate date;
 	private LocalTime startTime;
 	private LocalTime endTime;
-	private AgeGroup ageGroup;
+	private String ageGroup;
 	private String detail;
 	private int hirePlayerNumber;
 	private Long teamId;
@@ -25,7 +24,7 @@ public class HirePostListFilterResponseDto {
 	private String teamName;
 	private BigDecimal teamMannerTemperature;
 
-	public HirePostListFilterResponseDto(
+	public HirePostListFilterResponse(
 		Long postId,
 		String position,
 		String city,
@@ -34,7 +33,7 @@ public class HirePostListFilterResponseDto {
 		LocalDate date,
 		LocalTime startTime,
 		LocalTime endTime,
-		AgeGroup ageGroup,
+		String ageGroup,
 		String detail,
 		int hirePlayerNumber,
 		Long teamId,

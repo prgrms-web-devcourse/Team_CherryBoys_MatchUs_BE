@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.*;
 import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.common.Period;
 import com.matchus.domains.hire.domain.HirePost;
-import com.matchus.domains.hire.dto.response.HirePostListFilterResponseDto;
+import com.matchus.domains.hire.dto.response.HirePostListFilterResult;
 import com.matchus.domains.location.domain.City;
 import com.matchus.domains.location.domain.Ground;
 import com.matchus.domains.location.domain.Region;
@@ -163,7 +163,7 @@ public class HirePostRepositoryTest {
 		}
 
 		// when
-		List<HirePostListFilterResponseDto> hirePostsNoOffsetByFilter = hirePostRepository.findAllNoOffsetByFilter(
+		List<HirePostListFilterResult> hirePostsNoOffsetByFilter = hirePostRepository.findAllNoOffsetByFilter(
 			position,
 			sportsId,
 			ageGroup,
