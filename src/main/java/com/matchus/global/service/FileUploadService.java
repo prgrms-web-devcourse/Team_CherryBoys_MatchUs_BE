@@ -20,6 +20,10 @@ public class FileUploadService {
 	private final UploadService s3UploadService;
 
 	public String uploadImage(MultipartFile file) {
+		if (file.isEmpty()) {
+			return null;
+		}
+
 		String fileName = DIRECTORY + createFileName(file.getOriginalFilename());
 		ObjectMetadata objectMetadata = new ObjectMetadata();
 		objectMetadata.setContentType(file.getContentType());
