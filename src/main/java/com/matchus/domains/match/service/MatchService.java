@@ -6,6 +6,7 @@ import com.matchus.domains.location.domain.Location;
 import com.matchus.domains.location.service.LocationService;
 import com.matchus.domains.match.converter.MatchConverter;
 import com.matchus.domains.match.domain.Match;
+import com.matchus.domains.match.domain.MemberWaiting;
 import com.matchus.domains.match.domain.TeamWaiting;
 import com.matchus.domains.match.domain.WaitingType;
 import com.matchus.domains.match.dto.request.MatchCreateRequest;
@@ -28,6 +29,7 @@ import com.matchus.domains.team.domain.Team;
 import com.matchus.domains.team.exception.TeamUserNotFoundException;
 import com.matchus.domains.team.service.TeamService;
 import com.matchus.domains.user.domain.User;
+import com.matchus.domains.user.service.UserMatchHistoryService;
 import com.matchus.domains.user.service.UserService;
 import com.matchus.global.error.ErrorCode;
 import com.matchus.global.response.SuccessResponse;
@@ -52,6 +54,7 @@ public class MatchService {
 	private final LocationService locationService;
 	private final TeamWaitingService teamWaitingService;
 	private final UserService userService;
+	private final UserMatchHistoryService userMatchHistoryService;
 
 	@Transactional
 	public MatchIdResponse createMatchPost(MatchCreateRequest matchCreateRequest) {
@@ -180,16 +183,22 @@ public class MatchService {
 	}
 
 	@Transactional
-	public MatchIdResponse acceptMatch(Long teamWaitingId) {
+	public MatchIdResponse acceptMatch(Long applyTeamWaitingId) {
 
 		TeamWaiting teamWaiting = teamWaitingService.findByIdAndTypeNot(
-			teamWaitingId, WaitingType.REGISTER);
+			applyTeamWaitingId, WaitingType.REGISTER);
 
 		teamWaiting.changeWaitingType(WaitingType.SELECTED);
 
 		Match match = teamWaiting.getMatch();
 
 		match.achieveAwayTeam(teamWaiting.getTeam());
+
+		recordUserMatchHistory(applyTeamWaitingId, match);
+
+		TeamWaiting registerTeamWaiting = teamWaitingService.findByMatchIdAndType(
+			match.getId(), WaitingType.REGISTER);
+		recordUserMatchHistory(registerTeamWaiting.getId(), match);
 
 		return new MatchIdResponse(match.getId());
 	}
@@ -210,6 +219,16 @@ public class MatchService {
 			.orElseThrow(
 				() -> new MatchNotFoundException(ErrorCode.ENTITY_NOT_FOUND)
 			);
+	}
+
+	private void recordUserMatchHistory(Long teamWaitingId, Match match) {
+
+		List<MemberWaiting> memberWaitings = memberWaitingService.getMemberWaitings(teamWaitingId);
+
+		for (MemberWaiting memberWaiting : memberWaitings) {
+			userMatchHistoryService.saveUserMatchHistory(memberWaiting.getUser(), match);
+		}
+
 	}
 
 	private void createMatchWaiting(Team team, Match match, WaitingType type, List<Long> players) {

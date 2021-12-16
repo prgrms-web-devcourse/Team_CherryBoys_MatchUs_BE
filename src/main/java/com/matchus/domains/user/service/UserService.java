@@ -3,7 +3,6 @@ package com.matchus.domains.user.service;
 import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.match.domain.Match;
 import com.matchus.domains.match.domain.MatchInfo;
-import com.matchus.domains.match.domain.UserMatchHistory;
 import com.matchus.domains.sports.domain.Sports;
 import com.matchus.domains.sports.service.SportsService;
 import com.matchus.domains.tag.domain.Tag;
@@ -16,12 +15,13 @@ import com.matchus.domains.team.service.TeamUserService;
 import com.matchus.domains.user.converter.UserConverter;
 import com.matchus.domains.user.domain.Grouping;
 import com.matchus.domains.user.domain.User;
+import com.matchus.domains.user.domain.UserMatchHistory;
 import com.matchus.domains.user.dto.request.LoginRequest;
 import com.matchus.domains.user.dto.request.SignUpRequest;
 import com.matchus.domains.user.dto.request.UserChangeInfoRequest;
 import com.matchus.domains.user.dto.response.AffiliatedTeamsResponse;
 import com.matchus.domains.user.dto.response.LoginResponse;
-import com.matchus.domains.user.dto.response.UserChangeInfoResponse;
+import com.matchus.domains.user.dto.response.UserIdResponse;
 import com.matchus.domains.user.dto.response.UserInfoResponse;
 import com.matchus.domains.user.dto.response.UserMatchesResponse;
 import com.matchus.domains.user.exception.UserNotFoundException;
@@ -98,7 +98,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public UserChangeInfoResponse changeInfoUser(UserChangeInfoRequest request, String email) {
+	public UserIdResponse changeInfoUser(UserChangeInfoRequest request, String email) {
 		User user = findActiveUser(email);
 		Sports sports = sportsService.getSports(request.getSportName());
 
@@ -107,7 +107,7 @@ public class UserService {
 						AgeGroup.findGroup(request.getAgeGroup()), sports
 		);
 
-		return new UserChangeInfoResponse(user.getId());
+		return new UserIdResponse(user.getId());
 	}
 
 	public LoginResponse reissue(String email, String token) {

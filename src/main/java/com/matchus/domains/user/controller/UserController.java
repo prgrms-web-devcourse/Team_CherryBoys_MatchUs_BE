@@ -5,7 +5,7 @@ import com.matchus.domains.user.dto.request.SignUpRequest;
 import com.matchus.domains.user.dto.request.UserChangeInfoRequest;
 import com.matchus.domains.user.dto.response.AffiliatedTeamsResponse;
 import com.matchus.domains.user.dto.response.LoginResponse;
-import com.matchus.domains.user.dto.response.UserChangeInfoResponse;
+import com.matchus.domains.user.dto.response.UserIdResponse;
 import com.matchus.domains.user.dto.response.UserInfoResponse;
 import com.matchus.domains.user.dto.response.UserMatchesResponse;
 import com.matchus.domains.user.service.UserService;
@@ -102,7 +102,7 @@ public class UserController {
 		notes = "사용자 정보를 수정합니다."
 	)
 	@PutMapping("/me")
-	public ResponseEntity<ApiResponse<UserChangeInfoResponse>> changeInfoUser(
+	public ResponseEntity<ApiResponse<UserIdResponse>> changeInfoUser(
 		@RequestBody UserChangeInfoRequest userChangeInfoRequest,
 		@AuthenticationPrincipal JwtAuthentication authentication
 	) {
@@ -135,7 +135,7 @@ public class UserController {
 			ApiResponse.of(
 				userService.getMyInfo(authentication.username)));
 	}
-  
+
 	@ApiOperation(
 		value = "사용자 페이지 조회",
 		notes = "다른 사용자의 마이 페이지를 조회합니다."
@@ -146,7 +146,7 @@ public class UserController {
 		return ResponseEntity.ok(
 			ApiResponse.of(
 				userService.getUserInfo(userId)));
-  }
+	}
 
 	@ApiOperation(
 		value = "사용자의 경기 리스트 조회",
