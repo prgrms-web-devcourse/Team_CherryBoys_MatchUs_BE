@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface HireApplicationRepository extends JpaRepository<HireApplication, Long> {
 
 	List<HireApplication> findAllByHirePostId(Long hirePostId);
+
+	List<HireApplication> findAllByUserId(Long userId);
 }
