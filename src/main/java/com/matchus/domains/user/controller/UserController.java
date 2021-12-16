@@ -137,7 +137,7 @@ public class UserController {
 	}
 
 	@ApiOperation(
-		value = "사용자 페이지 조회",
+		value = "사용자 개인 페이지 조회",
 		notes = "다른 사용자의 마이 페이지를 조회합니다."
 	)
 	@GetMapping("/{userId}")

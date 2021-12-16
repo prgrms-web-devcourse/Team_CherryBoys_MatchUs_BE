@@ -43,9 +43,9 @@ public class TeamWaitingService {
 			.findAllByMatchIdAndType(matchId, type);
 	}
 
-	public TeamWaiting findByIdAndTypeNot(Long teamWaitingId, WaitingType type) {
+	public TeamWaiting findByIdAndType(Long teamWaitingId, WaitingType type) {
 		return teamWaitingReponsitory
-			.findByIdAndTypeNot(teamWaitingId, type)
+			.findByIdAndType(teamWaitingId, type)
 			.orElseThrow(() -> new TeamWaitingNotFoundException(ErrorCode.TEAM_WAITING_NOT_FOUND));
 	}
 

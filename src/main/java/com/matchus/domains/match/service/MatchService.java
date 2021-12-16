@@ -6,6 +6,7 @@ import com.matchus.domains.location.domain.Location;
 import com.matchus.domains.location.service.LocationService;
 import com.matchus.domains.match.converter.MatchConverter;
 import com.matchus.domains.match.domain.Match;
+import com.matchus.domains.match.domain.MatchStatus;
 import com.matchus.domains.match.domain.MemberWaiting;
 import com.matchus.domains.match.domain.TeamType;
 import com.matchus.domains.match.domain.TeamWaiting;
@@ -22,6 +23,7 @@ import com.matchus.domains.match.dto.response.MatchMember;
 import com.matchus.domains.match.dto.response.MatchRetrieveByFilterResponse;
 import com.matchus.domains.match.dto.response.MatchWaitingListResponse;
 import com.matchus.domains.match.dto.response.MatchWaitingTeam;
+import com.matchus.domains.match.exception.ApplyTeamAlreadyExistException;
 import com.matchus.domains.match.exception.MatchNotFoundException;
 import com.matchus.domains.match.repository.MatchRepository;
 import com.matchus.domains.sports.domain.Sports;
@@ -191,12 +193,16 @@ public class MatchService {
 	@Transactional
 	public MatchIdResponse acceptMatch(Long applyTeamWaitingId) {
 
-		TeamWaiting teamWaiting = teamWaitingService.findByIdAndTypeNot(
-			applyTeamWaitingId, WaitingType.REGISTER);
+		TeamWaiting teamWaiting = teamWaitingService.findByIdAndType(
+			applyTeamWaitingId, WaitingType.WAITING);
 
 		teamWaiting.changeWaitingType(WaitingType.SELECTED);
 
 		Match match = teamWaiting.getMatch();
+
+		if (match.getStatus() != MatchStatus.WAITING) {
+			throw new ApplyTeamAlreadyExistException(ErrorCode.APPLY_TEAM_ALREADY_EXISTS);
+		}
 
 		match.achieveAwayTeam(teamWaiting.getTeam());
 
