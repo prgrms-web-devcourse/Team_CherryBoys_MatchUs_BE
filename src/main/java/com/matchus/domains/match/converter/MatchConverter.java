@@ -51,6 +51,9 @@ public class MatchConverter {
 			.ground(match
 						.getGround()
 						.getName())
+			.sportName(match
+						   .getSport()
+						   .getName())
 			.date(match
 					  .getPeriod()
 					  .getDate())

@@ -20,6 +20,8 @@ public class MatchInfoResponse {
 
 	private final String ground;
 
+	private final String sportName;
+
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private final LocalDate date;
 
@@ -47,6 +49,7 @@ public class MatchInfoResponse {
 		String city,
 		String region,
 		String ground,
+		String sportName,
 		LocalDate date,
 		LocalTime startTime,
 		LocalTime endTime,
@@ -60,6 +63,7 @@ public class MatchInfoResponse {
 		this.city = city;
 		this.region = region;
 		this.ground = ground;
+		this.sportName = sportName;
 		this.date = date;
 		this.startTime = startTime;
 		this.endTime = endTime;

@@ -133,6 +133,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.httpBasic()
 			.disable()
 			.cors()
+			.configurationSource(corsConfigurationSource())
 			.and()
 			.authorizeRequests()
 			.antMatchers("/users/me")
