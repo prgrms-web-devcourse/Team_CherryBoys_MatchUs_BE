@@ -106,8 +106,10 @@ public class MatchService {
 
 		Period period = new Period(request.getDate(), request.getStartTime(), request.getEndTime());
 
+		Sports sports = sportsService.getSports(request.getSprotName());
+
 		match.changeInfo(
-			location.getCity(), location.getRegion(), location.getGround(), period,
+			location.getCity(), location.getRegion(), location.getGround(), period, sports,
 			request.getCost(), AgeGroup.findGroup(request.getAgeGroup()), request.getDetail()
 		);
 
@@ -241,7 +243,8 @@ public class MatchService {
 			match.getId(),
 			reviewedTeam.getId()
 		);
-		List<MemberWaiting> memberWaitings = memberWaitingService.getMemberWaitings(teamWaiting.getId());
+		List<MemberWaiting> memberWaitings = memberWaitingService.getMemberWaitings(
+			teamWaiting.getId());
 		userTagService.calculateUserTags(memberWaitings, request.getTagIds());
 
 		return new MatchIdResponse(matchId);
