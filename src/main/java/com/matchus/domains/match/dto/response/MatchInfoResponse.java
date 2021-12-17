@@ -82,7 +82,7 @@ public class MatchInfoResponse {
 		private final String teamLogo;
 		private final String teamName;
 		private final Long captainId;
-		private final String captainName;
+		private final String captainNickname;
 		private final BigDecimal mannerTemperature;
 		private final List<MatchMember> matchMembers;
 
@@ -91,7 +91,7 @@ public class MatchInfoResponse {
 			String teamLogo,
 			String teamName,
 			Long captainId,
-			String captainName,
+			String captainNickname,
 			BigDecimal mannerTemperature,
 			List<MatchMember> matchMembers
 		) {
@@ -99,7 +99,7 @@ public class MatchInfoResponse {
 			this.teamLogo = teamLogo;
 			this.teamName = teamName;
 			this.captainId = captainId;
-			this.captainName = captainName;
+			this.captainNickname = captainNickname;
 			this.mannerTemperature = mannerTemperature;
 			this.matchMembers = matchMembers;
 		}

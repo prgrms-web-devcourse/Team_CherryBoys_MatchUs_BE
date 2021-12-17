@@ -295,7 +295,7 @@ public class MatchService {
 					.getId(),
 				memberWaiting
 					.getUser()
-					.getName()
+					.getNickname()
 			))
 			.collect(Collectors.toList());
 
@@ -311,7 +311,7 @@ public class MatchService {
 
 		return new MatchInfoResponse.TeamInfo(
 			team.getId(), team.getLogo(), team.getName(), captain.getId(),
-			captain.getName(), team.getMannerTemperature(), matchMembers
+			captain.getNickname(), team.getMannerTemperature(), matchMembers
 		);
 
 	}
