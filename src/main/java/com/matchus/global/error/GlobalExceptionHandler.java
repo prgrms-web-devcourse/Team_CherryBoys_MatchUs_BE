@@ -16,6 +16,7 @@ import com.matchus.domains.user.exception.RoleNotFoundException;
 import com.matchus.domains.user.exception.UserNotFoundException;
 import com.matchus.global.error.exception.BusinessException;
 import com.matchus.global.error.exception.EntityNotFoundException;
+import com.matchus.global.error.exception.InvalidFileTypeException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +42,12 @@ public class GlobalExceptionHandler {
 	) {
 		ErrorResponse errorResponse = ErrorResponse.of(
 			ErrorCode.INVALID_INPUT_VALUE, e.getBindingResult());
+		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(InvalidFileTypeException.class)
+	public ResponseEntity<ErrorResponse> handleInvalidFile(BusinessException e) {
+		ErrorResponse errorResponse = ErrorResponse.of(e.getErrorCode());
 		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 
