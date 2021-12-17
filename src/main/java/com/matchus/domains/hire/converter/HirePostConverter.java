@@ -31,7 +31,7 @@ public class HirePostConverter {
 		String region = hirePost.getRegion().getName();
 		String groundName = hirePost.getGround().getName();
 		String position = hirePost.getPosition();
-		AgeGroup ageGroup = hirePost.getAgeGroup();
+		String ageGroup = hirePost.getAgeGroup().getAgeGroup();
 		int hirePlayerNumber = hirePost.getHirePlayerNumber();
 		String detail = hirePost.getDetail();
 		LocalDate date = hirePost.getPeriod().getDate();

@@ -1,7 +1,6 @@
 package com.matchus.domains.hire.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.matchus.domains.common.AgeGroup;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -16,7 +15,7 @@ public class HirePostInfoResponse {
 	private final String region;
 	private final String groundName;
 	private final String position;
-	private final AgeGroup ageGroup;
+	private final String ageGroup;
 	private final int hirePlayerNumber;
 	private final String detail;
 	private final LocalDate date;
@@ -35,7 +34,7 @@ public class HirePostInfoResponse {
 		String region,
 		String groundName,
 		String position,
-		AgeGroup ageGroup,
+		String ageGroup,
 		int hirePlayerNumber,
 		String detail,
 		LocalDate date,
