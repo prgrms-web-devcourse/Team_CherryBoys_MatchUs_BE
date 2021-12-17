@@ -1,6 +1,5 @@
 package com.matchus.domains.match.dto.response;
 
-import com.matchus.domains.common.AgeGroup;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -25,7 +24,7 @@ public class MatchListByFilterResponse {
 
 	private final LocalTime endTime;
 
-	private final AgeGroup ageGroup;
+	private final String ageGroup;
 
 	private final String sports;
 

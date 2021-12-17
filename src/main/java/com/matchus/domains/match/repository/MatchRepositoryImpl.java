@@ -9,7 +9,7 @@ import static com.matchus.domains.team.domain.QTeam.*;
 
 import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.match.domain.MatchStatus;
-import com.matchus.domains.match.dto.response.MatchListByFilterResponse;
+import com.matchus.domains.match.dto.response.MatchListByFilterResult;
 import com.matchus.global.utils.PageRequest;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -26,7 +26,7 @@ public class MatchRepositoryImpl implements MatchRepositoryCustom {
 	}
 
 	@Override
-	public List<MatchListByFilterResponse> findAllNoOffsetByFilter(
+	public List<MatchListByFilterResult> findAllNoOffsetByFilter(
 		Long sportsId,
 		AgeGroup ageGroup,
 		Long cityId,
@@ -38,7 +38,7 @@ public class MatchRepositoryImpl implements MatchRepositoryCustom {
 		return queryFactory
 			.select(
 				Projections.constructor(
-					MatchListByFilterResponse.class,
+					MatchListByFilterResult.class,
 					match.id.as("matchId"),
 					match.city.name.as("city"),
 					match.region.name.as("region"),
