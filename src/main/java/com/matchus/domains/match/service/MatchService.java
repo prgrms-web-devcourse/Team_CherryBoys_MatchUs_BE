@@ -110,8 +110,10 @@ public class MatchService {
 
 		Period period = new Period(request.getDate(), request.getStartTime(), request.getEndTime());
 
+		Sports sports = sportsService.getSports(request.getSprotName());
+
 		match.changeInfo(
-			location.getCity(), location.getRegion(), location.getGround(), period,
+			location.getCity(), location.getRegion(), location.getGround(), period, sports,
 			request.getCost(), AgeGroup.findGroup(request.getAgeGroup()), request.getDetail()
 		);
 

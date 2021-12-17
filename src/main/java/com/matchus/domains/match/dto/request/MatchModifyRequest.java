@@ -16,6 +16,8 @@ public class MatchModifyRequest {
 
 	private final Long ground;
 
+	private final String sprotName;
+
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private final LocalDate date;
 

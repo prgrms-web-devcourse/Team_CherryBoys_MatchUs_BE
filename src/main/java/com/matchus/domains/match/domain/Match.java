@@ -174,12 +174,13 @@ public class Match extends BaseEntity {
 	public void changeStatusReview() {
 		this.status = MatchStatus.REVIEWED;
 	}
-  
+
 	public void changeInfo(
 		City city,
 		Region region,
 		Ground ground,
 		Period period,
+		Sports sport,
 		int cost,
 		AgeGroup ageGroup,
 		String detail
@@ -188,6 +189,7 @@ public class Match extends BaseEntity {
 		this.region = region;
 		this.ground = ground;
 		this.period = period;
+		this.sport = sport;
 		this.ageGroup = ageGroup;
 		this.cost = cost;
 		this.detail = detail;
