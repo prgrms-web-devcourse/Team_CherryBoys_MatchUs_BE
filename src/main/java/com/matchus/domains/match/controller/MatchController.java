@@ -16,6 +16,7 @@ import com.matchus.global.response.SuccessResponse;
 import com.matchus.global.utils.PageRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -42,7 +43,7 @@ public class MatchController {
 		notes = "매칭 글을 작성합니다."
 	)
 	@PostMapping("/matches")
-	public ResponseEntity<ApiResponse<MatchIdResponse>> createMatchPost(@RequestBody MatchCreateRequest request) {
+	public ResponseEntity<ApiResponse<MatchIdResponse>> createMatchPost(@Valid @RequestBody MatchCreateRequest request) {
 		return ResponseEntity.ok(ApiResponse.of(matchService.createMatchPost(request)));
 	}
 
@@ -62,7 +63,7 @@ public class MatchController {
 	@PutMapping("/matches/{matchId}")
 	public ResponseEntity<ApiResponse<MatchIdResponse>> changeMatchInfo(
 		@PathVariable Long matchId,
-		@RequestBody MatchModifyRequest request
+		@Valid @RequestBody MatchModifyRequest request
 	) {
 		return ResponseEntity.ok(ApiResponse.of(matchService.matchChangeInfo(request, matchId)));
 	}
@@ -114,7 +115,7 @@ public class MatchController {
 	@PostMapping("/matchs/{matchId}/waitings")
 	public ResponseEntity<ApiResponse<MatchIdResponse>> applyMatch(
 		@PathVariable Long matchId,
-		@RequestBody MatchTeamInfoRequest request
+		@Valid @RequestBody MatchTeamInfoRequest request
 	) {
 
 		return ResponseEntity.ok(ApiResponse.of(matchService.applyMatch(matchId, request)));
@@ -137,21 +138,21 @@ public class MatchController {
 	@PostMapping("/matches/{matchId}/review")
 	public ResponseEntity<ApiResponse<MatchIdResponse>> reviewMatch(
 		@PathVariable Long matchId,
-		@RequestBody MatchReviewRequest request
+		@Valid @RequestBody MatchReviewRequest request
 	) {
 		return ResponseEntity.ok(
 			ApiResponse.of(matchService.reviewMatch(matchId, request))
 		);
-  }
-  
-  @ApiOperation(
+	}
+
+	@ApiOperation(
 		value = "매치 팀원 명단 수정",
 		notes = "매치에 등록한 팀원 명단을 수정한다."
 	)
 	@PutMapping("/matches/{matchId}/members")
 	public ResponseEntity<ApiResponse<MatchIdResponse>> acceptMatch(
 		@PathVariable Long matchId,
-		@RequestBody MatchTeamInfoRequest request
+		@Valid @RequestBody MatchTeamInfoRequest request
 	) {
 		return ResponseEntity.ok(
 			ApiResponse.of(matchService.changeMatchMembersInfo(request, matchId)));
