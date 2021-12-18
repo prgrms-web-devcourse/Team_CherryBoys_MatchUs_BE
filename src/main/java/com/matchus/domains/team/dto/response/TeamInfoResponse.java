@@ -1,6 +1,7 @@
 package com.matchus.domains.team.dto.response;
 
 import com.matchus.domains.common.AgeGroup;
+import com.matchus.domains.tag.dto.response.TagResponse;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,7 +21,7 @@ public class TeamInfoResponse {
 	private final LocalDateTime teamCreatedAt;
 	private final Long captainId;
 	private final String captainName;
-	private final List<String> tagNames;
+	private final List<TagResponse.TagInfo> tags;
 
 	public TeamInfoResponse(
 		Long teamId,
@@ -34,7 +35,7 @@ public class TeamInfoResponse {
 		LocalDateTime teamCreatedAt,
 		Long captainId,
 		String captainName,
-		List<String> tagNames
+		List<TagResponse.TagInfo> tags
 	) {
 		this.teamId = teamId;
 		this.teamName = teamName;
@@ -47,6 +48,6 @@ public class TeamInfoResponse {
 		this.teamCreatedAt = teamCreatedAt;
 		this.captainId = captainId;
 		this.captainName = captainName;
-		this.tagNames = tagNames;
+		this.tags = tags;
 	}
 }

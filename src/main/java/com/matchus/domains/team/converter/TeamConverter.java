@@ -2,6 +2,7 @@ package com.matchus.domains.team.converter;
 
 import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.sports.domain.Sports;
+import com.matchus.domains.tag.dto.response.TagResponse;
 import com.matchus.domains.team.domain.Team;
 import com.matchus.domains.team.dto.request.TeamCreateRequest;
 import com.matchus.domains.team.dto.response.TeamInfoResponse;
@@ -23,7 +24,11 @@ public class TeamConverter {
 			.build();
 	}
 
-	public TeamInfoResponse convertToTeamInfoResponse(Team team, List<String> tagNames, User user) {
+	public TeamInfoResponse convertToTeamInfoResponse(
+		Team team,
+		List<TagResponse.TagInfo> tags,
+		User user
+	) {
 		return new TeamInfoResponse(
 			team.getId(),
 			team.getName(),
@@ -36,7 +41,7 @@ public class TeamConverter {
 			team.getCreatedDate(),
 			user.getId(),
 			user.getNickname(),
-			tagNames
+			tags
 		);
 	}
 }

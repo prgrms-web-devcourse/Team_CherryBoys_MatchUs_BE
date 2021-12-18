@@ -5,8 +5,8 @@ import com.matchus.domains.match.domain.Match;
 import com.matchus.domains.match.domain.MatchInfo;
 import com.matchus.domains.sports.domain.Sports;
 import com.matchus.domains.sports.service.SportsService;
-import com.matchus.domains.tag.domain.Tag;
 import com.matchus.domains.tag.domain.TeamTag;
+import com.matchus.domains.tag.dto.response.TagResponse;
 import com.matchus.domains.tag.service.TeamTagService;
 import com.matchus.domains.team.converter.TeamConverter;
 import com.matchus.domains.team.domain.Grade;
@@ -99,16 +99,23 @@ public class TeamService {
 	@Transactional(readOnly = true)
 	public TeamInfoResponse getTeamInfo(Long teamId) {
 		Team team = findExistingTeam(teamId);
-		List<String> tagNames = teamTagService
+		List<TagResponse.TagInfo> tags = teamTagService
 			.getTeamTags(teamId)
 			.stream()
-			.sorted(Comparator
-						.comparing(TeamTag::getTagCount)
-						.reversed())
+			.sorted(
+				Comparator
+					.comparing(TeamTag::getTagCount)
+					.reversed()
+			)
 			.map(TeamTag::getTag)
-			.map(Tag::getName)
+			.map(
+				tag -> new TagResponse.TagInfo(
+					tag.getId(),
+					tag.getName(),
+					tag.getType().name()
+				)
+			)
 			.collect(Collectors.toList());
-
 		User captain = teamUserRepository
 			.findAllByTeamId(teamId)
 			.stream()
@@ -117,9 +124,9 @@ public class TeamService {
 				.equals(Grade.CAPTAIN))
 			.findFirst()
 			.map(TeamUser::getUser)
-			.orElseThrow(() -> new UserNotFoundException(ErrorCode.ENTITY_NOT_FOUND));
+			.orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
 
-		return teamConverter.convertToTeamInfoResponse(team, tagNames, captain);
+		return teamConverter.convertToTeamInfoResponse(team, tags, captain);
 	}
 
 	@Transactional(readOnly = true)
