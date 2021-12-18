@@ -2,6 +2,7 @@ package com.matchus.domains.user.converter;
 
 import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.sports.domain.Sports;
+import com.matchus.domains.tag.dto.response.TagResponse;
 import com.matchus.domains.team.domain.TeamSimpleInfo;
 import com.matchus.domains.user.domain.Gender;
 import com.matchus.domains.user.domain.Grouping;
@@ -71,7 +72,7 @@ public class UserConverter {
 	public UserInfoResponse convertToUserInfoResponse(
 		User user,
 		List<TeamSimpleInfo.TeamNameAndLogo> myTeams,
-		List<String> tagNames
+		List<TagResponse.TagInfo> tags
 	) {
 
 		return UserInfoResponse
@@ -87,7 +88,7 @@ public class UserConverter {
 			.ageGrouop(user
 						   .getAgeGroup()
 						   .getAgeGroup())
-			.tagNames(tagNames)
+			.tags(tags)
 			.bio(user.getBio())
 			.mannerTemperature(user.getMannerTemperature())
 			.myTeams(myTeams)
