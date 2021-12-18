@@ -1,6 +1,7 @@
 package com.matchus.global.error;
 
 import com.matchus.domains.common.exception.AgeGroupNotFoundException;
+import com.matchus.domains.common.exception.InvalidLocalTimeDataException;
 import com.matchus.domains.hire.exception.HireApplicationNotFoundException;
 import com.matchus.domains.match.exception.ApplyTeamAlreadyExistException;
 import com.matchus.domains.match.exception.TeamWaitingNotFoundException;
@@ -20,6 +21,7 @@ import com.matchus.global.error.exception.InvalidFileTypeException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -47,6 +49,12 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(InvalidFileTypeException.class)
 	public ResponseEntity<ErrorResponse> handleInvalidFile(BusinessException e) {
+		ErrorResponse errorResponse = ErrorResponse.of(e.getErrorCode());
+		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(InvalidLocalTimeDataException.class)
+	public ResponseEntity<ErrorResponse> handleInvalidLocalTime(BusinessException e) {
 		ErrorResponse errorResponse = ErrorResponse.of(e.getErrorCode());
 		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
@@ -96,6 +104,12 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(InsufficientGradeException.class)
 	public ResponseEntity<ErrorResponse> handleInsufficientGrade(BusinessException e) {
 		ErrorResponse errorResponse = ErrorResponse.of(e.getErrorCode());
+		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	public ResponseEntity<ErrorResponse> handleJsonParseException(HttpMessageNotReadableException e) {
+		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE);
 		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 
