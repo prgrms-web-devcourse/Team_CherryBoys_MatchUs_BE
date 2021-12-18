@@ -6,11 +6,11 @@ import lombok.Getter;
 public class MatchMember {
 
 	private final Long userId;
-	private final String userName;
+	private final String userNickname;
 
-	public MatchMember(Long userId, String userName) {
+	public MatchMember(Long userId, String userNickname) {
 		this.userId = userId;
-		this.userName = userName;
+		this.userNickname = userNickname;
 	}
 
 }
