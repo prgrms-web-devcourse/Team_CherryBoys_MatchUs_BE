@@ -111,7 +111,7 @@ public class MatchController {
 		value = "매치 신청",
 		notes = "매치 게시글에 대해 매치를 신청한다."
 	)
-	@PostMapping("/matchs/{matchId}/waitings")
+	@PostMapping("/matches/{matchId}/waitings")
 	public ResponseEntity<ApiResponse<MatchIdResponse>> applyMatch(
 		@PathVariable Long matchId,
 		@RequestBody MatchTeamInfoRequest request
@@ -142,9 +142,9 @@ public class MatchController {
 		return ResponseEntity.ok(
 			ApiResponse.of(matchService.reviewMatch(matchId, request))
 		);
-  }
-  
-  @ApiOperation(
+	}
+
+	@ApiOperation(
 		value = "매치 팀원 명단 수정",
 		notes = "매치에 등록한 팀원 명단을 수정한다."
 	)

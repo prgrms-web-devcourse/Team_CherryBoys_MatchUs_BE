@@ -5,8 +5,8 @@ import com.matchus.domains.match.domain.Match;
 import com.matchus.domains.match.domain.MatchInfo;
 import com.matchus.domains.sports.domain.Sports;
 import com.matchus.domains.sports.service.SportsService;
-import com.matchus.domains.tag.domain.Tag;
 import com.matchus.domains.tag.domain.UserTag;
+import com.matchus.domains.tag.dto.response.TagResponse;
 import com.matchus.domains.tag.service.UserTagService;
 import com.matchus.domains.team.domain.Grade;
 import com.matchus.domains.team.domain.TeamSimpleInfo;
@@ -212,14 +212,16 @@ public class UserService {
 
 	private UserInfoResponse buildUserInfoRespose(User user) {
 
-		List<String> tagNames = userTagService
+		List<TagResponse.TagInfo> tags = userTagService
 			.getUserTags(user.getId())
 			.stream()
 			.sorted(Comparator
 						.comparing(UserTag::getTagCount)
 						.reversed())
 			.map(UserTag::getTag)
-			.map(Tag::getName)
+			.map(tag -> new TagResponse.TagInfo(tag.getId(), tag.getName(), tag
+				.getType()
+				.name()))
 			.collect(Collectors.toList());
 
 		List<TeamSimpleInfo.TeamNameAndLogo> myTeams = teamUserService
@@ -231,8 +233,7 @@ public class UserService {
 			))
 			.collect(Collectors.toList());
 
-		return userConverter.convertToUserInfoResponse(user, myTeams, tagNames);
-
+		return userConverter.convertToUserInfoResponse(user, myTeams, tags);
 	}
 
 	public void validTeamUser(Long teamId, String email) {
