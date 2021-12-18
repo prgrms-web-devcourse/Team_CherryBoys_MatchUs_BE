@@ -1,5 +1,6 @@
 package com.matchus.domains.match.dto.response;
 
+import com.matchus.domains.common.AgeGroup;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -8,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class MatchListByFilterResponse {
+public class MatchListByFilterResult {
 
 	private final Long matchId;
 
@@ -24,7 +25,7 @@ public class MatchListByFilterResponse {
 
 	private final LocalTime endTime;
 
-	private final String ageGroup;
+	private final AgeGroup ageGroup;
 
 	private final String sports;
 

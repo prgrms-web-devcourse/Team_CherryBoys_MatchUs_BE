@@ -18,7 +18,7 @@ import com.matchus.domains.match.dto.request.MatchReviewRequest;
 import com.matchus.domains.match.dto.request.MatchTeamInfoRequest;
 import com.matchus.domains.match.dto.response.MatchIdResponse;
 import com.matchus.domains.match.dto.response.MatchInfoResponse;
-import com.matchus.domains.match.dto.response.MatchListByFilterResponse;
+import com.matchus.domains.match.dto.response.MatchListByFilterResult;
 import com.matchus.domains.match.dto.response.MatchMember;
 import com.matchus.domains.match.dto.response.MatchRetrieveByFilterResponse;
 import com.matchus.domains.match.dto.response.MatchWaitingListResponse;
@@ -127,7 +127,7 @@ public class MatchService {
 		Sports sports = sportsService.getSportsOrNull(filterRequest.getSports());
 		AgeGroup ageGroup = AgeGroup.findGroupOrNull(filterRequest.getAgeGroup());
 
-		List<MatchListByFilterResponse> matchs = matchRepository.findAllNoOffsetByFilter(
+		List<MatchListByFilterResult> results = matchRepository.findAllNoOffsetByFilter(
 			sports == null ? null : sports.getId(),
 			ageGroup,
 			filterRequest.getCityId(),
@@ -137,7 +137,7 @@ public class MatchService {
 			pageRequest
 		);
 
-		return new MatchRetrieveByFilterResponse(matchs);
+		return matchConverter.convertToRetrieveByFilterResponse(results);
 	}
 
 	public MatchInfoResponse getMatchInfo(Long matchId) {
