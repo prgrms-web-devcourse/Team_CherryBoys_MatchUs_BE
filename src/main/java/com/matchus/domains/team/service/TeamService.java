@@ -112,7 +112,9 @@ public class TeamService {
 				tag -> new TagResponse.TagInfo(
 					tag.getId(),
 					tag.getName(),
-					tag.getType().name()
+					tag
+						.getType()
+						.name()
 				)
 			)
 			.collect(Collectors.toList());
@@ -230,7 +232,7 @@ public class TeamService {
 			teamMembers.add(
 				new TeamMember(
 					user.getId(),
-					user.getName(),
+					user.getNickname(),
 					teamUser
 						.getGrade()
 						.getType()
