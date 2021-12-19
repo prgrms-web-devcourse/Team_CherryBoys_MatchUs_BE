@@ -31,7 +31,7 @@ public class MatchCreateRequest {
 	@Min(value = 1, message = "구장 정보는 필수 입력 값입니다.")
 	private final Long ground;
 
-	@Future(message = "현재보다 이른 날짜는 선택할 수 없습니다")
+	@Future(message = "현재보다 이른 날짜는 선택할 수 없습니다.")
 	@NotNull(message = "날짜 정보는 필수 입력 값입니다.")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private final LocalDate date;
