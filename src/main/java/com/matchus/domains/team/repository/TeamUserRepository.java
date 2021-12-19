@@ -1,6 +1,7 @@
 package com.matchus.domains.team.repository;
 
 import com.matchus.domains.team.domain.Grade;
+import com.matchus.domains.team.domain.Team;
 import com.matchus.domains.team.domain.TeamUser;
 import com.matchus.domains.user.domain.User;
 import java.util.List;
@@ -23,5 +24,5 @@ public interface TeamUserRepository extends JpaRepository<TeamUser, Long> {
 
 	void deleteByTeamIdAndUserId(Long teamId, Long userId);
 
-	boolean existsByUser(User user);
+	boolean existsByUserAndTeam(User user, Team team);
 }
