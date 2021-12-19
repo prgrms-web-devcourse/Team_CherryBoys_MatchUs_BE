@@ -15,6 +15,7 @@ import com.matchus.global.response.CheckDuplicatedResponse;
 import com.matchus.global.response.SuccessResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -45,7 +46,7 @@ public class UserController {
 		notes = "회원가입한 사용자가 로그인을 요청합니다."
 	)
 	@PostMapping(path = "/login")
-	public ResponseEntity<ApiResponse<LoginResponse>> login(@RequestBody LoginRequest request) {
+	public ResponseEntity<ApiResponse<LoginResponse>> login(@Valid @RequestBody LoginRequest request) {
 
 		return ResponseEntity.ok(ApiResponse.of(userService.login(request)));
 	}
@@ -55,7 +56,7 @@ public class UserController {
 		notes = "사용자가 회원가입을 요청합니다."
 	)
 	@PostMapping
-	public ResponseEntity<ApiResponse<SuccessResponse>> signUp(@RequestBody SignUpRequest request) {
+	public ResponseEntity<ApiResponse<SuccessResponse>> signUp(@Valid @RequestBody SignUpRequest request) {
 		userService.signUp(request);
 		return ResponseEntity.ok(ApiResponse.of(new SuccessResponse(true)));
 	}
@@ -106,7 +107,7 @@ public class UserController {
 	)
 	@PutMapping("/me")
 	public ResponseEntity<ApiResponse<UserIdResponse>> changeInfoUser(
-		@RequestBody UserChangeInfoRequest userChangeInfoRequest,
+		@Valid @RequestBody UserChangeInfoRequest userChangeInfoRequest,
 		@AuthenticationPrincipal JwtAuthentication authentication
 	) {
 
