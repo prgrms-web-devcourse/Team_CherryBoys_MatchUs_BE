@@ -36,6 +36,7 @@ import com.matchus.domains.user.service.UserService;
 import com.matchus.global.error.ErrorCode;
 import com.matchus.global.utils.PageRequest;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -164,23 +165,23 @@ public class HirePostService {
 	}
 
 	@Transactional(readOnly = true)
-	public HireApplicationTeamsResponse getHireApplyTeams(String name) {
-		User user = userService.findActiveUser(name);
+	public HireApplicationTeamsResponse getHireApplyTeams(String email) {
+		User user = userService.findActiveUser(email);
 
-		List<HireApplyTeam> hireApplyTeams = hireApplicationRepository
-			.findAllByUserId(user.getId())
-			.stream()
-			.map(HireApplication::getHirePost)
-			.map(hirePost -> new HireApplyTeam(
-				hirePost.getId(),
-				hirePost
-					.getTeam()
-					.getId(),
-				hirePost
-					.getTeam()
-					.getName()
-			))
-			.collect(Collectors.toList());
+		List<HireApplication> hireApplications = hireApplicationRepository.findAllByUserId(
+			user.getId());
+
+		List<HireApplyTeam> hireApplyTeams = new ArrayList<>();
+
+		for (HireApplication hireApplication : hireApplications) {
+			HirePost hirePost = hireApplication.getHirePost();
+			Team team = hirePost.getTeam();
+
+			hireApplyTeams.add(
+				new HireApplyTeam(hireApplication.getId(), hirePost.getId(),
+								  team.getId(), team.getName()
+				));
+		}
 
 		return new HireApplicationTeamsResponse(hireApplyTeams);
 	}
