@@ -1,5 +1,7 @@
 package com.matchus.domains.common;
 
+import com.matchus.domains.common.exception.InvalidLocalTimeDataException;
+import com.matchus.global.error.ErrorCode;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import javax.persistence.Column;
@@ -23,8 +25,15 @@ public class Period {
 	private LocalTime endTime;
 
 	public Period(LocalDate date, LocalTime startTime, LocalTime endTime) {
+		validTime(startTime, endTime);
 		this.date = date;
 		this.startTime = startTime;
 		this.endTime = endTime;
+	}
+
+	private void validTime(LocalTime startTime, LocalTime endTime) {
+		if (startTime.isAfter(endTime)) {
+			throw new InvalidLocalTimeDataException(ErrorCode.INVALID_TIME_DATA);
+		}
 	}
 }
