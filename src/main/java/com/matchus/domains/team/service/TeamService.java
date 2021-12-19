@@ -49,6 +49,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class TeamService {
 
+	public static final String EMPTY_STRING = "";
+
 	private final TeamConverter teamConverter;
 	private final TeamRepository teamRepository;
 	private final SportsService sportsService;
@@ -187,10 +189,10 @@ public class TeamService {
 						.getId() : null,
 					match.getAwayTeam() != null ? match
 						.getAwayTeam()
-						.getName() : null,
+						.getName() : EMPTY_STRING,
 					match.getAwayTeam() != null ? match
 						.getAwayTeam()
-						.getLogo() : null,
+						.getLogo() : EMPTY_STRING,
 					match
 						.getPeriod()
 						.getDate(),
