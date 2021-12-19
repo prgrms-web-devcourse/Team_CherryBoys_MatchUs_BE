@@ -6,12 +6,12 @@ import lombok.Getter;
 public class TeamMember {
 
 	private final Long userId;
-	private final String userNickname;
+	private final String userName;
 	private final String grade;
 
-	public TeamMember(Long userId, String userNickname, String grade) {
+	public TeamMember(Long userId, String userName, String grade) {
 		this.userId = userId;
-		this.userNickname = userNickname;
+		this.userName = userName;
 		this.grade = grade;
 	}
 }
