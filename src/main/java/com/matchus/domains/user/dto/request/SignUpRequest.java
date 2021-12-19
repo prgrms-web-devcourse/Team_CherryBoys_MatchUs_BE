@@ -18,7 +18,7 @@ public class SignUpRequest {
 	@Email(message = "이메일 형식이 올바르지 않습니다.")
 	private final String email;
 
-	@Size(max = 8, message = "닉네임은 8자까지 만들 수 있습니다")
+	@Size(max = 8, message = "닉네임은 8자까지 만들 수 있습니다.")
 	@NotBlank(message = "닉네임 필수 입력 값입니다.")
 	@Pattern(regexp = "^[a-zA-Z0-9가-힣ㄱ-ㅎ]*$", message = "닉네임에는 특수문자가 들어갈 수 없습니다.")
 	private final String nickname;
