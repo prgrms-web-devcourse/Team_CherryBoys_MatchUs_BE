@@ -68,7 +68,7 @@ public class TeamUserService {
 	}
 
 	public TeamUser saveTeamUser(Team team, User user) {
-		if (teamUserRepository.existsByUser(user)) {
+		if (teamUserRepository.existsByUserAndTeam(user, team)) {
 			throw new TeamUserAlreadyExistsException(ErrorCode.TEAM_USER_ALREADY_EXISTS);
 		}
 		return teamUserRepository.save(TeamUser
