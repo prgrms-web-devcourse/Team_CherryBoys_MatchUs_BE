@@ -153,9 +153,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.authenticated()
 			.antMatchers(HttpMethod.DELETE, "/matches/{matchId}")
 			.authenticated()
-			.antMatchers("/hire-applications", "/hire-applications/{applicationsId}", "/hires",
-						 "/hires/{postId}/applications", "/hires/me"
+			.antMatchers(
+				"/hire-applications", "/hire-applications/{applicationsId}",
+				"/hires/{postId}/applications", "/hires/me"
 			)
+			.authenticated()
+			.antMatchers(HttpMethod.POST, "/hires")
 			.authenticated()
 			.antMatchers(HttpMethod.PUT, "/hires/{postId}")
 			.authenticated()
