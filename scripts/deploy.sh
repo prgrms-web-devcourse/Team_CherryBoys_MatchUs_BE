@@ -40,7 +40,7 @@ CURRENT_PORT=$(cat /home/ec2-user/service_url.inc | grep -Po '[0-9]+' | tail -1)
 
 echo "> 애플리케이션 health check 'http://127.0.0.1:${CURRENT_PORT}'"
 
-for RETRY_COUNT in {1...10}
+for RETRY_COUNT in {1..10}
 do
   echo "> #${RETRY_COUNT} trying..."
   RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:${CURRENT_PORT}/health-check)
