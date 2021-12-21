@@ -4,13 +4,12 @@
 
 <div align="center">
 
-🤼 스포츠 매칭 플랫폼<br>
-⚽️ [MatchUs](https://matchus.netlify.app)  
-[프론트엔드 Repository 링크](https://github.com/prgrms-web-devcourse/Team_CherryBoys_MatchUs_FE)
+&nbsp;🤼 스포츠 매칭 플랫폼<br>
+&nbsp;⚽️ MatchUs<br>
+&nbsp;[프론트엔드 Repository 링크](https://github.com/prgrms-web-devcourse/Team_CherryBoys_MatchUs_FE)
 
 </div>
 <br/>
-
 
 <h2>💻 서비스 소개</h2>
 
