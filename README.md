@@ -3,9 +3,11 @@
 </p>
 
 <div align="center">
-    🤼 스포츠 매칭 플랫폼<br>
-    ⚽️ MatchUs<br>
-    [프론트엔드 Repository 링크](https://github.com/prgrms-web-devcourse/Team_CherryBoys_MatchUs_FE)
+    
+  🤼 스포츠 매칭 플랫폼<br>
+  ⚽️ MatchUs<br>
+  [프론트엔드 Repository 링크](https://github.com/prgrms-web-devcourse/Team_CherryBoys_MatchUs_FE)
+    
 </div>
 <br/>
 
