@@ -3,16 +3,19 @@ package com.matchus.domains.hire.service;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
-import com.matchus.domains.common.Address;
 import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.common.Period;
 import com.matchus.domains.hire.converter.HirePostConverter;
 import com.matchus.domains.hire.domain.HirePost;
 import com.matchus.domains.hire.dto.request.HirePostRetrieveFilterRequest;
 import com.matchus.domains.hire.dto.response.HirePostInfoResponse;
-import com.matchus.domains.hire.dto.response.HirePostListFilterResponseDto;
+import com.matchus.domains.hire.dto.response.HirePostListFilterResponse;
+import com.matchus.domains.hire.dto.response.HirePostListFilterResult;
 import com.matchus.domains.hire.dto.response.HirePostRetrieveByFilterResponse;
 import com.matchus.domains.hire.repository.HirePostRepository;
+import com.matchus.domains.location.domain.City;
+import com.matchus.domains.location.domain.Ground;
+import com.matchus.domains.location.domain.Region;
 import com.matchus.domains.sports.domain.Sports;
 import com.matchus.domains.sports.service.SportsService;
 import com.matchus.domains.team.domain.Team;
@@ -51,8 +54,8 @@ class HirePostServiceTest {
 		// given
 		given(sportsService.getSportsOrNull(any())).willReturn(null);
 
-		List<HirePostListFilterResponseDto> hirePosts = List.of(
-			new HirePostListFilterResponseDto(
+		List<HirePostListFilterResult> results = List.of(
+			new HirePostListFilterResult(
 				30L,
 				"윙백",
 				"서울",
@@ -69,7 +72,7 @@ class HirePostServiceTest {
 				"팀이름1",
 				new BigDecimal("36.5")
 			),
-			new HirePostListFilterResponseDto(
+			new HirePostListFilterResult(
 				29L,
 				"윙백",
 				"서울",
@@ -86,7 +89,7 @@ class HirePostServiceTest {
 				"팀이름1",
 				new BigDecimal("36.5")
 			),
-			new HirePostListFilterResponseDto(
+			new HirePostListFilterResult(
 				28L,
 				"윙백",
 				"서울",
@@ -104,7 +107,6 @@ class HirePostServiceTest {
 				new BigDecimal("36.5")
 			)
 		);
-
 		PageRequest pageRequest = new PageRequest(null, 30);
 		given(hirePostRepository.findAllNoOffsetByFilter(
 			"윙백",
@@ -115,7 +117,64 @@ class HirePostServiceTest {
 			null,
 			null,
 			pageRequest
-		)).willReturn(hirePosts);
+		)).willReturn(results);
+
+		List<HirePostListFilterResponse> hirePosts = List.of(
+			new HirePostListFilterResponse(
+				30L,
+				"윙백",
+				"서울",
+				"광진구",
+				"아차산풋살장",
+				LocalDate.now(),
+				LocalTime.now(),
+				LocalTime.now().plusHours(2),
+				AgeGroup.TWENTIES.getAgeGroup(),
+				"세부내용",
+				1,
+				1L,
+				"팀로고1",
+				"팀이름1",
+				new BigDecimal("36.5")
+			),
+			new HirePostListFilterResponse(
+				29L,
+				"윙백",
+				"서울",
+				"광진구",
+				"아차산풋살장",
+				LocalDate.now(),
+				LocalTime.now(),
+				LocalTime.now().plusHours(2),
+				AgeGroup.TWENTIES.getAgeGroup(),
+				"세부내용",
+				1,
+				1L,
+				"팀로고1",
+				"팀이름1",
+				new BigDecimal("36.5")
+			),
+			new HirePostListFilterResponse(
+				28L,
+				"윙백",
+				"서울",
+				"광진구",
+				"아차산풋살장",
+				LocalDate.now(),
+				LocalTime.now(),
+				LocalTime.now().plusHours(2),
+				AgeGroup.TWENTIES.getAgeGroup(),
+				"세부내용",
+				1,
+				1L,
+				"팀로고1",
+				"팀이름1",
+				new BigDecimal("36.5")
+			)
+		);
+		given(hirePostConverter.convertToRetrieveByFilterResponse(results)).willReturn(
+			new HirePostRetrieveByFilterResponse(hirePosts)
+		);
 
 		HirePostRetrieveFilterRequest filterRequest = new HirePostRetrieveFilterRequest(
 			"윙백",
@@ -143,9 +202,10 @@ class HirePostServiceTest {
 	void getHirePostTest() {
 		// given
 		long postId = 1L;
-		String title = "제목";
 		String position = "윙백";
-		Address address = new Address("서울", "광진구", "아차산풋살장");
+		City city = new City(1L, "서울특별시");
+		Region region = new Region(1L, city, "강남구");
+		Ground ground = new Ground(1L, region, "대륭축구장");
 		Period period = new Period(
 			LocalDate.parse("2021-12-10"),
 			LocalTime.of(12, 30),
@@ -157,9 +217,10 @@ class HirePostServiceTest {
 		HirePost hirePost = HirePost
 			.builder()
 			.id(postId)
-			.title(title)
 			.position(position)
-			.address(address)
+			.city(city)
+			.region(region)
+			.ground(ground)
 			.period(period)
 			.ageGroup(ageGroup)
 			.detail(detail)
@@ -178,12 +239,11 @@ class HirePostServiceTest {
 		given(hirePostRepository.findById(anyLong())).willReturn(Optional.of(hirePost));
 		HirePostInfoResponse response = new HirePostInfoResponse(
 			postId,
-			title,
-			address.getCity(),
-			address.getRegion(),
-			address.getGroundName(),
+			city.getName(),
+			region.getName(),
+			ground.getName(),
 			position,
-			ageGroup,
+			ageGroup.getAgeGroup(),
 			hirePlayerNumber,
 			detail,
 			period.getDate(),

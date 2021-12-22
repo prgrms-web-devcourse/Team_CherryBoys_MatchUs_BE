@@ -6,9 +6,9 @@ import lombok.Getter;
 @Getter
 public class HirePostRetrieveByFilterResponse {
 
-	private final List<HirePostListFilterResponseDto> hirePosts;
+	private final List<HirePostListFilterResponse> hirePosts;
 
-	public HirePostRetrieveByFilterResponse(List<HirePostListFilterResponseDto> hirePosts) {
+	public HirePostRetrieveByFilterResponse(List<HirePostListFilterResponse> hirePosts) {
 		this.hirePosts = hirePosts;
 	}
 }

@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,6 +25,7 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
@@ -117,7 +119,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
 
-		configuration.addAllowedOrigin("http://localhost:3000");
+		configuration.addAllowedOriginPattern("*");
 		configuration.addAllowedHeader("*");
 		configuration.addAllowedMethod("*");
 		configuration.setAllowCredentials(true);
@@ -133,10 +135,42 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.httpBasic()
 			.disable()
 			.cors()
+			.configurationSource(corsConfigurationSource())
 			.and()
 			.authorizeRequests()
-			.antMatchers("/users/me")
-			.hasAnyRole("USER", "ADMIN")
+			.requestMatchers(CorsUtils::isPreFlightRequest)
+			.permitAll()
+			.antMatchers("/users/me", "/users/reissue", "/users/me/teams")
+			.authenticated()
+			.antMatchers(
+				"/match-waitings/{teamWaitingId}", "/matches/{matchId}/review",
+				"/matches/{matchId}/waitings"
+			)
+			.authenticated()
+			.antMatchers(HttpMethod.POST, "/matches")
+			.authenticated()
+			.antMatchers(HttpMethod.PUT, "/matches/{matchId}", "/matches/{matchId}/members")
+			.authenticated()
+			.antMatchers(HttpMethod.DELETE, "/matches/{matchId}")
+			.authenticated()
+			.antMatchers(
+				"/hire-applications", "/hire-applications/{applicationsId}",
+				"/hires/{postId}/applications", "/hires/me"
+			)
+			.authenticated()
+			.antMatchers(HttpMethod.POST, "/hires")
+			.authenticated()
+			.antMatchers(HttpMethod.PUT, "/hires/{postId}")
+			.authenticated()
+			.antMatchers(HttpMethod.DELETE, "/hires/{postId}")
+			.authenticated()
+			.antMatchers(
+				"/teams", "/teams/{teamId}/me", "/teams/{teamId}/members",
+				"/invitations/{invitationId}", "/invitations/me"
+			)
+			.authenticated()
+			.antMatchers(HttpMethod.PUT, "/teams/{teamId}")
+			.authenticated()
 			.anyRequest()
 			.permitAll()
 			.and()
@@ -156,7 +190,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.exceptionHandling()
 			.accessDeniedHandler(accessDeniedHandler())
 			.and()
-			.addFilterAfter(jwtAuthenticationFilter(), SecurityContextPersistenceFilter.class)
+			.addFilterAfter(
+				jwtAuthenticationFilter(), SecurityContextPersistenceFilter.class)
 		;
 	}
 

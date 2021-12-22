@@ -3,11 +3,16 @@ package com.matchus.domains.hire.repository;
 
 import static org.assertj.core.api.Assertions.*;
 
-import com.matchus.domains.common.Address;
 import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.common.Period;
 import com.matchus.domains.hire.domain.HirePost;
-import com.matchus.domains.hire.dto.response.HirePostListFilterResponseDto;
+import com.matchus.domains.hire.dto.response.HirePostListFilterResult;
+import com.matchus.domains.location.domain.City;
+import com.matchus.domains.location.domain.Ground;
+import com.matchus.domains.location.domain.Region;
+import com.matchus.domains.location.repository.CityRepository;
+import com.matchus.domains.location.repository.GroundRepository;
+import com.matchus.domains.location.repository.RegionRepository;
 import com.matchus.domains.sports.domain.Sports;
 import com.matchus.domains.sports.repository.SportRepository;
 import com.matchus.domains.team.domain.Team;
@@ -40,79 +45,14 @@ public class HirePostRepositoryTest {
 	@Autowired
 	private SportRepository sportRepository;
 
-	@DisplayName("용병 구인 게시글 첫 번째 페이지 조회 테스트")
-	@Test
-	void findAllNoOffsetFirstTest() {
-		// given
-		Long lastId = null;
-		int size = 10;
+	@Autowired
+	private CityRepository cityRepository;
 
-		for (int i = 1; i <= 30; i++) {
-			hirePostRepository.save(
-				HirePost
-					.builder()
-					.title("구인글제목1")
-					.position("윙백")
-					.address(new Address("서울", "광진구", "아차산풋살장"))
-					.period(
-						new Period(
-							LocalDate.of(2021, 12, 6),
-							LocalTime.of(12, 30),
-							LocalTime.of(14, 30)
-						)
-					)
-					.ageGroup(AgeGroup.TEENAGER)
-					.detail("세부내용")
-					.hirePlayerNumber(3)
-					.build()
-			);
-		}
+	@Autowired
+	private RegionRepository regionRepository;
 
-		// when
-		List<HirePost> hirePosts = hirePostRepository.findAllNoOffset(lastId, size);
-
-		// then
-		assertThat(hirePosts).hasSize(10);
-		assertThat(hirePosts.get(0).getId()).isEqualTo(30L);
-		assertThat(hirePosts.get(9).getId()).isEqualTo(21L);
-	}
-
-	@DisplayName("용병 구인 게시글 두 번째 페이지 조회 테스트")
-	@Test
-	void findAllNoOffsetSecondTest() {
-		// given
-		Long lastId = 21L;
-		int size = 10;
-
-		for (int i = 1; i <= 30; i++) {
-			hirePostRepository.save(
-				HirePost
-					.builder()
-					.title("구인글제목1")
-					.position("윙백")
-					.address(new Address("서울", "광진구", "아차산풋살장"))
-					.period(
-						new Period(
-							LocalDate.of(2021, 12, 6),
-							LocalTime.of(12, 30),
-							LocalTime.of(14, 30)
-						)
-					)
-					.ageGroup(AgeGroup.TEENAGER)
-					.detail("세부내용")
-					.hirePlayerNumber(3)
-					.build()
-			);
-		}
-
-		// when
-		List<HirePost> hirePosts = hirePostRepository.findAllNoOffset(lastId, size);
-
-		// then
-		assertThat(hirePosts).hasSize(10);
-		assertThat(hirePosts.get(0).getId()).isEqualTo(20L);
-		assertThat(hirePosts.get(9).getId()).isEqualTo(11L);
-	}
+	@Autowired
+	private GroundRepository groundRepository;
 
 	@DisplayName("용병 게시글 리스트 필터 조회 성공 테스트")
 	@Test
@@ -120,10 +60,10 @@ public class HirePostRepositoryTest {
 		// given
 		String position = "윙백";
 		Long sportsId = null;
+		Long cityId = null;
+		Long regionId = null;
+		Long groundId = null;
 		AgeGroup ageGroup = null;
-		String city = null;
-		String region = null;
-		String groundName = null;
 		LocalDate date = null;
 		Long lastId = null;
 		int size = 30;
@@ -152,13 +92,17 @@ public class HirePostRepositoryTest {
 				.build()
 		);
 
+		City city = cityRepository.save(new City(1L, "서울특별시"));
+		Region region = regionRepository.save(new Region(1L, city, "강남구"));
+		Ground ground = groundRepository.save(new Ground(1L, region, "대륭축구장"));
 		for (int i = 1; i <= 10; i++) {
 			HirePost hirePost = hirePostRepository.save(
 				HirePost
 					.builder()
-					.title("구인글제목1")
 					.position("윙백")
-					.address(new Address("서울", "광진구", "아차산풋살장"))
+					.city(city)
+					.region(region)
+					.ground(ground)
 					.period(
 						new Period(
 							LocalDate.of(2021, 12, 6),
@@ -177,9 +121,10 @@ public class HirePostRepositoryTest {
 			HirePost hirePost = hirePostRepository.save(
 				HirePost
 					.builder()
-					.title("구인글제목2")
 					.position("수비수")
-					.address(new Address("서울", "광진구", "아차산풋살장"))
+					.city(city)
+					.region(region)
+					.ground(ground)
 					.period(
 						new Period(
 							LocalDate.of(2021, 12, 6),
@@ -198,9 +143,10 @@ public class HirePostRepositoryTest {
 			HirePost hirePost = hirePostRepository.save(
 				HirePost
 					.builder()
-					.title("구인글제목3")
 					.position("수비수")
-					.address(new Address("경기도", "남양주시", "오남풋살장"))
+					.city(city)
+					.region(region)
+					.ground(ground)
 					.period(
 						new Period(
 							LocalDate.of(2021, 12, 6),
@@ -217,13 +163,13 @@ public class HirePostRepositoryTest {
 		}
 
 		// when
-		List<HirePostListFilterResponseDto> hirePostsNoOffsetByFilter = hirePostRepository.findAllNoOffsetByFilter(
+		List<HirePostListFilterResult> hirePostsNoOffsetByFilter = hirePostRepository.findAllNoOffsetByFilter(
 			position,
 			sportsId,
 			ageGroup,
-			city,
-			region,
-			groundName,
+			cityId,
+			regionId,
+			groundId,
 			date,
 			pageRequest
 		);

@@ -1,8 +1,10 @@
 package com.matchus.domains.hire.domain;
 
-import com.matchus.domains.common.Address;
 import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.common.Period;
+import com.matchus.domains.location.domain.City;
+import com.matchus.domains.location.domain.Ground;
+import com.matchus.domains.location.domain.Region;
 import com.matchus.domains.team.domain.Team;
 import com.matchus.global.domain.BaseEntity;
 import javax.persistence.Column;
@@ -26,7 +28,7 @@ import org.hibernate.annotations.Where;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE users SET is_deleted = true WHERE id=?")
+@SQLDelete(sql = "UPDATE hire_posts SET is_deleted = true WHERE id=?")
 @Where(clause = "is_deleted = false")
 @Entity
 @Table(name = "hire_posts")
@@ -36,14 +38,29 @@ public class HirePost extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false, length = 100)
-	private String title;
-
 	@Column(length = 50)
 	private String position;
 
-	@Embedded
-	private Address address;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(
+		name = "city_id",
+		referencedColumnName = "id"
+	)
+	private City city;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(
+		name = "region_id",
+		referencedColumnName = "id"
+	)
+	private Region region;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(
+		name = "ground_id",
+		referencedColumnName = "id"
+	)
+	private Ground ground;
 
 	@Embedded
 	private Period period;
@@ -70,18 +87,20 @@ public class HirePost extends BaseEntity {
 	@Builder
 	private HirePost(
 		Long id,
-		String title,
 		String position,
-		Address address,
+		City city,
+		Region region,
+		Ground ground,
 		Period period,
 		AgeGroup ageGroup,
 		String detail,
 		int hirePlayerNumber
 	) {
 		this.id = id;
-		this.title = title;
 		this.position = position;
-		this.address = address;
+		this.city = city;
+		this.region = region;
+		this.ground = ground;
 		this.period = period;
 		this.ageGroup = ageGroup;
 		this.detail = detail;
@@ -95,5 +114,25 @@ public class HirePost extends BaseEntity {
 
 		this.team = team;
 		team.getHirePosts().add(this);
+	}
+
+	public void changeInfo(
+		String position,
+		City city,
+		Region region,
+		Ground ground,
+		Period period,
+		AgeGroup ageGroup,
+		String detail,
+		int hirePlayerNumber
+	) {
+		this.position = position;
+		this.city = city;
+		this.region = region;
+		this.ground = ground;
+		this.period = period;
+		this.ageGroup = ageGroup;
+		this.detail = detail;
+		this.hirePlayerNumber = hirePlayerNumber;
 	}
 }

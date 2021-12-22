@@ -2,6 +2,7 @@ package com.matchus.domains.tag.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,6 +25,6 @@ public class Tag {
 	@Column(nullable = false, length = 20)
 	private String name;
 
-	@Enumerated
+	@Enumerated(EnumType.STRING)
 	private TagType type;
 }

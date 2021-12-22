@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -41,4 +42,22 @@ public class TeamWaiting {
 
 	@Enumerated(EnumType.STRING)
 	private WaitingType type;
+
+	@Builder
+	public TeamWaiting(
+		Long id,
+		Match match,
+		Team team,
+		WaitingType type
+	) {
+		this.id = id;
+		this.match = match;
+		this.team = team;
+		this.type = type;
+	}
+
+	public void changeWaitingType(WaitingType type) {
+		this.type = type;
+	}
+
 }

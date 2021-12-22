@@ -1,11 +1,14 @@
 package com.matchus.domains.hire.repository;
 
 import static com.matchus.domains.hire.domain.QHirePost.*;
+import static com.matchus.domains.location.domain.QCity.*;
+import static com.matchus.domains.location.domain.QGround.*;
+import static com.matchus.domains.location.domain.QRegion.*;
 import static com.matchus.domains.team.domain.QTeam.*;
 
 import com.matchus.domains.common.AgeGroup;
 import com.matchus.domains.hire.domain.HirePost;
-import com.matchus.domains.hire.dto.response.HirePostListFilterResponseDto;
+import com.matchus.domains.hire.dto.response.HirePostListFilterResult;
 import com.matchus.global.utils.PageRequest;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -31,25 +34,25 @@ public class HirePostRepositoryImpl implements HirePostRepositoryCustom {
 	}
 
 	@Override
-	public List<HirePostListFilterResponseDto> findAllNoOffsetByFilter(
+	public List<HirePostListFilterResult> findAllNoOffsetByFilter(
 		String position,
 		Long sportsId,
 		AgeGroup ageGroup,
-		String city,
-		String region,
-		String groundName,
+		Long cityId,
+		Long regionId,
+		Long groundId,
 		LocalDate date,
 		PageRequest pageRequest
 	) {
 		return queryFactory
 			.select(
 				Projections.constructor(
-					HirePostListFilterResponseDto.class,
+					HirePostListFilterResult.class,
 					hirePost.id.as("postId"),
 					hirePost.position.as("position"),
-					hirePost.address.city.as("city"),
-					hirePost.address.region.as("region"),
-					hirePost.address.groundName.as("groundName"),
+					city.name.as("city"),
+					region.name.as("region"),
+					ground.name.as("groundName"),
 					hirePost.period.date.as("date"),
 					hirePost.period.startTime.as("startTime"),
 					hirePost.period.endTime.as("endTime"),
@@ -64,16 +67,18 @@ public class HirePostRepositoryImpl implements HirePostRepositoryCustom {
 			)
 			.from(hirePost)
 			.join(hirePost.team, team)
+			.join(hirePost.city, city)
+			.join(hirePost.region, region)
+			.join(hirePost.ground, ground)
 			.where(
 				ltHirePostId(pageRequest.getLastId()),
 				eqPosition(position),
 				eqSports(sportsId),
 				eqAgeGroup(ageGroup),
-				eqCity(city),
-				eqRegion(region),
-				eqGroundName(groundName),
-				eqDate(date),
-				hirePost.isDeleted.isFalse()
+				eqCity(cityId),
+				eqRegion(regionId),
+				eqGround(groundId),
+				eqDate(date)
 			)
 			.orderBy(hirePost.id.desc())
 			.limit(pageRequest.getSize())
@@ -108,25 +113,25 @@ public class HirePostRepositoryImpl implements HirePostRepositoryCustom {
 		return hirePost.ageGroup.eq(ageGroup);
 	}
 
-	private BooleanExpression eqCity(String city) {
-		if (StringUtils.isEmpty(city)) {
+	private BooleanExpression eqCity(Long cityId) {
+		if (cityId == null) {
 			return null;
 		}
-		return hirePost.address.city.eq(city);
+		return city.id.eq(cityId);
 	}
 
-	private BooleanExpression eqRegion(String region) {
-		if (StringUtils.isEmpty(region)) {
+	private BooleanExpression eqRegion(Long regionId) {
+		if (regionId == null) {
 			return null;
 		}
-		return hirePost.address.region.eq(region);
+		return region.id.eq(regionId);
 	}
 
-	private BooleanExpression eqGroundName(String groundName) {
-		if (StringUtils.isEmpty(groundName)) {
+	private BooleanExpression eqGround(Long groundId) {
+		if (groundId == null) {
 			return null;
 		}
-		return hirePost.address.groundName.eq(groundName);
+		return ground.id.eq(groundId);
 	}
 
 	private BooleanExpression eqDate(LocalDate date) {

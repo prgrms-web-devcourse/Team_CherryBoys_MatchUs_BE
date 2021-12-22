@@ -6,7 +6,9 @@ import com.matchus.domains.team.domain.TeamUser;
 import com.matchus.global.domain.BaseEntity;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -83,6 +85,9 @@ public class User extends BaseEntity {
 	@OneToMany(mappedBy = "team", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private List<TeamUser> teamUsers = new ArrayList<>();
 
+	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	private List<UserMatchHistory> userMatchHistorys = new ArrayList<>();
+
 	@Builder
 	private User(
 		Long id,
@@ -108,6 +113,24 @@ public class User extends BaseEntity {
 		this.ageGroup = ageGroup;
 	}
 
+	public List<UserMatchHistory> getAllMatches() {
+		return this.userMatchHistorys
+			.stream()
+			.sorted(Comparator
+						.comparing(
+							(UserMatchHistory userMatchHistory) -> userMatchHistory
+								.getMatch()
+								.getPeriod()
+								.getDate()
+						)
+						.reversed())
+			.collect(Collectors.toList());
+	}
+
+	public int getMatchCount() {
+		return this.userMatchHistorys.size();
+	}
+
 	public void checkPassword(PasswordEncoder passwordEncoder, String credentials) {
 		if (!passwordEncoder.matches(credentials, password)) {
 			throw new IllegalArgumentException("Bad credential");
@@ -118,4 +141,19 @@ public class User extends BaseEntity {
 		this.isDisaffiliated = true;
 	}
 
+	public void changeInfo(
+		String nickname,
+		String bio,
+		AgeGroup ageGroup,
+		Sports sport
+	) {
+		this.nickname = nickname;
+		this.bio = bio;
+		this.ageGroup = ageGroup;
+		this.sport = sport;
+	}
+
+	public void updateMannerTemperature(BigDecimal value) {
+		this.mannerTemperature = value;
+	}
 }

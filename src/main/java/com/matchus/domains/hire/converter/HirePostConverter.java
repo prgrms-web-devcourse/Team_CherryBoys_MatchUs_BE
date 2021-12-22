@@ -1,8 +1,14 @@
 package com.matchus.domains.hire.converter;
 
 import com.matchus.domains.common.AgeGroup;
+import com.matchus.domains.common.Period;
 import com.matchus.domains.hire.domain.HirePost;
+import com.matchus.domains.hire.dto.request.HirePostWriteRequest;
 import com.matchus.domains.hire.dto.response.HirePostInfoResponse;
+import com.matchus.domains.hire.dto.response.HirePostListFilterResponse;
+import com.matchus.domains.hire.dto.response.HirePostListFilterResult;
+import com.matchus.domains.hire.dto.response.HirePostRetrieveByFilterResponse;
+import com.matchus.domains.location.domain.Location;
 import com.matchus.domains.team.domain.Grade;
 import com.matchus.domains.team.domain.Team;
 import com.matchus.domains.team.domain.TeamUser;
@@ -11,6 +17,8 @@ import com.matchus.global.error.ErrorCode;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,12 +27,11 @@ public class HirePostConverter {
 	public HirePostInfoResponse convertToHirePostInfoResponse(HirePost hirePost) {
 
 		Long postId = hirePost.getId();
-		String title = hirePost.getTitle();
-		String city = hirePost.getAddress().getCity();
-		String region = hirePost.getAddress().getRegion();
-		String groundName = hirePost.getAddress().getGroundName();
+		String city = hirePost.getCity().getName();
+		String region = hirePost.getRegion().getName();
+		String groundName = hirePost.getGround().getName();
 		String position = hirePost.getPosition();
-		AgeGroup ageGroup = hirePost.getAgeGroup();
+		String ageGroup = hirePost.getAgeGroup().getAgeGroup();
 		int hirePlayerNumber = hirePost.getHirePlayerNumber();
 		String detail = hirePost.getDetail();
 		LocalDate date = hirePost.getPeriod().getDate();
@@ -48,7 +55,6 @@ public class HirePostConverter {
 
 		return new HirePostInfoResponse(
 			postId,
-			title,
 			city,
 			region,
 			groundName,
@@ -65,6 +71,53 @@ public class HirePostConverter {
 			teamMannerTemperature,
 			teamCaptainId,
 			teamManagerName
+		);
+	}
+
+	public HirePost convertToHirePost(
+		HirePostWriteRequest request,
+		Location location,
+		AgeGroup ageGroup
+	) {
+		return HirePost
+			.builder()
+			.position(request.getPosition())
+			.city(location.getCity())
+			.region(location.getRegion())
+			.ground(location.getGround())
+			.period(new Period(request.getDate(), request.getStartTime(), request.getEndTime()))
+			.ageGroup(ageGroup)
+			.detail(request.getDetail())
+			.hirePlayerNumber(request.getHirePlayerNumber())
+			.build();
+	}
+
+	public HirePostRetrieveByFilterResponse convertToRetrieveByFilterResponse(
+		List<HirePostListFilterResult> results
+	) {
+		return new HirePostRetrieveByFilterResponse(
+			results
+				.stream()
+				.map(
+					result -> new HirePostListFilterResponse(
+						result.getPostId(),
+						result.getPosition(),
+						result.getCity(),
+						result.getRegion(),
+						result.getGroundName(),
+						result.getDate(),
+						result.getStartTime(),
+						result.getEndTime(),
+						result.getAgeGroup().getAgeGroup(),
+						result.getDetail(),
+						result.getHirePlayerNumber(),
+						result.getTeamId(),
+						result.getTeamLogo(),
+						result.getTeamName(),
+						result.getTeamMannerTemperature()
+					)
+				)
+				.collect(Collectors.toList())
 		);
 	}
 }
