@@ -2,6 +2,7 @@ package com.matchus.global.error;
 
 import com.matchus.domains.common.exception.AgeGroupNotFoundException;
 import com.matchus.domains.common.exception.InvalidLocalTimeDataException;
+import com.matchus.domains.hire.exception.HireApplicationAlreadyExistsException;
 import com.matchus.domains.hire.exception.HireApplicationNotFoundException;
 import com.matchus.domains.hire.exception.InvalidHireApplicationException;
 import com.matchus.domains.match.exception.ApplyTeamAlreadyExistException;
@@ -115,7 +116,13 @@ public class GlobalExceptionHandler {
 	}
 
 	@ExceptionHandler(InvalidHireApplicationException.class)
-	public ResponseEntity<ErrorResponse> handleJsonParseException(BusinessException e) {
+	public ResponseEntity<ErrorResponse> handleInvalidHireApplication(BusinessException e) {
+		ErrorResponse errorResponse = ErrorResponse.of(e.getErrorCode());
+		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(HireApplicationAlreadyExistsException.class)
+	public ResponseEntity<ErrorResponse> handleHireApplicationAlreadyExists(BusinessException e) {
 		ErrorResponse errorResponse = ErrorResponse.of(e.getErrorCode());
 		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
