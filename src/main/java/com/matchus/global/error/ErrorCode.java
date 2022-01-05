@@ -13,6 +13,8 @@ public enum ErrorCode {
 	INVALID_INPUT_VALUE("올바른 입력 형식이 아닙니다.", 400),
 	ENTITY_NOT_FOUND("엔티티를 찾을 수 없습니다.", 400),
 	HIRE_APPLICATION_NOT_FOUND("유효하지 않은 용병 신청 내역입니다.", 400),
+	HIRE_APPLICATION_ALREADY_EXISTS("기존 용병 신청 내역이 존재합니다.", 400),
+	INVALID_HIRE_APPLICATION("잘못된 용병 신청 요청입니다.", 400),
 	HIRE_POST_NOT_FOUND("해당 용병 게시글이 존재하지 않습니다.", 400),
 	TEAM_NOT_FOUND("존재하지 않는 팀 입니다.", 400),
 	USER_NOT_FOUND("해당 유저가 존재하지 않습니다.", 400),
@@ -31,7 +33,7 @@ public enum ErrorCode {
 	APPLY_TEAM_ALREADY_EXISTS("기존 상대 팀이 존재합니다.", 400),
 	INVALID_TIME_DATA("종료일자가 시작일자보다 빠를 수 없습니다", 400),
 
-	//401
+	// 401
 	UNAUTHORIZED_USER("권한이 없는 사용자입니다.", 401),
 	;
 

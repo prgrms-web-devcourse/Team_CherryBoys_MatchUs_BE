@@ -3,6 +3,7 @@ package com.matchus.global.error;
 import com.matchus.domains.common.exception.AgeGroupNotFoundException;
 import com.matchus.domains.common.exception.InvalidLocalTimeDataException;
 import com.matchus.domains.hire.exception.HireApplicationNotFoundException;
+import com.matchus.domains.hire.exception.InvalidHireApplicationException;
 import com.matchus.domains.match.exception.ApplyTeamAlreadyExistException;
 import com.matchus.domains.match.exception.TeamWaitingNotFoundException;
 import com.matchus.domains.sports.exception.SportsNotFoundException;
@@ -110,6 +111,12 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<ErrorResponse> handleJsonParseException(HttpMessageNotReadableException e) {
 		ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE);
+		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(InvalidHireApplicationException.class)
+	public ResponseEntity<ErrorResponse> handleJsonParseException(BusinessException e) {
+		ErrorResponse errorResponse = ErrorResponse.of(e.getErrorCode());
 		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 
