@@ -1,6 +1,5 @@
 package com.matchus.domains.tag.service;
 
-import com.matchus.domains.match.domain.MemberWaiting;
 import com.matchus.domains.tag.domain.Tag;
 import com.matchus.domains.tag.domain.TagType;
 import com.matchus.domains.tag.domain.UserTag;
@@ -27,9 +26,8 @@ public class UserTagService {
 		return userTagRepository.findAllByUserId(userId);
 	}
 
-	public void calculateUserTags(List<MemberWaiting> memberWaitings, List<Long> tagIds) {
-		for (MemberWaiting memberWaiting : memberWaitings) {
-			User user = memberWaiting.getUser();
+	public void calculateUserTags(List<User> waitingUsers, List<Long> tagIds) {
+		for (User user : waitingUsers) {
 			for (Long tagId : tagIds) {
 				userTagRepository
 					.findByUserIdAndTagId(user.getId(), tagId)

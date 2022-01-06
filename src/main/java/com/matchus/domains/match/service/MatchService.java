@@ -249,10 +249,13 @@ public class MatchService {
 		Match match = findExistingMatch(matchId);
 
 		TeamType type = TeamType.findTeamType(request.getReviewerTeamType());
-		if (type == TeamType.REGISTER) {
-			match.completeHomeTeamReview();
-		} else if (type == TeamType.APPLY) {
-			match.completeAwayTeamReview();
+		switch (type) {
+			case REGISTER:
+				match.completeHomeTeamReview();
+				break;
+			case APPLY:
+				match.completeAwayTeamReview();
+				break;
 		}
 
 		if (match.isHomeTeamReviewed() && match.isAwayTeamReviewed()) {
@@ -266,9 +269,12 @@ public class MatchService {
 			match.getId(),
 			reviewedTeam.getId()
 		);
-		List<MemberWaiting> memberWaitings = memberWaitingService.getMemberWaitings(
-			teamWaiting.getId());
-		userTagService.calculateUserTags(memberWaitings, request.getTagIds());
+		List<User> waitingUsers = memberWaitingService
+			.getMemberWaitings(teamWaiting.getId())
+			.stream()
+			.map(MemberWaiting::getUser)
+			.collect(Collectors.toList());
+		userTagService.calculateUserTags(waitingUsers, request.getTagIds());
 
 		return new MatchIdResponse(matchId);
 	}
