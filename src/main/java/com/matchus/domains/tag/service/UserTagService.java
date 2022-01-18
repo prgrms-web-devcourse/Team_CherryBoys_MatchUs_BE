@@ -1,14 +1,10 @@
 package com.matchus.domains.tag.service;
 
-import com.matchus.domains.match.domain.MemberWaiting;
 import com.matchus.domains.tag.domain.Tag;
 import com.matchus.domains.tag.domain.TagType;
 import com.matchus.domains.tag.domain.UserTag;
-import com.matchus.domains.tag.exception.TagNotFoundException;
-import com.matchus.domains.tag.repository.TagRepository;
 import com.matchus.domains.tag.repository.UserTagRepository;
 import com.matchus.domains.user.domain.User;
-import com.matchus.global.error.ErrorCode;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,16 +16,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserTagService {
 
 	private final UserTagRepository userTagRepository;
-	private final TagRepository tagRepository;
+	private final TagService tagService;
 
 	@Transactional(readOnly = true)
 	public List<UserTag> getUserTags(Long userId) {
 		return userTagRepository.findAllByUserId(userId);
 	}
 
-	public void calculateUserTags(List<MemberWaiting> memberWaitings, List<Long> tagIds) {
-		for (MemberWaiting memberWaiting : memberWaitings) {
-			User user = memberWaiting.getUser();
+	public void calculateUserTags(List<User> waitingUsers, List<Long> tagIds) {
+		for (User user : waitingUsers) {
 			for (Long tagId : tagIds) {
 				userTagRepository
 					.findByUserIdAndTagId(user.getId(), tagId)
@@ -42,9 +37,7 @@ public class UserTagService {
 							);
 						},
 						() -> {
-							Tag tag = tagRepository
-								.findById(tagId)
-								.orElseThrow(() -> new TagNotFoundException(ErrorCode.TAG_NOT_FOUND));
+							Tag tag = tagService.getTag(tagId);
 							userTagRepository.save(
 								UserTag
 									.builder()

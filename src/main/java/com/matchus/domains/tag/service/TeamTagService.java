@@ -3,11 +3,8 @@ package com.matchus.domains.tag.service;
 import com.matchus.domains.tag.domain.Tag;
 import com.matchus.domains.tag.domain.TagType;
 import com.matchus.domains.tag.domain.TeamTag;
-import com.matchus.domains.tag.exception.TagNotFoundException;
-import com.matchus.domains.tag.repository.TagRepository;
 import com.matchus.domains.tag.repository.TeamTagRepository;
 import com.matchus.domains.team.domain.Team;
-import com.matchus.global.error.ErrorCode;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class TeamTagService {
 
 	private final TeamTagRepository teamTagRepository;
-	private final TagRepository tagRepository;
+	private final TagService tagService;
 
 	@Transactional(readOnly = true)
 	public List<TeamTag> getTeamTags(Long teamId) {
@@ -36,9 +33,7 @@ public class TeamTagService {
 						calculateTeamMannerTemperature(teamTag.getTag().getType(), reviewedTeam);
 					},
 					() -> {
-						Tag tag = tagRepository
-							.findById(tagId)
-							.orElseThrow(() -> new TagNotFoundException(ErrorCode.TAG_NOT_FOUND));
+						Tag tag = tagService.getTag(tagId);
 						teamTagRepository.save(
 							TeamTag
 								.builder()
