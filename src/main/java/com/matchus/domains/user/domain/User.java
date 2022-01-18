@@ -82,7 +82,7 @@ public class User extends BaseEntity {
 	@Column(nullable = false, columnDefinition = "BOOLEAN default false")
 	private boolean isDisaffiliated = false;
 
-	@OneToMany(mappedBy = "team", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private List<TeamUser> teamUsers = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)

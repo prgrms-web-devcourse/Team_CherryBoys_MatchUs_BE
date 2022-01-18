@@ -35,9 +35,8 @@ public class HireApplicationController {
 		@RequestBody HireApplyRequest request,
 		@AuthenticationPrincipal JwtAuthentication authentication
 	) {
-		String userEmail = authentication.username;
 		return ResponseEntity.ok(
-			ApiResponse.of(hireApplicationService.applyHire(request, userEmail))
+			ApiResponse.of(hireApplicationService.applyHire(request, authentication.username))
 		);
 	}
 

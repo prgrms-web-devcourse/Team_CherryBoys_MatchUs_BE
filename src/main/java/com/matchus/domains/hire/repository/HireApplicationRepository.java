@@ -9,4 +9,6 @@ public interface HireApplicationRepository extends JpaRepository<HireApplication
 	List<HireApplication> findAllByHirePostId(Long hirePostId);
 
 	List<HireApplication> findAllByUserId(Long userId);
+
+	boolean existsByHirePostIdAndUserId(Long hirePostId, Long userId);
 }
