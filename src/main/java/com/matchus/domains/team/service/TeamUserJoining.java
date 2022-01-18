@@ -6,9 +6,11 @@ import com.matchus.domains.user.domain.User;
 import com.matchus.domains.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class TeamUserJoining {
 
 	private final TeamUserService teamUserService;
@@ -21,5 +23,4 @@ public class TeamUserJoining {
 
 		return new TeamIdResponse(teamId);
 	}
-
 }
