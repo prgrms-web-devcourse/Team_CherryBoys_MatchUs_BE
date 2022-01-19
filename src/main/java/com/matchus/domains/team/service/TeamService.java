@@ -11,7 +11,6 @@ import com.matchus.domains.tag.service.TeamTagService;
 import com.matchus.domains.team.converter.TeamConverter;
 import com.matchus.domains.team.domain.Grade;
 import com.matchus.domains.team.domain.Team;
-import com.matchus.domains.team.domain.TeamInvitation;
 import com.matchus.domains.team.domain.TeamMember;
 import com.matchus.domains.team.domain.TeamUser;
 import com.matchus.domains.team.dto.request.ChangeGradesRequest;
@@ -25,9 +24,7 @@ import com.matchus.domains.team.dto.response.TeamInfoResponse;
 import com.matchus.domains.team.dto.response.TeamMatchesResponse;
 import com.matchus.domains.team.dto.response.TeamMembersResponse;
 import com.matchus.domains.team.dto.response.TeamModifyResponse;
-import com.matchus.domains.team.exception.TeamInvitationAlreadyExistsException;
 import com.matchus.domains.team.exception.TeamNotFoundException;
-import com.matchus.domains.team.repository.TeamInvitationRepository;
 import com.matchus.domains.team.repository.TeamRepository;
 import com.matchus.domains.team.repository.TeamUserRepository;
 import com.matchus.domains.user.domain.User;
@@ -53,12 +50,12 @@ public class TeamService {
 
 	private final TeamConverter teamConverter;
 	private final TeamRepository teamRepository;
+	private final TeamUserRepository teamUserRepository;
 	private final SportsService sportsService;
 	private final FileUploadService uploadService;
 	private final TeamTagService teamTagService;
-	private final TeamUserRepository teamUserRepository;
 	private final UserService userService;
-	private final TeamInvitationRepository teamInvitationRepository;
+	private final TeamInvitationService teamInvitationService;
 
 	public TeamCreateResponse createTeam(TeamCreateRequest request, String userEmail) {
 		String logo = uploadService.uploadImage(request.getLogo());
@@ -245,18 +242,9 @@ public class TeamService {
 
 	public TeamIdResponse inviteUser(Long teamId, InviteUserRequest request) {
 		User user = userService.findActiveUser(request.getEmail());
-		if (teamInvitationRepository.existsByTeamIdAndUserId(teamId, user.getId())) {
-			throw new TeamInvitationAlreadyExistsException(
-				ErrorCode.TEAM_INVITATION_ALREADY_EXISTS);
-		}
+		teamInvitationService.checkTeamInvitationExists(teamId, user.getId());
 
-		teamInvitationRepository.save(
-			TeamInvitation
-				.builder()
-				.team(findExistingTeam(teamId))
-				.user(user)
-				.build()
-		);
+		teamInvitationService.saveTeamInvitation(findExistingTeam(teamId), user);
 
 		return new TeamIdResponse(teamId);
 	}

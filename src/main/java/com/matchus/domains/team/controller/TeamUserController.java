@@ -1,7 +1,7 @@
 package com.matchus.domains.team.controller;
 
 import com.matchus.domains.team.dto.response.TeamIdResponse;
-import com.matchus.domains.team.service.TeamUserService;
+import com.matchus.domains.team.service.TeamUserJoining;
 import com.matchus.global.jwt.JwtAuthentication;
 import com.matchus.global.response.ApiResponse;
 import io.swagger.annotations.Api;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TeamUserController {
 
-	private final TeamUserService teamUserService;
+	private final TeamUserJoining teamUserJoining;
 
 	@ApiOperation(
 		value = "팀 탈퇴",
@@ -29,9 +29,8 @@ public class TeamUserController {
 		@PathVariable Long teamId,
 		@AuthenticationPrincipal JwtAuthentication authentication
 	) {
-		String userEmail = authentication.username;
 		return ResponseEntity.ok(
-			ApiResponse.of(teamUserService.leaveTeam(teamId, userEmail))
+			ApiResponse.of(teamUserJoining.leaveTeam(teamId, authentication.username))
 		);
 	}
 }

@@ -1,8 +1,10 @@
 package com.matchus.domains.team.service;
 
+import com.matchus.domains.team.domain.Team;
 import com.matchus.domains.team.domain.TeamInvitation;
 import com.matchus.domains.team.domain.TeamInvitationInfo;
 import com.matchus.domains.team.dto.response.TeamInvitationList;
+import com.matchus.domains.team.exception.TeamInvitationAlreadyExistsException;
 import com.matchus.domains.team.exception.TeamInvitationNotFoundException;
 import com.matchus.domains.team.repository.TeamInvitationRepository;
 import com.matchus.domains.user.domain.User;
@@ -49,7 +51,6 @@ public class TeamInvitationService {
 		return new SuccessResponse(true);
 	}
 
-	@Transactional(readOnly = true)
 	public TeamInvitation findTeamInvitationById(Long invitationId) {
 
 		return teamInvitationRepository
@@ -78,4 +79,22 @@ public class TeamInvitationService {
 		return new TeamInvitationList(teamInvitationInfos);
 	}
 
+	public void checkTeamInvitationExists(Long teamId, Long userId) {
+		if (teamInvitationRepository.existsByTeamIdAndUserId(teamId, userId)) {
+			throw new TeamInvitationAlreadyExistsException(ErrorCode.TEAM_INVITATION_ALREADY_EXISTS);
+		}
+	}
+
+	@Transactional
+	public Long saveTeamInvitation(Team team, User user) {
+		return teamInvitationRepository
+			.save(
+				TeamInvitation
+					.builder()
+					.team(team)
+					.user(user)
+					.build()
+			)
+			.getId();
+	}
 }

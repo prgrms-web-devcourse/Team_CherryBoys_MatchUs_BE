@@ -3,14 +3,11 @@ package com.matchus.domains.team.service;
 import com.matchus.domains.team.domain.Grade;
 import com.matchus.domains.team.domain.Team;
 import com.matchus.domains.team.domain.TeamUser;
-import com.matchus.domains.team.dto.response.TeamIdResponse;
 import com.matchus.domains.team.exception.InsufficientGradeException;
 import com.matchus.domains.team.exception.TeamUserAlreadyExistsException;
 import com.matchus.domains.team.exception.TeamUserNotFoundException;
 import com.matchus.domains.team.repository.TeamUserRepository;
 import com.matchus.domains.user.domain.User;
-import com.matchus.domains.user.exception.UserNotFoundException;
-import com.matchus.domains.user.repository.UserRepository;
 import com.matchus.global.error.ErrorCode;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class TeamUserService {
 
 	private final TeamUserRepository teamUserRepository;
-	private final UserRepository userRepository;
 
 	@Transactional(readOnly = true)
 	public List<TeamUser> getMyTeamUsers(Long userId) {
@@ -43,24 +39,9 @@ public class TeamUserService {
 		teamUserRepository.save(teamUser);
 	}
 
-	public TeamIdResponse leaveTeam(Long teamId, String userEmail) {
-		User user = userRepository
-			.findByEmail(userEmail)
-			.orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
-
-		TeamUser teamUser = teamUserRepository
-			.findByTeamIdAndUserId(teamId, user.getId())
-			.orElseThrow(() -> new TeamUserNotFoundException(ErrorCode.TEAM_USER_NOT_FOUND));
-		teamUserRepository.delete(teamUser);
-
-		return new TeamIdResponse(teamId);
-	}
-
 	@Transactional(readOnly = true)
 	public void validGrade(Long teamId, Long userId) {
-		TeamUser teamUser = teamUserRepository
-			.findByTeamIdAndUserId(teamId, userId)
-			.orElseThrow(() -> new TeamUserNotFoundException(ErrorCode.TEAM_USER_NOT_FOUND));
+		TeamUser teamUser = getTeamUser(teamId, userId);
 
 		if (!Grade.VALID_GRADE.contains(teamUser.getGrade())) {
 			throw new InsufficientGradeException(ErrorCode.UNAUTHORIZED_TEAM_USER);
@@ -77,6 +58,17 @@ public class TeamUserService {
 										   .user(user)
 										   .grade(Grade.GENERAL)
 										   .build());
+	}
+
+	@Transactional(readOnly = true)
+	public TeamUser getTeamUser(Long teamId, Long userId) {
+		return teamUserRepository
+			.findByTeamIdAndUserId(teamId, userId)
+			.orElseThrow(() -> new TeamUserNotFoundException(ErrorCode.TEAM_USER_NOT_FOUND));
+	}
+
+	public void delete(TeamUser teamUser) {
+		teamUserRepository.delete(teamUser);
 	}
 
 }
